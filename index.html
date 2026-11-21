@@ -269,7 +269,7 @@
 
       <button id="navBtn-approved" onclick="switchTab('approved')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white">
         <i class="fa-solid fa-circle-check"></i>
-        <span>Approved Manifest</span>
+        <span>Approved</span>
         <span id="approvedCount" class="bg-slate-800 text-slate-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full">0</span>
       </button>
 
@@ -278,21 +278,21 @@
         <span>Folders</span>
       </button>
 
-      <button id="navBtn-trash" onclick="switchTab('trash')" class="py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-rose-400">
+      <button id="navBtn-trash" onclick="switchTab('trash')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-rose-400">
         <i class="fa-solid fa-trash-can"></i>
-        <span class="hidden sm:inline">Trash</span>
+        <span>Trash</span>
       </button>
 
-      <button id="navBtn-memory" onclick="switchTab('memory')" class="py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-sky-400">
+      <button id="navBtn-memory" onclick="switchTab('memory')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-sky-400">
         <i class="fa-solid fa-database"></i>
-        <span class="hidden sm:inline">Memory</span>
+        <span>Memory</span>
         <span class="bg-sky-500/20 text-sky-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-sky-500/30">12</span>
       </button>
     </div>
   </nav>
 
   <!-- ==================== MAIN WORKSPACE CONTAINER ==================== -->
-  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 flex-1">
+  <main class="w-full flex-1 px-4 sm:px-6 lg:px-8 py-4 flex flex-col">
     
     <!-- TAB 1: SHORTLIST VIEW -->
     <div id="shortlistView" class="space-y-4">
@@ -468,25 +468,25 @@
               <i class="fa-solid fa-truck-fast"></i>
               <span>4. Freight, Customs & Return Warranty</span>
             </div>
-            <p id="modalShipping" class="text-xs text-slate-300 mt-1.5 leading-relaxed font-sans">
-              <!-- Content -->
-            </p>
-          </div>
-
-        </div>
-
+  <!-- ==================== LOGOUT / SESSION LOCKED MODAL ==================== -->
+  <div id="loggedOutModal" class="fixed inset-0 z-50 bg-[#030712]/95 backdrop-blur-xl flex items-center justify-center p-4 hidden">
+    <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl text-center relative overflow-hidden">
+      <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto mb-4">
+        <i class="fa-solid fa-lock text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-black text-white">Session Terminated</h3>
+      <p class="text-xs text-slate-400 font-mono mt-1">Local encrypted cache purged for this device.</p>
+      
+      <div class="bg-slate-900/90 rounded-2xl p-4 my-5 border border-slate-800 text-left space-y-1 text-xs text-slate-300 font-mono">
+        <div class="flex justify-between"><span class="text-slate-500">Device Status:</span> <span class="text-emerald-400 font-bold">Secure Clean</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Partition Cache:</span> <span class="text-slate-300">Detached</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Re-entry Mode:</span> <span class="text-orange-400 font-bold">OAuth Required</span></div>
       </div>
 
-      <!-- Modal Footer Actions -->
-      <div class="p-4 border-t border-slate-800 bg-[#080d19] flex items-center justify-between gap-2">
-        <button onclick="closeListingModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">
-          Close
-        </button>
-        <div class="flex items-center gap-2" id="modalActionButtons">
-          <!-- Action buttons injected dynamically -->
-        </div>
-      </div>
-
+      <button onclick="relaunchAuthGate()" class="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-2xl text-xs transition-all shadow-lg flex items-center justify-center gap-2">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Return to Login Gate</span>
+      </button>
     </div>
   </div>
 
@@ -869,7 +869,21 @@
       localStorage.removeItem('cc_active_user_name');
       localStorage.removeItem('cc_active_user_avatar');
       currentUser = null;
-      location.reload();
+      
+      // Display dedicated session locked page
+      const lockModal = document.getElementById('loggedOutModal');
+      if (lockModal) {
+        lockModal.classList.remove('hidden');
+      } else {
+        location.reload();
+      }
+    }
+
+    function relaunchAuthGate() {
+      const lockModal = document.getElementById('loggedOutModal');
+      if (lockModal) lockModal.classList.add('hidden');
+      const gate = document.getElementById('mandatoryAuthGate');
+      if (gate) gate.classList.remove('hidden');
     }
 
     // --- DATA PARTITIONING & STORAGE ---
@@ -1359,4 +1373,4 @@
     }
   </script>
 </body>
-</html>
+          </html>
