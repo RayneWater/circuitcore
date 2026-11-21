@@ -201,8 +201,8 @@
   </div>
 
   <!-- ==================== MAIN TOP NAVIGATION BAR ==================== -->
-  <header class="glass-panel sticky top-0 z-30 border-b border-slate-800/80 px-4 sm:px-6 py-3">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+  <header class="glass-panel sticky top-0 z-30 border-b border-slate-800/80 px-3 sm:px-5 py-3 w-full">
+    <div class="w-full flex items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-400 p-0.5 shadow-md">
@@ -234,8 +234,8 @@
   </header>
 
   <!-- ==================== SEARCH & TRIAGE QUERY BAR ==================== -->
-  <section class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-5 pb-3">
-    <div class="glass-card rounded-2xl p-3 sm:p-4 border border-slate-800">
+  <section class="w-full px-3 sm:px-5 pt-4 pb-2">
+    <div class="glass-card rounded-2xl p-3 sm:p-4 border border-slate-800 w-full">
       <form onsubmit="handleExecuteTriage(event)" class="flex flex-col sm:flex-row gap-2.5">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
@@ -259,8 +259,8 @@
   </section>
 
   <!-- ==================== PRIMARY NAVIGATION TABS ==================== -->
-  <nav class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-2">
-    <div class="flex border-b border-slate-800/80 gap-1 sm:gap-2">
+  <nav class="w-full px-3 sm:px-5 py-2">
+    <div class="flex border-b border-slate-800/80 gap-1 sm:gap-2 w-full">
       <button id="navBtn-shortlist" onclick="switchTab('shortlist')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-orange-400 border-b-2 border-orange-500 bg-orange-500/10">
         <i class="fa-solid fa-list-check"></i>
         <span>Shortlist</span>
@@ -292,7 +292,7 @@
   </nav>
 
   <!-- ==================== MAIN WORKSPACE CONTAINER ==================== -->
-  <main class="w-full flex-1 px-4 sm:px-6 lg:px-8 py-4 flex flex-col">
+  <main class="w-full flex-1 px-3 sm:px-5 py-4 flex flex-col">
     
     <!-- TAB 1: SHORTLIST VIEW -->
     <div id="shortlistView" class="space-y-4">
