@@ -1,12 +1,16 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CircuitCore — Triage & Sourcing Hub</title>
+  <title>CircuitCore — Triage & Sourcing Hub | Created by RayneWater</title>
   
+  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Official Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <script>
     tailwind.config = {
@@ -17,9 +21,9 @@
             brand: {
               orange: '#f97316',
               blue: '#38bdf8',
-              dark: '#0f172a',
-              card: '#1e293b',
-              border: '#334155'
+              dark: '#07090e',
+              card: '#0f1422',
+              border: '#1e293b'
             }
           }
         }
@@ -27,353 +31,316 @@
     }
   </script>
   <style>
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.05); }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.04); opacity: 1; }
     }
-    .boot-pulse { animation: pulseGlow 2s infinite ease-in-out; }
-    
-    /* Hardware CSS fade-out: guaranteed to vanish even if JS is delayed */
-    @keyframes fadeOutBoot {
+    .pulse-badge { animation: pulseSoft 2.5s infinite ease-in-out; }
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #07090e; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Snappy Boot Screen Keyframe Animation */
+    @keyframes bootFadeOut {
       0% { opacity: 1; pointer-events: auto; }
-      80% { opacity: 1; pointer-events: auto; }
+      75% { opacity: 1; pointer-events: auto; }
       99% { opacity: 0; pointer-events: auto; }
       100% { opacity: 0; pointer-events: none; visibility: hidden; display: none; }
     }
-    .boot-overlay-anim {
-      animation: fadeOutBoot 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .boot-overlay-auto {
+      animation: bootFadeOut 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
-
-    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    @keyframes logoSpinGlow {
+      0% { transform: scale(0.85) rotate(-6deg); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.3)); }
+      50% { transform: scale(1.05) rotate(0deg); filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.6)); }
+      100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.4)); }
+    }
+    .boot-logo-anim { animation: logoSpinGlow 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
+<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden antialiased">
 
-  <!-- Full Launch Animation Boot Screen (Pure CSS Auto-Dismiss + Tap to Skip) -->
-  <div id="bootScreen" onclick="this.style.display='none'" class="boot-overlay-anim fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
-    <div class="relative flex items-center justify-center mb-6">
-      <div class="absolute w-28 h-28 rounded-full bg-orange-500/20 blur-xl boot-pulse"></div>
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-500 to-sky-400 flex items-center justify-center shadow-lg shadow-orange-500/20 border border-white/20">
-        <i class="fa-solid fa-microchip text-2xl text-slate-950"></i>
+  <!-- ==================== QUICK ANIMATED BOOT SCREEN ==================== -->
+  <div id="quickBootScreen" onclick="this.style.display='none'" class="boot-overlay-auto fixed inset-0 z-50 bg-[#06080e] flex flex-col items-center justify-center cursor-pointer select-none">
+    <div class="relative flex items-center justify-center mb-5">
+      <div class="absolute w-32 h-32 rounded-full bg-gradient-to-r from-orange-500/25 to-sky-500/25 blur-2xl animate-pulse"></div>
+      <div class="boot-logo-anim w-18 h-18 p-4 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 shadow-2xl border border-white/20">
+        <i class="fa-solid fa-microchip text-3xl"></i>
       </div>
     </div>
-    <h1 class="text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-sky-400">
+    <h1 class="text-3xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-sky-400">
       CIRCUITCORE
     </h1>
-    <p class="text-xs text-slate-400 mt-2 font-mono tracking-widest uppercase">Electronics Triage Engine</p>
-    <div class="mt-6 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] text-sky-400">
-      <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
-      Created by RayneWater
+    <p class="text-[11px] text-slate-400 mt-1 font-mono tracking-widest uppercase">Electronics Triage Engine</p>
+    <div class="mt-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d1322] border border-slate-800 text-xs text-sky-400 font-semibold shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+      Created by <span class="text-white font-bold ml-0.5">RayneWater</span>
     </div>
-    <span class="text-[10px] text-slate-600 mt-4 font-mono">Tap anywhere to skip</span>
+    <span class="text-[10px] text-slate-600 mt-3 font-mono">Tap anywhere to skip</span>
   </div>
 
-  <!-- Sticky Top Header -->
-  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-sky-400 flex items-center justify-center text-slate-950 font-bold shadow-sm">
-        <i class="fa-solid fa-bolt"></i>
-      </div>
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="font-extrabold text-base tracking-wide text-white">CircuitCore</span>
-          <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-mono">v1.2</span>
+  <!-- ==================== MANDATORY LOGIN GATEWAY ==================== -->
+  <div id="mandatoryAuthGate" class="fixed inset-0 z-45 bg-[#07090e]/98 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="bg-[#0f1422] border border-slate-700/80 w-full max-w-sm rounded-3xl p-6 space-y-5 text-center shadow-2xl shadow-black relative overflow-hidden">
+      <div class="absolute -top-12 -left-12 w-32 h-32 bg-orange-500/15 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-sky-500/15 rounded-full blur-2xl"></div>
+      
+      <div class="relative flex flex-col items-center">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-orange-500/20 mb-3">
+          <i class="fa-solid fa-microchip text-2xl"></i>
         </div>
-        <p class="text-[10px] text-slate-400">Created by <span class="text-sky-400 font-medium">RayneWater</span></p>
+        <h2 class="text-lg font-black text-white tracking-wide">Welcome to CircuitCore</h2>
+        <p class="text-[11px] text-slate-400 font-mono mt-0.5">Repair Procurement Engine • RayneWater</p>
+      </div>
+
+      <div class="bg-[#07090e] p-3 rounded-2xl border border-slate-800 text-left space-y-1.5">
+        <div class="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-emerald-400"></i> Authentication Required
+        </div>
+        <p class="text-[10px] text-slate-400 leading-relaxed">
+          Sign in with your Google account to access your shortlisted components, project folders, and permanently sync data across all your devices.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <button id="gateGoogleSignInBtn" class="w-full py-3 rounded-2xl bg-white hover:bg-slate-100 active:scale-95 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition-all shadow-lg cursor-pointer">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span id="gateGoogleSignInText">Sign in with Google</span>
+        </button>
+        <div id="g_id_onload" class="hidden"></div>
+        <button id="gateQuickDemoBtn" class="w-full py-2.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700/80 text-sky-400 font-semibold text-[11px] transition-colors border border-slate-700/60 cursor-pointer">
+          Quick Demo Access (RayneWater)
+        </button>
+      </div>
+
+      <div class="text-[10px] text-slate-500 font-mono">
+        Permanent Google Drive & Sheet sync enabled
       </div>
     </div>
-    <div class="flex items-center gap-2 text-xs">
-      <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 font-mono text-[11px]">
-        <i class="fa-solid fa-plane-arrival"></i> SG Free Freight
-      </span>
+  </div>
+
+  <!-- ==================== HEADER (NON-BLOCKING LAUNCH BRANDING) ==================== -->
+  <header class="sticky top-0 z-40 bg-[#0a0d16]/95 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Brand & Creator -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-orange-500/20 pulse-badge">
+          <i class="fa-solid fa-microchip text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide text-white">CircuitCore</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/40 font-mono font-bold">PRO</span>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            Repair Procurement Engine • <strong class="text-sky-400 font-semibold tracking-wide">Created by RayneWater</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Real-Time Task & Service Status Indicator -->
+      <div class="flex items-center gap-2">
+        <div id="serviceStatusPill" class="px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800/60 flex items-center gap-1.5 font-mono text-[11px] shadow-sm transition-all duration-300">
+          <i id="serviceStatusIcon" class="fa-solid fa-circle-notch fa-spin text-[10px]"></i>
+          <span id="serviceStatusText">Loading Services...</span>
+        </div>
+
+        <!-- Account Profile / Cloud Sync Button -->
+        <button id="openAccountModalBtn" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#141b2a] hover:bg-[#1d273f] border border-slate-700/80 text-xs text-slate-300 font-medium transition-all active:scale-95 shadow cursor-pointer">
+          <span id="userAvatar" class="w-4 h-4 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[9px] font-bold">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <span id="userAccountLabel" class="text-[11px] font-mono">Guest</span>
+        </button>
+      </div>
+
     </div>
   </header>
 
-  <!-- Main Nav Tabs -->
-  <nav class="bg-slate-900/80 border-b border-slate-800 px-2 flex justify-around text-xs sticky top-[57px] z-30 backdrop-blur-sm">
-    <button onclick="window.switchTab('shortlist')" id="tab-shortlist" class="py-3 px-3 border-b-2 border-orange-500 text-orange-400 font-medium flex items-center gap-1.5 transition-all">
-      <i class="fa-solid fa-list-check"></i> Shortlist <span id="badge-shortlist" class="px-1.5 py-0.2 rounded-full bg-orange-500/20 text-[10px]">4</span>
-    </button>
-    <button onclick="window.switchTab('approved')" id="tab-approved" class="py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium flex items-center gap-1.5 transition-all">
-      <i class="fa-solid fa-circle-check"></i> Approved <span id="badge-approved" class="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px]">0</span>
-    </button>
-    <button onclick="window.switchTab('trash')" id="tab-trash" class="py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium flex items-center gap-1.5 transition-all">
-      <i class="fa-solid fa-trash-can"></i> Trash <span id="badge-trash" class="px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-400 text-[10px]">2</span>
-    </button>
-    <button onclick="window.switchTab('memory')" id="tab-memory" class="py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium flex items-center gap-1.5 transition-all">
-      <i class="fa-solid fa-book-bookmark"></i> Memory Log
-    </button>
-  </nav>
+  <!-- ==================== SEARCH / COMMAND BAR ==================== -->
+  <div class="p-4 bg-[#0a0f1c] border-b border-slate-800/80">
+    <div class="max-w-4xl mx-auto space-y-2.5">
+      <div class="relative">
+        <input 
+          type="text" 
+          id="commandInput" 
+          placeholder="Enter device and part: e.g. S21 Ultra OLED screen + battery..." 
+          class="w-full bg-[#07090e] border border-slate-700/80 rounded-xl px-4 py-2.5 pl-10 pr-20 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-all font-mono"
+        >
+        <i class="fa-solid fa-terminal absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+        <button 
+          id="runCmdBtn" 
+          class="absolute right-1.5 top-1.5 px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-400 active:scale-95 text-slate-950 font-black text-xs transition-all shadow cursor-pointer"
+        >
+          Run
+        </button>
+      </div>
 
-  <!-- Search / Command Bar -->
-  <div class="p-4 bg-slate-900/40 border-b border-slate-800/80">
-    <div class="relative">
-      <input type="text" id="commandInput" placeholder="Try: /ccrpadd s21 ultra screen + frame..." 
-             class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 pl-10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-all font-mono">
-      <i class="fa-solid fa-terminal absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
-      <button onclick="window.handleCommand()" class="absolute right-2 top-2 px-3 py-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-xs transition-colors">
-        Run
-      </button>
-    </div>
-    <!-- Quick Search Chips -->
-    <div class="flex items-center gap-2 mt-2.5 overflow-x-auto pb-1 text-[11px] custom-scroll">
-      <span class="text-slate-500 text-[10px] uppercase font-mono tracking-wider">Presets:</span>
-      <button onclick="window.setQuery('/ccrpadd s20+ oled screen + frame and original battery')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 whitespace-nowrap transition-colors">
-        ⚡ S20+ Screen & Battery
-      </button>
-      <button onclick="window.setQuery('/ccrpadd s21 ultra OLED screen + frame and battery')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 whitespace-nowrap transition-colors">
-        ⚡ S21 Ultra Kit
-      </button>
+      <!-- Quick Preset Buttons -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-[11px] custom-scroll">
+        <span class="text-slate-500 text-[10px] uppercase font-mono tracking-wider shrink-0">Fast Presets:</span>
+        <div id="presetChipsContainer" class="flex items-center gap-2"></div>
+        <button id="openNewPresetModalBtn" class="px-2.5 py-1 rounded-full bg-orange-500/20 hover:bg-orange-500/30 active:scale-95 border border-orange-500/40 text-orange-300 whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1">
+          <i class="fa-solid fa-plus text-[10px]"></i> New Preset
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Content Container -->
-  <main class="flex-1 p-4 max-w-4xl w-full mx-auto pb-24">
+  <!-- Live Triage Search Indicator (Appears when Run is triggered) -->
+  <div id="searchIndicator" class="hidden max-w-4xl mx-auto px-4 pt-3">
+    <div class="bg-gradient-to-r from-orange-500/15 via-[#0f172a] to-sky-500/15 border border-orange-500/40 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-lg shadow-orange-500/10">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400">
+          <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white flex items-center gap-2">
+            <span>Triaging Chinese Platforms...</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-orange-500/20 text-orange-400">PDD + SG Direct</span>
+          </div>
+          <p id="searchIndicatorQuery" class="text-[11px] text-slate-400 font-mono truncate max-w-[240px] sm:max-w-md">Query...</p>
+        </div>
+      </div>
+      <span class="text-[10px] font-mono text-emerald-400 shrink-0 font-semibold flex items-center gap-1">
+        <i class="fa-solid fa-filter"></i> Filtering Scams
+      </span>
+    </div>
+  </div>
 
-    <!-- TAB: SHORTLIST -->
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1 p-4 max-w-4xl w-full mx-auto pb-36">
+
+    <!-- 1. TAB: SHORTLIST -->
     <section id="view-shortlist" class="space-y-3">
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Vetted Candidates (Awaiting Review)</span>
-        <span class="font-mono text-orange-400 text-[11px]">Anti-Bait Filters Active</span>
+        <span>Vetted Candidates (Awaiting RayneWater Review)</span>
+        <span class="font-mono text-orange-400 text-[11px] flex items-center gap-1">
+          <i class="fa-solid fa-shield-halved"></i> Anti-Bait Filters Active
+        </span>
       </div>
       <div id="shortlist-container" class="space-y-3"></div>
     </section>
 
-    <!-- TAB: APPROVED -->
+    <!-- 2. TAB: APPROVED -->
     <section id="view-approved" class="space-y-3 hidden">
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Ready for Procurement / In Cart</span>
-        <button onclick="window.exportApprovedJSON()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-400 text-[11px] border border-slate-700">
-          <i class="fa-solid fa-download mr-1"></i> Export Manifest
+        <span>Approved Sourcing Manifest (Ready for Procurement)</span>
+        <button id="exportManifestBtn" class="px-2.5 py-1 rounded bg-[#141b2a] hover:bg-[#1d273f] text-sky-400 text-[11px] border border-slate-700 font-semibold transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-download"></i> Export JSON
         </button>
       </div>
       <div id="approved-container" class="space-y-3"></div>
     </section>
 
-    <!-- TAB: TRASH -->
+    <!-- 3. TAB: TRASH -->
     <section id="view-trash" class="space-y-3 hidden">
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Filtered Scams & Rejected Variants</span>
-        <button onclick="window.emptyTrash()" class="text-rose-400 hover:underline text-[11px]">Empty Trash</button>
+        <span>Filtered Scams &amp; Rejected Variants</span>
+        <button id="emptyTrashBtn" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold transition-colors">
+          <i class="fa-solid fa-trash-can mr-1"></i> Empty Trash
+        </button>
       </div>
       <div id="trash-container" class="space-y-3"></div>
     </section>
 
-    <!-- TAB: MEMORY LOG -->
-    <section id="view-memory" class="space-y-4 hidden">
-      <div class="bg-gradient-to-r from-orange-500/10 via-slate-900 to-sky-500/10 p-4 rounded-2xl border border-slate-800">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="font-bold text-sm text-white flex items-center gap-2">
-            <i class="fa-solid fa-database text-orange-400"></i> Persistent Memory Log (RayneWater)
+    <!-- 4. TAB: FOLDERS -->
+    <section id="view-folders" class="space-y-4 hidden">
+      <div class="bg-gradient-to-r from-cyan-500/10 via-[#0e1320] to-blue-500/10 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 uppercase font-bold">
+            Project Organization
+          </span>
+          <h2 class="font-black text-base text-white mt-1 flex items-center gap-2">
+            <i class="fa-solid fa-folder-tree text-cyan-400"></i> Repair Folders &amp; Batch Kits
           </h2>
-          <a href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" target="_blank" 
-             class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] flex items-center gap-1.5 hover:bg-emerald-500/30 transition-colors">
-            <i class="fa-solid fa-up-right-from-square"></i> Open Live Sheet
+          <p class="text-xs text-slate-400 mt-0.5">Group related screens, batteries, gaskets, and boards by customer or device project.</p>
+        </div>
+        <button id="openNewFolderModalBtn" class="px-3 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-cyan-500/20 shrink-0">
+          <i class="fa-solid fa-folder-plus"></i> Create Folder
+        </button>
+      </div>
+      <div id="folders-container" class="space-y-4"></div>
+    </section>
+
+    <!-- 5. TAB: MEMORY LOG -->
+    <section id="view-memory" class="space-y-4 hidden">
+      <div class="bg-gradient-to-r from-orange-500/10 via-[#0e1320] to-sky-500/10 p-5 rounded-2xl border border-slate-800 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 uppercase font-bold">
+              Memory Anchor
+            </span>
+            <h2 class="font-black text-base text-white mt-1 flex items-center gap-2">
+              <i class="fa-solid fa-database text-orange-400"></i> Electronics Repair &amp; Procurement Log (RayneWater)
+            </h2>
+          </div>
+          <a 
+            href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" 
+            target="_blank" 
+            class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Google Sheet
           </a>
         </div>
         <p class="text-xs text-slate-400 leading-relaxed">
-          Permanent single source of truth for hardware guardrails, anti-scam triage rules, and userscripts to prevent context loss across LLM resets.
+          Permanent single source of truth for hardware standards, anti-scam triage rules, and userscripts. Configured to prevent context loss across chat sessions.
         </p>
       </div>
 
-      <!-- Hardware Guardrails Quick Cards -->
+      <!-- Hardware Guardrails Quick Reference -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-          <div class="text-orange-400 font-semibold mb-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-temperature-arrow-down"></i> Samsung Display Standards
+        <div class="bg-[#0f1422] p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-orange-400 font-bold flex items-center gap-1.5 text-sm">
+            <i class="fa-solid fa-mobile-screen-button"></i> Samsung Display Guardrails
           </div>
-          <ul class="text-slate-300 space-y-1 list-disc pl-4 text-[11px]">
-            <li>Flexible AMOLED with full intact copper heat-shield foil.</li>
-            <li>Rejects thick-bezel TFT/Incell clones (causes green lines & kills ultrasonic fingerprint).</li>
-            <li>Priority on pre-assembled chassis (带框) to eliminate glue errors.</li>
+          <ul class="text-slate-300 space-y-1.5 list-disc pl-4 text-[11px] leading-relaxed">
+            <li><strong>Flexible AMOLED with Copper Foil:</strong> Preserves intact factory copper dissipation backing to prevent driver IC heat breakdown (eliminates green/magenta lines).</li>
+            <li><strong>Anti-Thick-Bezel Filter:</strong> Rejects rigid aftermarket Incell/TFT copies (excessive chin bezel &gt;3.0mm, destroys fingerprint recognition).</li>
+            <li><strong>Pre-assembled Midframe (带框):</strong> Enforces factory-bonded chassis to eliminate messy adhesive failures.</li>
           </ul>
         </div>
-        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-          <div class="text-sky-400 font-semibold mb-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-battery-bolt"></i> Battery & Charging Standards
+
+        <div class="bg-[#0f1422] p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-sky-400 font-bold flex items-center gap-1.5 text-sm">
+            <i class="fa-solid fa-battery-bolt"></i> Battery &amp; Fuel Gauge Guardrails
           </div>
-          <ul class="text-slate-300 space-y-1 list-disc pl-4 text-[11px]">
-            <li>Preserved Texas Instruments (TI) Fuel Gauge IC for PPS fast charging.</li>
-            <li>Mandatory separate stretch pull-tab adhesive (GH02-25600A/S20/S21).</li>
-            <li>Restores IP68 with die-cut perimeter rear gasket (GH82-33392A).</li>
+          <ul class="text-slate-300 space-y-1.5 list-disc pl-4 text-[11px] leading-relaxed">
+            <li><strong>Texas Instruments (TI) Fuel Gauge:</strong> Requires authentic TI BMS controller to handshake full 25W/45W PPS Super Fast Charging.</li>
+            <li><strong>Stretch Pull-Tab Adhesives:</strong> Pre-cut factory stretch release tape (GH02-25600A series) mandatory to prevent pouch puncture.</li>
+            <li><strong>Perimeter Gasket:</strong> Retains IP68 seal via die-cut rear back cover adhesive (GH82-33392A).</li>
           </ul>
         </div>
       </div>
 
-      <!-- Activity Timeline -->
+      <!-- Synchronized Ledger -->
       <div class="space-y-2.5">
-        <h3 class="text-xs font-mono uppercase text-slate-500 tracking-wider">Synchronized Milestone Ledger</h3>
+        <div class="flex items-center justify-between text-xs text-slate-500 font-mono">
+          <span class="uppercase tracking-wider">Synchronized Milestone Ledger</span>
+          <span>10 Total Milestones</span>
+        </div>
         <div id="memoryLogList" class="space-y-2 text-xs"></div>
       </div>
-    </section>
 
-  </main>
-
-  <!-- Detailed Listing Modal -->
-  <div id="listingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-slate-900 border border-slate-700/80 w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[85vh] flex flex-col overflow-hidden">
-      <!-- Modal Header -->
-      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
-        <div class="flex items-center gap-2">
-          <span id="modalPlatformBadge" class="px-2 py-0.5 rounded text-[10px] font-bold">PDD</span>
-          <h3 id="modalTitle" class="font-bold text-sm text-white truncate max-w-[260px]">Part Detail</h3>
-        </div>
-        <button onclick="window.closeModal()" class="text-slate-400 hover:text-white p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="p-4 overflow-y-auto space-y-4 text-xs custom-scroll">
-        <div class="flex items-center gap-3">
-          <div id="modalIconBox" class="w-14 h-14 rounded-xl bg-slate-800 flex items-center justify-center text-2xl text-orange-400 border border-slate-700">
-            <i class="fa-solid fa-microchip"></i>
+      <!-- Google Sheets Auto-Sync Webhook Settings Drawer -->
+      <div class="p-4 rounded-2xl bg-[#0f1422] border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs font-bold text-white">
+            <i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i>
+            <span>Google Sheet Automatic Sync Config</span>
           </div>
-          <div>
-            <div id="modalPrice" class="text-lg font-extrabold text-orange-400">¥0.00</div>
-            <div id="modalSGD" class="text-[11px] text-slate-400 font-mono">~S$0.00</div>
-            <div class="text-[11px] text-emerald-400 mt-0.5"><i class="fa-solid fa-check"></i> Free Shipping to Singapore</div>
-          </div>
+          <span id="syncStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+            AUTO-SYNC ON
+          </span>
         </div>
-
-        <div>
-          <h4 class="font-bold text-slate-200 mb-2 uppercase tracking-wider text-[10px] font-mono text-slate-400">Technical Specifications & Verification</h4>
-          <ul id="modalSpecsList" class="space-y-1.5 text-slate-300 list-disc pl-4 text-[11px] leading-relaxed"></ul>
-        </div>
-
-        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-          <div class="text-[10px] font-mono uppercase text-slate-500 mb-1">Authentic Huaqiangbei Search Token</div>
-          <div id="modalSearchToken" class="font-mono text-sky-400 text-[11px] break-all select-all"></div>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex flex-col gap-2">
-        <div class="flex gap-2">
-          <button id="modalApproveBtn" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-check"></i> Approve Listing
-          </button>
-          <button id="modalRejectBtn" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs border border-rose-500/40 transition-colors">
-            <i class="fa-solid fa-trash-can"></i> Reject
-          </button>
-        </div>
-        <a id="modalDeepLink" href="#" target="_blank" 
-           class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs text-center font-medium border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in Shopping App
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Persistent Bottom Bar -->
-  <footer class="fixed bottom-0 left-0 right-0 z-30 bg-slate-950/90 backdrop-blur-md border-t border-slate-800/80 px-4 py-2.5 flex items-center justify-between text-[11px]">
-    <span class="text-slate-400 flex items-center gap-1.5">
-      <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Engine Ready
-    </span>
-    <span class="font-mono text-slate-500">CircuitCore • RayneWater</span>
-  </footer>
-
-  <script>
-    // State Store
-    let items = [
-      {
-        id: 's20p-screen',
-        title: 'S20+ Genuine Teardown Dynamic AMOLED 2X + Midframe',
-        partCode: 'GH82-22134B / GH82-22145B',
-        device: 'Samsung Galaxy S20+ (SM-G985/G986)',
-        category: 'screen',
-        platform: 'Pinduoduo',
-        priceCNY: 318.00,
-        priceSGD: 59.80,
-        shipping: 'Free to SG (Consolidated)',
-        status: 'shortlist',
-        searchToken: 'S20+ G9860 拆机原装 屏幕总成 带框 纯原',
-        deepLink: 'https://mobile.yangkeduo.com/search_result.html?search_key=S20%2B+%E6%8B%86%E6%9C%BA%E5%8E%9F%E8%A3%85+%E5%B8%A6%E6%A1%86',
-        specs: [
-          'Original 6.7" Dynamic AMOLED 2X (120Hz at FHD+ verified)',
-          'Factory-bonded Cosmic Gray midframe eliminates messy liquid glue repairs',
-          'Full rear copper heat dissipation foil intact to safeguard against heat-line defects',
-          'Includes factory side volume/power buttons and internal vibration motor',
-          'Tested 0 burn-in, 0 dead pixels, verified touch digitizer'
-        ]
-      },
-      {
-        id: 's20p-battery',
-        title: 'S20+ OEM Battery (EB-BG985ABY) + Pull Adhesive Pack',
-        partCode: 'EB-BG985ABY / GH82-22133A',
-        device: 'Samsung Galaxy S20+ (SM-G985/G986)',
-        category: 'battery',
-        platform: 'Pinduoduo',
-        priceCNY: 36.50,
-        priceSGD: 6.90,
-        shipping: 'Free to SG (Consolidated)',
-        status: 'shortlist',
-        searchToken: 'S20+ 原装电池 EB-BG985ABY 拆机 0循环 带电池胶',
-        deepLink: 'https://mobile.yangkeduo.com/search_result.html?search_key=S20%2B+EB-BG985ABY+%E5%8E%9F%E8%A3%85%E7%94%B5%E6%B1%A0',
-        specs: [
-          'Preserved original Texas Instruments (TI) Fuel Gauge IC',
-          'Supports standard Samsung 25W Super Fast Charging without thermal throttle',
-          'Rated capacity: 4370mAh / Typical 4500mAh; 0 charge cycles',
-          'Bundled with OEM stretch-release pull adhesive tabs (no glue punctures)',
-          'Includes die-cut rear back cover IP68 waterproof perimeter seal'
-        ]
-      },
-      {
-        id: 's21u-screen',
-        title: 'S21 Ultra Teardown Dynamic AMOLED 2X with Midframe',
-        partCode: 'GH82-26036A / GH82-24590A',
-        device: 'Samsung Galaxy S21 Ultra (SM-G998B/DS)',
-        category: 'screen',
-        platform: 'Pinduoduo',
-        priceCNY: 386.00,
-        priceSGD: 72.50,
-        shipping: 'Free to SG (Consolidated)',
-        status: 'shortlist',
-        searchToken: 'S21 Ultra G998B 拆机原装 屏幕总成 带框 纯原',
-        deepLink: 'https://mobile.yangkeduo.com/search_result.html?search_key=S21+Ultra+G998B+%E6%8B%86%E6%9C%BA%E5%8E%9F%E8%A3%85+%E5%B8%A6%E6%A1%86',
-        specs: [
-          '6.8" Quad HD+ Dynamic AMOLED 2X with 10-120Hz adaptive refresh',
-          'Pre-assembled Phantom Black metal midframe and side buttons',
-          'Intact thick copper thermal dissipation foil behind panel',
-          'Ultrasonic in-display fingerprint sensor calibrated and fully functional',
-          'Strict rejection of thick-bezel Incell/TFT copies'
-        ]
-      },
-      {
-        id: 's21u-battery',
-        title: 'S21 Ultra OEM Battery (EB-BG998ABY) + Stretch Adhesive',
-        partCode: 'EB-BG998ABY / GH82-24592A',
-        device: 'Samsung Galaxy S21 Ultra (SM-G998B/DS)',
-        category: 'battery',
-        platform: 'Pinduoduo',
-        priceCNY: 42.80,
-        priceSGD: 8.05,
-        shipping: 'Free to SG (Consolidated)',
-        status: 'shortlist',
-        searchToken: 'S21 Ultra 原装电池 EB-BG998ABY 拆机 0循环 带电池胶',
-        deepLink: 'https://mobile.yangkeduo.com/search_result.html?search_key=S21+Ultra+%E5%8E%9F%E8%A3%85%E7%94%B5%E6%B1%A0+EB-BG998ABY',
-        specs: [
-          'Preserved TI BQ series fuel gauge IC for full 25W fast charge protocol',
-          '5000mAh typical rating with working NTC temperature sensor',
-          'Pre-cut precision battery stretch pull-tab strips included',
-          'Prevents false "Battery temperature too cold/hot" charging errors'
-        ]
-      },
-      {
-        id: 's20p-scam-1',
-        title: 'Bait Tool Kit Listed under "S20+ Full Screen Assembly"',
-        partCode: 'SCAM-BAIT-01',
-        device: 'Samsung S20+',
-        category: 'scam',
-        platform: 'Pinduoduo',
-        priceCNY: 12.90,
-        priceSGD: 2.45,
-        shipping: 'Free to SG',
-        status: 'trash',
-        searchToken: 'S20+ 钢化膜 + 拆机工具包',
-        deepLink: '#',
-        specs: [
-          'Flagged by auto-triage: Price below ¥25 threshold for OLED screens',
-        
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          Every time you run a search, the filtered parts are triaged and automatically poste
