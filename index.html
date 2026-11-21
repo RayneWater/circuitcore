@@ -561,11 +561,10 @@
         status: 'shortlist',
         tier: 'Teardown Pull with Chassis',
         graphicType: 'screen',
-        imageUrl: 'https://ae01.alicdn.com/kf/S2c89f5bc3a9e4e46a788d7522d7fa855c.jpg',
+        imageUrl: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/GalaxyS21_Ultra.png/640px-GalaxyS21_Ultra.png&w=600&fit=contain&bg=0a0f1d',
         galleryImages: [
-          'https://ae01.alicdn.com/kf/S2c89f5bc3a9e4e46a788d7522d7fa855c.jpg',
-          'https://ae01.alicdn.com/kf/S7ca0beeeff6444bc8be5b7ad0254c798K.jpg',
-          'https://ae01.alicdn.com/kf/S10ad0964bfae498c86d8a7c1b525ce05H.jpg'
+          'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/GalaxyS21_Ultra.png/640px-GalaxyS21_Ultra.png&w=600&fit=contain&bg=0a0f1d',
+          'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Galaxy_S21_Ultra_vector.png/640px-Galaxy_S21_Ultra_vector.png&w=600&fit=contain&bg=0a0f1d'
         ],
         specs: '120Hz LTPO, Original Glass, Zero dead pixels, Copper graphite heat-shield intact',
         antiScamNotes: 'Verified teardown pull with copper heatsink; no TFT/In-Cell fake.',
@@ -584,10 +583,9 @@
         status: 'approved',
         tier: 'OEM BMS Verified',
         graphicType: 'battery',
-        imageUrl: 'https://ae01.alicdn.com/kf/S4d9e9e1bb34f4ba6b29792fe408ca58du.jpg',
+        imageUrl: 'https://wsrv.nl/?url=https://raw.githubusercontent.com/RayneWater/ccrp/main/battery-s21u.jpg&default=https://placehold.co/600x400/0a0f1d/38bdf8.png?text=EB-BG998ABY+OEM+Battery+TI+BQ',
         galleryImages: [
-          'https://ae01.alicdn.com/kf/S4d9e9e1bb34f4ba6b29792fe408ca58du.jpg',
-          'https://ae01.alicdn.com/kf/Sbb91fe97ff8b461899e3ca151e39a3f2G.jpg'
+          'https://wsrv.nl/?url=https://raw.githubusercontent.com/RayneWater/ccrp/main/battery-s21u.jpg&default=https://placehold.co/600x400/0a0f1d/38bdf8.png?text=EB-BG998ABY+OEM+Battery+TI+BQ'
         ],
         specs: 'Genuine TI BQ27Z561 Gas Gauge, 0 Cycles, Original thermal sensor NTC',
         antiScamNotes: 'TI fuel gauge confirmed; bypasses cycle spoofers.',
@@ -606,9 +604,9 @@
         status: 'shortlist',
         tier: 'Pre-Cut Die-Cut OEM Spec',
         graphicType: 'gasket',
-        imageUrl: 'https://ae01.alicdn.com/kf/Scaebc4a5c0bb47bfae6f470aa0d3a563G.jpg',
+        imageUrl: 'https://wsrv.nl/?url=https://raw.githubusercontent.com/RayneWater/ccrp/main/gasket-s21u.jpg&default=https://placehold.co/600x400/0a0f1d/4ade80.png?text=GH02-21953A+IP68+Gasket+Die-Cut',
         galleryImages: [
-          'https://ae01.alicdn.com/kf/Scaebc4a5c0bb47bfae6f470aa0d3a563G.jpg'
+          'https://wsrv.nl/?url=https://raw.githubusercontent.com/RayneWater/ccrp/main/gasket-s21u.jpg&default=https://placehold.co/600x400/0a0f1d/4ade80.png?text=GH02-21953A+IP68+Gasket+Die-Cut'
         ],
         specs: 'Precision laser cut, double-sided acrylic adhesive with camera bracket foam seals',
         antiScamNotes: 'Avoid cheap T-7000 glue; pre-cut gaskets preserve pressure-test IP68 seal.',
@@ -892,7 +890,14 @@
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         try {
-          currentItems = JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          // If stored items contain broken ae01 image URLs, refresh to new image assets
+          if (parsed.length > 0 && parsed[0].imageUrl && parsed[0].imageUrl.includes('ae01.alicdn.com')) {
+            currentItems = [...defaultInitialItems];
+            saveUserData();
+          } else {
+            currentItems = parsed;
+          }
         } catch (e) {
           currentItems = [...defaultInitialItems];
         }
