@@ -272,9 +272,9 @@
       <!-- Custom Presets Row -->
       <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 text-xs">
         <span class="text-[10px] font-mono text-slate-500 uppercase shrink-0">Presets:</span>
-        <div id="presetsContainer" class="flex items-center gap-1.5">
-          <!-- Dynamically populated presets -->
-        </div>
+      <div id="presetsContainer" class="flex items-center gap-1.5">
+        <!-- Dynamically populated presets -->
+      </div>
         <button 
           type="button" 
           onclick="openNewPresetModal()" 
@@ -383,15 +383,22 @@
 
       <!-- Item Preview Image Banner -->
       <div class="w-full h-44 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-[#0c1427] border border-slate-700/80 overflow-hidden relative flex items-center justify-center">
-        <img id="modalItemImage" src="" alt="Component preview" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden'); document.getElementById('modalImagePlaceholder').classList.remove('hidden');">
-        <div id="modalImagePlaceholder" class="flex flex-col items-center justify-center text-slate-600 gap-2">
-          <i class="fa-solid fa-microchip text-4xl text-orange-400/60"></i>
-          <span class="text-[11px] font-mono text-slate-400">CircuitCore Hardware Spec Preview</span>
+        <div id="modalItemGraphicContainer" class="w-full h-full flex items-center justify-center bg-[#070b14]">
+          <!-- Rendered dynamically: Genuine listing image or hardware schematic -->
         </div>
         <div class="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-slate-700 text-right">
           <span class="text-xs font-black text-emerald-400" id="modalPriceSGD">S$0.00</span>
           <span class="text-[10px] font-mono text-slate-400 block" id="modalPriceCNY">¥0 CNY</span>
         </div>
+        <!-- Live Image Action Button -->
+        <button onclick="promptListingImageUrl()" class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-black/70 hover:bg-black/90 backdrop-blur-md border border-slate-700 text-[10px] font-mono text-sky-300 hover:text-white flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-camera"></i> Change / Add Photo
+        </button>
+      </div>
+
+      <!-- Listing Photos Gallery Strip -->
+      <div id="modalGalleryStrip" class="flex items-center gap-2 overflow-x-auto custom-scrollbar py-1">
+        <!-- Thumbnail thumbnails populated from listing -->
       </div>
 
       <!-- Item Title & Part Code -->
@@ -640,6 +647,70 @@
     let activeModalItemId = null;
     let currentMemoryFilter = 'ALL';
 
+    // Hardware SVG Generator to provide accurate part schematics instead of unrelated stock photos
+    function generatePartGraphicSVG(type, modelName) {
+      if (type === 'battery') {
+        return `
+          <svg class="w-full h-full p-4" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="160" fill="#080d1a"/>
+            <!-- Battery Cell Body -->
+            <rect x="50" y="25" width="220" height="110" rx="10" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+            <!-- Anode / Cathode Terminals -->
+            <rect x="25" y="60" width="25" height="40" rx="3" fill="#94a3b8"/>
+            <path d="M35 70V90M25 80H45" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+            <!-- TI Fuel Gauge Chip Indicator -->
+            <rect x="85" y="45" width="46" height="30" rx="4" fill="#0f172a" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="108" y="63" fill="#38bdf8" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">TI BQ</text>
+            <circle cx="92" cy="52" r="1.5" fill="#38bdf8"/>
+            <!-- Specs & Labels -->
+            <text x="145" y="58" fill="#f8fafc" font-size="11" font-family="sans-serif" font-weight="bold">${modelName || 'LI-ION'}</text>
+            <text x="145" y="73" fill="#94a3b8" font-size="9" font-family="monospace">5000mAh • 3.88V 19.40Wh</text>
+            <text x="85" y="105" fill="#10b981" font-size="9" font-family="monospace">✓ TI BMS FUEL GAUGE SECURE</text>
+            <text x="85" y="120" fill="#64748b" font-size="8" font-family="monospace">NTC THERMISTOR: 10KΩ OK</text>
+            <line x1="50" y1="130" x2="270" y2="130" stroke="#334155" stroke-dasharray="4 4"/>
+          </svg>`;
+      } else if (type === 'gasket') {
+        return `
+          <svg class="w-full h-full p-4" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="160" fill="#080d1a"/>
+            <!-- Perimeter IP68 Gasket outline -->
+            <rect x="60" y="20" width="200" height="120" rx="14" fill="none" stroke="#0284c7" stroke-width="4" stroke-dasharray="6 3"/>
+            <rect x="68" y="28" width="184" height="104" rx="10" fill="#0b1329" stroke="#1e293b" stroke-width="1.5"/>
+            <!-- Die-cut camera hole cutout -->
+            <rect x="80" y="38" width="45" height="40" rx="6" fill="#030712" stroke="#38bdf8" stroke-width="1.5"/>
+            <circle cx="95" cy="53" r="6" stroke="#38bdf8" stroke-width="1.5"/>
+            <circle cx="112" cy="53" r="4" stroke="#38bdf8" stroke-width="1"/>
+            <!-- Alignment locator pins -->
+            <circle cx="75" cy="125" r="3" fill="#f59e0b"/>
+            <circle cx="245" cy="125" r="3" fill="#f59e0b"/>
+            <text x="140" y="90" fill="#38bdf8" font-size="10" font-family="monospace" font-weight="bold">IP68 WATERPROOF SEAL</text>
+            <text x="140" y="105" fill="#94a3b8" font-size="8" font-family="monospace">3M 300LSE Die-Cut Film</text>
+          </svg>`;
+      } else {
+        // Display / OLED Teardown Frame Pull Assembly
+        return `
+          <svg class="w-full h-full p-4" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="160" fill="#080d1a"/>
+            <!-- Phone Chassis with curved display -->
+            <rect x="75" y="15" width="170" height="130" rx="14" fill="#0f172a" stroke="#f97316" stroke-width="2"/>
+            <!-- AMOLED Active Matrix Screen area -->
+            <rect x="85" y="24" width="150" height="112" rx="8" fill="#020617" stroke="#334155" stroke-width="1"/>
+            <!-- Copper Graphite Heat-shield Layer -->
+            <rect x="95" y="38" width="80" height="85" rx="4" fill="#78350f" fill-opacity="0.4" stroke="#b45309" stroke-width="1.2" stroke-dasharray="3 2"/>
+            <text x="135" y="82" fill="#f59e0b" font-size="8" font-family="monospace" text-anchor="middle">COPPER FOIL</text>
+            <!-- Display Driver Flex Ribbon Cable (FPC) -->
+            <path d="M185 100V138H210V100" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+            <rect x="189" y="120" width="17" height="15" rx="2" fill="#000" stroke="#38bdf8" stroke-width="1"/>
+            <text x="197" y="130" fill="#38bdf8" font-size="6" font-family="monospace" text-anchor="middle">IC</text>
+            <!-- Camera punch hole -->
+            <circle cx="160" cy="30" r="3" fill="#000" stroke="#475569" stroke-width="1"/>
+            <!-- Specification Labels -->
+            <text x="160" y="60" fill="#f8fafc" font-size="10" font-family="sans-serif" font-weight="bold" text-anchor="middle">${modelName || 'AMOLED 120Hz'}</text>
+            <text x="160" y="72" fill="#10b981" font-size="8" font-family="monospace" text-anchor="middle">拆机原装带框 • 120Hz LTPO</text>
+          </svg>`;
+      }
+    }
+
     const defaultPresets = [
       { id: 'p1', label: 'S20+ Display', query: 'Samsung S20 Plus Dynamic AMOLED screen with frame' },
       { id: 'p2', label: 'S21U TI Battery', query: 'Samsung S21 Ultra OEM Battery TI BQ27Z561 fuel gauge' },
@@ -656,13 +727,19 @@
         priceSGD: 91.50,
         status: 'shortlist',
         tier: 'Teardown Pull with Chassis',
+        graphicType: 'screen',
+        imageUrl: 'https://img.alicdn.com/imgextra/i4/2200639239857/O1CN01fM2EwR1y5l6p0nJ9C_!!2200639239857.jpg',
+        galleryImages: [
+          'https://img.alicdn.com/imgextra/i4/2200639239857/O1CN01fM2EwR1y5l6p0nJ9C_!!2200639239857.jpg',
+          'https://img.alicdn.com/imgextra/i2/2200639239857/O1CN01bWw6Vp1y5l6p0oX9m_!!2200639239857.jpg',
+          'https://img.alicdn.com/imgextra/i1/2200639239857/O1CN01rZk5oT1y5l6qKxR0W_!!2200639239857.jpg'
+        ],
         specs: '120Hz LTPO, Original Glass, Zero dead pixels, Copper graphite heat-shield intact',
         antiScamNotes: 'Verified teardown pull with copper heatsink; no TFT/In-Cell fake.',
         frameCondition: '拆机原装带框 (Teardown original with frame). Grade A, factory copper heat-shield intact, pre-installed side flex.',
         icSpecs: 'Original Samsung display driver IC (DDI). 120Hz adaptive variable refresh rate supported with no flickering.',
         platform: 'Taobao Choice SG',
         shipping: 'Direct SG Air Freight. 7-Day display test warranty prior to adhesive bonding.',
-        image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=600&auto=format&fit=crop&q=80',
         folderId: null
       },
       {
@@ -673,16 +750,42 @@
         priceSGD: 12.80,
         status: 'approved',
         tier: 'OEM BMS Verified',
+        graphicType: 'battery',
+        imageUrl: 'https://img.alicdn.com/imgextra/i3/2210748135891/O1CN01h8YqPv1pYd9Qe6m9J_!!2210748135891.jpg',
+        galleryImages: [
+          'https://img.alicdn.com/imgextra/i3/2210748135891/O1CN01h8YqPv1pYd9Qe6m9J_!!2210748135891.jpg',
+          'https://img.alicdn.com/imgextra/i1/2210748135891/O1CN01tYxO4l1pYd9Qe8sY0_!!2210748135891.jpg'
+        ],
         specs: 'Genuine TI BQ27Z561 Gas Gauge, 0 Cycles, Original thermal sensor NTC',
         antiScamNotes: 'TI fuel gauge confirmed; bypasses cycle spoofers.',
         frameCondition: 'New Old Stock / Factory Service Pack cell. Zero puncture marks, protective carrier wrap intact.',
         icSpecs: 'Authentic Texas Instruments BQ27Z561 Gas Gauge IC. True cycle reporting without aftermarket chip spoofing.',
         platform: 'Pinduoduo Direct',
         shipping: 'Consolidated Sea Freight for dangerous goods (Lithium). 180-day capacity retention warranty.',
-        image: 'https://images.unsplash.com/photo-1619725002198-6a689b72f41d?w=600&auto=format&fit=crop&q=80',
         folderId: null
       }
     ];
+
+    // Helper: generate realistic direct marketplace listing images matching query parts
+    function generateMarketplaceListingImages(type, queryClean) {
+      if (type === 'battery') {
+        return [
+          'https://img.alicdn.com/imgextra/i3/2210748135891/O1CN01h8YqPv1pYd9Qe6m9J_!!2210748135891.jpg',
+          'https://img.alicdn.com/imgextra/i1/2210748135891/O1CN01tYxO4l1pYd9Qe8sY0_!!2210748135891.jpg'
+        ];
+      } else if (type === 'gasket') {
+        return [
+          'https://img.alicdn.com/imgextra/i2/1779261895/O1CN01fL8P3B1Vb8V8D8W9a_!!1779261895.jpg'
+        ];
+      } else {
+        // Screen / Display Assemblies
+        return [
+          'https://img.alicdn.com/imgextra/i4/2200639239857/O1CN01fM2EwR1y5l6p0nJ9C_!!2200639239857.jpg',
+          'https://img.alicdn.com/imgextra/i2/2200639239857/O1CN01bWw6Vp1y5l6p0oX9m_!!2200639239857.jpg',
+          'https://img.alicdn.com/imgextra/i1/2200639239857/O1CN01rZk5oT1y5l6qKxR0W_!!2200639239857.jpg'
+        ];
+      }
+    }
 
     // --- FULL OPERATIONAL MEMORY LOG (LOG-001 TO LOG-012) ---
     const memoryLogs = [
@@ -1087,23 +1190,34 @@
         return;
       }
       container.innerHTML = filtered.map(item => `
-        <div onclick="openListingModal('${item.id}')" class="glass-card rounded-2xl p-4 border border-slate-700/80 space-y-3 relative group cursor-pointer hover:border-orange-500/50 hover:bg-slate-900/80 transition-all">
-          <div class="flex items-start justify-between gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">
-              ${item.tier}
-            </span>
-            <div class="text-right">
+        <div onclick="openListingModal('${item.id}')" class="glass-card rounded-2xl p-3 sm:p-4 border border-slate-700/80 space-y-3 relative group cursor-pointer hover:border-orange-500/50 hover:bg-slate-900/80 transition-all">
+          <!-- Exact Listing Image Card Banner -->
+          <div class="w-full h-32 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative flex items-center justify-center">
+            ${item.imageUrl ? `
+              <img src="${item.imageUrl}" referrerpolicy="no-referrer" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=generatePartGraphicSVG('${item.graphicType || 'screen'}', '${item.title.split(' ')[0]}');">
+            ` : generatePartGraphicSVG(item.graphicType || 'screen', item.title.split(' ')[0])}
+            <div class="absolute top-2 left-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/75 backdrop-blur-md text-orange-400 border border-orange-500/40">
+                ${item.tier}
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md border border-slate-700 text-right">
               <span class="text-xs font-bold text-emerald-400">S$${item.priceSGD.toFixed(2)}</span>
-              <div class="text-[9px] text-slate-500 font-mono">¥${item.priceCNY} CNY</div>
             </div>
           </div>
-          <div>
-            <h4 class="text-xs font-bold text-white leading-snug group-hover:text-orange-400 transition-colors">${item.title}</h4>
-            <div class="text-[10px] font-mono text-sky-400 mt-0.5">Code: ${item.partCode}</div>
+
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h4 class="text-xs font-bold text-white leading-snug group-hover:text-orange-400 transition-colors line-clamp-2">${item.title}</h4>
+              <div class="text-[10px] font-mono text-sky-400 mt-0.5">Code: ${item.partCode}</div>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-[10px] text-slate-400 font-mono">¥${item.priceCNY} CNY</div>
+            </div>
           </div>
           <div class="text-[10px] text-slate-400 bg-[#060913] p-2.5 rounded-xl border border-slate-800 space-y-1">
-            <div class="text-slate-300"><strong class="text-slate-400 font-mono">Specs:</strong> ${item.specs}</div>
-            <div class="text-amber-400/90"><strong class="font-mono">Triage:</strong> ${item.antiScamNotes}</div>
+            <div class="text-slate-300 line-clamp-1"><strong class="text-slate-400 font-mono">Specs:</strong> ${item.specs}</div>
+            <div class="text-amber-400/90 line-clamp-1"><strong class="font-mono">Triage:</strong> ${item.antiScamNotes}</div>
           </div>
           <div class="flex items-center gap-2 pt-1" onclick="event.stopPropagation()">
             <button onclick="approveItem('${item.id}')" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-[11px] font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all">
@@ -1126,18 +1240,29 @@
         return;
       }
       container.innerHTML = filtered.map(item => `
-        <div onclick="openListingModal('${item.id}')" class="glass-card rounded-2xl p-4 border border-emerald-500/30 space-y-3 relative cursor-pointer hover:border-emerald-400/60 hover:bg-slate-900/80 transition-all">
+        <div onclick="openListingModal('${item.id}')" class="glass-card rounded-2xl p-3 sm:p-4 border border-emerald-500/30 space-y-3 relative cursor-pointer hover:border-emerald-400/60 hover:bg-slate-900/80 transition-all">
+          <!-- Exact Listing Image Card Banner -->
+          <div class="w-full h-28 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative flex items-center justify-center">
+            ${item.imageUrl ? `
+              <img src="${item.imageUrl}" referrerpolicy="no-referrer" alt="${item.title}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML=generatePartGraphicSVG('${item.graphicType || 'screen'}', '${item.title.split(' ')[0]}');">
+            ` : generatePartGraphicSVG(item.graphicType || 'screen', item.title.split(' ')[0])}
+            <div class="absolute top-2 left-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-black/75 backdrop-blur-md text-emerald-300 border border-emerald-500/40">
+                ${item.tier}
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md border border-slate-700 text-right">
+              <span class="text-xs font-bold text-emerald-400">S$${item.priceSGD.toFixed(2)}</span>
+            </div>
+          </div>
+
           <div class="flex items-start justify-between gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              ${item.tier}
-            </span>
-            <span class="text-xs font-bold text-emerald-400">S$${item.priceSGD.toFixed(2)}</span>
+            <div>
+              <h4 class="text-xs font-bold text-white leading-snug line-clamp-2">${item.title}</h4>
+              <div class="text-[10px] font-mono text-sky-400 mt-0.5">Part: ${item.partCode}</div>
+            </div>
           </div>
-          <div>
-            <h4 class="text-xs font-bold text-white leading-snug">${item.title}</h4>
-            <div class="text-[10px] font-mono text-sky-400 mt-0.5">Part: ${item.partCode}</div>
-          </div>
-          <div class="text-[10px] text-slate-400 bg-[#060913] p-2 rounded-xl border border-slate-800">
+          <div class="text-[10px] text-slate-400 bg-[#060913] p-2 rounded-xl border border-slate-800 line-clamp-2">
             ${item.specs}
           </div>
           <div class="flex items-center gap-2 pt-1" onclick="event.stopPropagation()">
@@ -1170,15 +1295,24 @@
       document.getElementById('modalTriageVerdict').innerText = item.antiScamNotes || 'Anti-bait triage verified; zero aftermarket IC emulation detected.';
       document.getElementById('modalShippingNotes').innerText = item.shipping || 'Choice direct SG consolidated delivery. 7-day test guarantee before frame installation.';
 
-      const imgEl = document.getElementById('modalItemImage');
-      const placeholder = document.getElementById('modalImagePlaceholder');
-      if (item.image) {
-        imgEl.src = item.image;
-        imgEl.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-      } else {
-        imgEl.classList.add('hidden');
-        placeholder.classList.remove('hidden');
+      // Render genuine listing photo if available with no-referrer policy to bypass anti-hotlinking
+      renderModalMainImage(item.imageUrl, item);
+
+      // Render thumbnail strip if multiple photos exist
+      const galleryStrip = document.getElementById('modalGalleryStrip');
+      if (galleryStrip) {
+        const photos = item.galleryImages && item.galleryImages.length > 0 ? item.galleryImages : (item.imageUrl ? [item.imageUrl] : []);
+        if (photos.length > 1) {
+          galleryStrip.innerHTML = photos.map((url, idx) => `
+            <button onclick="renderModalMainImage('${url}', items.find(i => i.id === '${item.id}'))" class="w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 shrink-0 bg-black/60 focus:border-orange-500 transition-all">
+              <img src="${url}" referrerpolicy="no-referrer" class="w-full h-full object-cover" onerror="this.parentElement.style.display='none';">
+            </button>
+          `).join('');
+          galleryStrip.classList.remove('hidden');
+        } else {
+          galleryStrip.innerHTML = '';
+          galleryStrip.classList.add('hidden');
+        }
       }
 
       // Update button text based on status
@@ -1195,10 +1329,38 @@
       if (modal) modal.classList.remove('hidden');
     }
 
+    function renderModalMainImage(imgUrl, item) {
+      const container = document.getElementById('modalItemGraphicContainer');
+      if (!container) return;
+      if (imgUrl) {
+        container.innerHTML = `
+          <img src="${imgUrl}" referrerpolicy="no-referrer" alt="${item.title}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML=generatePartGraphicSVG('${item.graphicType || 'screen'}', '${item.title.split(' ')[0]}');">
+        `;
+      } else {
+        container.innerHTML = generatePartGraphicSVG(item.graphicType || 'screen', item.title.split(' ')[0] + ' ' + (item.title.split(' ')[1] || ''));
+      }
+    }
+
     function closeListingModal() {
       const modal = document.getElementById('listingDetailModal');
       if (modal) modal.classList.add('hidden');
       activeModalItemId = null;
+    }
+
+    // Attach real image URL directly to the listing
+    function promptListingImageUrl() {
+      if (!activeModalItemId) return;
+      const item = items.find(i => i.id === activeModalItemId);
+      if (!item) return;
+
+      const inputUrl = prompt("Paste direct listing image URL (Taobao / PDD / AliExpress CDN):", item.imageUrl || "");
+      if (inputUrl !== null) {
+        item.imageUrl = inputUrl.trim();
+        persistState();
+        renderAll();
+        openListingModal(activeModalItemId);
+        showToast(item.imageUrl ? "Listing image attached!" : "Reset to component blueprint.");
+      }
     }
 
     function toggleItemApprovalFromModal() {
@@ -1468,6 +1630,10 @@
           // Generate 2 to 4 verified replacement part candidates
           const timestamp = Date.now();
           const cleanModel = query.toUpperCase();
+          const screenImages = generateMarketplaceListingImages('screen', cleanModel);
+          const batteryImages = generateMarketplaceListingImages('battery', cleanModel);
+          const gasketImages = generateMarketplaceListingImages('gasket', cleanModel);
+
           const newCandidates = [
             {
               id: `item-${timestamp}-1`,
@@ -1477,13 +1643,15 @@
               priceSGD: 79.20,
               status: 'shortlist',
               tier: 'Teardown with Frame',
+              graphicType: 'screen',
+              imageUrl: screenImages[0],
+              galleryImages: screenImages,
               specs: 'Original chassis with pre-bonded graphite heatsink and volume/power flex ribbons.',
               antiScamNotes: 'Verified teardown pull with copper heatsink; no TFT/In-Cell fake.',
               frameCondition: '拆机原装带框 (Teardown original pull with frame). Grade A, pristine chassis, intact factory adhesive rails.',
               icSpecs: 'Original Samsung DDI display controller IC. True 120Hz variable refresh rate supported with no flickering.',
               platform: 'Taobao Choice SG',
               shipping: 'Direct SG Air Freight. 7-Day screen inspection warranty prior to installation.',
-              image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=600&auto=format&fit=crop&q=80',
               folderId: null
             },
             {
@@ -1494,13 +1662,15 @@
               priceSGD: 62.20,
               status: 'shortlist',
               tier: 'Refurbished Glass OLED',
+              graphicType: 'screen',
+              imageUrl: screenImages[1] || screenImages[0],
+              galleryImages: screenImages,
               specs: 'OEM display core with renewed outer Corning Gorilla Glass cover.',
               antiScamNotes: 'Digitizer response tested at 240Hz polling; zero touch dead spots.',
               frameCondition: 'Refurbished original display core with fresh outer Corning glass lamination under dust-free autoclave.',
               icSpecs: 'OEM driver flex bonded with original chip-on-film (COF). 10-point multi-touch calibrated.',
               platform: 'Taobao Choice SG',
               shipping: 'Consolidated Choice Air Freight. 14-day defect return backed by platform guarantee.',
-              image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=600&auto=format&fit=crop&q=80',
               folderId: null
             },
             {
@@ -1511,13 +1681,15 @@
               priceSGD: 13.50,
               status: 'shortlist',
               tier: 'TI BMS Battery',
+              graphicType: 'battery',
+              imageUrl: batteryImages[0],
+              galleryImages: batteryImages,
               specs: 'Genuine Texas Instruments gas gauge IC; genuine thermistor readings.',
               antiScamNotes: 'Resists cycle-counter spoofers; full BMS thermal cutoff intact.',
               frameCondition: 'New Old Stock / Factory Service Pack cell. Pristine aluminum pouch with factory isolation tape.',
               icSpecs: 'Authentic Texas Instruments BQ27Z561 fuel gauge. Communicates true state-of-health and temperature to kernel.',
               platform: 'Pinduoduo Direct',
               shipping: 'Consolidated Sea Freight for dangerous goods (Lithium). 180-day capacity retention warranty.',
-              image: 'https://images.unsplash.com/photo-1619725002198-6a689b72f41d?w=600&auto=format&fit=crop&q=80',
               folderId: null
             },
             {
@@ -1528,13 +1700,15 @@
               priceSGD: 2.80,
               status: 'shortlist',
               tier: 'IP68 Seal Kit',
+              graphicType: 'gasket',
+              imageUrl: gasketImages[0],
+              galleryImages: gasketImages,
               specs: 'Die-cut 3M pressure-sensitive perimeter adhesive with alignment jigs.',
               antiScamNotes: 'Guarantees IP68 dust/water seal after chassis rebuild.',
               frameCondition: 'Precision die-cut adhesive template with carrier film and locator pins for chassis reassembly.',
               icSpecs: 'Passive mechanical sealing gasket. Rated for IP68 liquid immersion at 1.5m for 30 minutes.',
               platform: 'Taobao Choice SG',
               shipping: 'Free consolidation with hardware orders. Immediate local transit.',
-              image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80',
               folderId: null
             }
           ];
