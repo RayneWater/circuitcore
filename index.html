@@ -2,113 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CircuitCore — Triage & Sourcing Hub | Created by RayneWater</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CircuitCore — Repair Procurement Engine</title>
   <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Official Google Identity Services SDK -->
-  <script src="https://accounts.google.com/gsi/client"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              orange: '#f97316',
-              blue: '#38bdf8',
-              dark: '#07090e',
-              card: '#0f1422',
-              border: '#1e293b'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    @keyframes pulseSoft {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.04); opacity: 1; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #030712;
+      color: #f3f4f6;
+      -webkit-tap-highlight-color: transparent;
     }
-    .pulse-badge { animation: pulseSoft 2.5s infinite ease-in-out; }
-    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #07090e; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
-    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    /* Snappy Boot Screen Keyframe Animation */
-    @keyframes bootFadeOut {
-      0% { opacity: 1; pointer-events: auto; }
-      75% { opacity: 1; pointer-events: auto; }
-      99% { opacity: 0; pointer-events: auto; }
-      100% { opacity: 0; pointer-events: none; visibility: hidden; display: none; }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
     }
-    .boot-overlay-auto {
-      animation: bootFadeOut 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
-    @keyframes logoSpinGlow {
-      0% { transform: scale(0.85) rotate(-6deg); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.3)); }
-      50% { transform: scale(1.05) rotate(0deg); filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.6)); }
-      100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.4)); }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
     }
-    .boot-logo-anim { animation: logoSpinGlow 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .boot-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
   </style>
 </head>
-<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden antialiased">
+<body class="min-h-screen flex flex-col pb-28 selection:bg-orange-500 selection:text-black">
 
-  <!-- ==================== QUICK ANIMATED BOOT SCREEN ==================== -->
-  <div id="quickBootScreen" onclick="this.style.display='none'" class="boot-overlay-auto fixed inset-0 z-50 bg-[#06080e] flex flex-col items-center justify-center cursor-pointer select-none">
-    <div class="relative flex items-center justify-center mb-5">
-      <div class="absolute w-32 h-32 rounded-full bg-gradient-to-r from-orange-500/25 to-sky-500/25 blur-2xl animate-pulse"></div>
-      <div class="boot-logo-anim w-18 h-18 p-4 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 shadow-2xl border border-white/20">
-        <i class="fa-solid fa-microchip text-3xl"></i>
-      </div>
-    </div>
-    <h1 class="text-3xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-sky-400">
-      CIRCUITCORE
-    </h1>
-    <p class="text-[11px] text-slate-400 mt-1 font-mono tracking-widest uppercase">Electronics Triage Engine</p>
-    <div class="mt-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d1322] border border-slate-800 text-xs text-sky-400 font-semibold shadow-inner">
-      <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
-      Created by <span class="text-white font-bold ml-0.5">RayneWater</span>
-    </div>
-    <span class="text-[10px] text-slate-600 mt-3 font-mono">Tap anywhere to skip</span>
+  <!-- ==================== IN-APP NOTIFICATION TOAST ==================== -->
+  <div id="inAppToast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-sm w-[90%] bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base shrink-0"></i>
+    <div class="text-xs leading-snug flex-1" id="toastMessage">Notification message</div>
   </div>
 
-  <!-- ==================== MANDATORY LOGIN GATEWAY ==================== -->
-  <div id="mandatoryAuthGate" class="fixed inset-0 z-45 bg-[#07090e]/98 backdrop-blur-xl flex items-center justify-center p-4">
-    <div class="bg-[#0f1422] border border-slate-700/80 w-full max-w-sm rounded-3xl p-6 space-y-5 text-center shadow-2xl shadow-black relative overflow-hidden">
-      <div class="absolute -top-12 -left-12 w-32 h-32 bg-orange-500/15 rounded-full blur-2xl"></div>
-      <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-sky-500/15 rounded-full blur-2xl"></div>
-      
-      <div class="relative flex flex-col items-center">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-orange-500/20 mb-3">
-          <i class="fa-solid fa-microchip text-2xl"></i>
+  <!-- ==================== BOOT SCREEN ANIMATION ==================== -->
+  <div id="bootScreen" class="fixed inset-0 z-[90] bg-[#030712] flex flex-col items-center justify-center p-6 transition-opacity duration-700 ease-out cursor-pointer" onclick="dismissBootScreen()">
+    <div class="flex flex-col items-center gap-4 text-center">
+      <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-orange-500 via-amber-400 to-sky-400 p-0.5 shadow-2xl shadow-orange-500/20 boot-pulse">
+        <div class="w-full h-full bg-[#070b14] rounded-[22px] flex items-center justify-center text-orange-400 text-3xl">
+          <i class="fa-solid fa-microchip"></i>
         </div>
-        <h2 class="text-lg font-black text-white tracking-wide">Welcome to CircuitCore</h2>
-        <p class="text-[11px] text-slate-400 font-mono mt-0.5">Repair Procurement Engine • RayneWater</p>
+      </div>
+      <div class="space-y-1">
+        <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-sky-400">CIRCUITCORE</h1>
+        <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Repair Procurement Engine</p>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-[11px] text-slate-300 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Created by <strong class="text-white">RayneWater</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MANDATORY AUTHENTICATION GATE ==================== -->
+  <div id="mandatoryAuthGate" class="fixed inset-0 z-[80] bg-[#030712]/95 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-500">
+    <div class="w-full max-w-sm glass-card rounded-3xl p-6 border border-slate-800 text-center space-y-5 shadow-2xl relative">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 p-0.5 shadow-lg shadow-orange-500/20">
+        <div class="w-full h-full bg-[#0a0f1d] rounded-[14px] flex items-center justify-center text-orange-400 text-xl">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
       </div>
 
-      <div class="bg-[#07090e] p-3 rounded-2xl border border-slate-800 text-left space-y-1.5">
-        <div class="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+      <div class="space-y-1">
+        <h2 class="text-lg font-bold text-white">Welcome to CircuitCore</h2>
+        <p class="text-xs text-slate-400 font-mono">Repair Procurement Engine • RayneWater</p>
+      </div>
+
+      <!-- Notice Box -->
+      <div class="bg-[#06080e] p-3.5 rounded-2xl border border-slate-800/80 text-left space-y-1.5">
+        <div class="text-[11px] font-bold text-slate-200 flex items-center gap-1.5">
           <i class="fa-solid fa-shield-halved text-emerald-400"></i> Authentication Required
         </div>
-        <p class="text-[10px] text-slate-400 leading-relaxed">
-          Sign in with your Google account to access your shortlisted components, project folders, and permanently sync data across all your devices.
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          Sign in with your Google account to access your curated parts database, triage folders, and cloud backups.
         </p>
       </div>
 
+      <!-- Actions -->
       <div class="space-y-3 flex flex-col items-center w-full">
-        <!-- Universal Always-Visible Google Sign-In Button -->
+        <!-- Sign in with Google Button -->
         <button 
           id="gateGoogleSignInBtn" 
-          class="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 active:scale-95 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition-all shadow-lg shadow-white/5 cursor-pointer border border-slate-200"
+          type="button"
+          onclick="triggerOfficialGoogleLogin()"
+          class="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-100 active:scale-95 text-slate-900 font-bold text-xs flex items-center justify-center gap-3 transition-all shadow-lg cursor-pointer border border-slate-200"
         >
           <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -116,241 +104,278 @@
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
-          <span>Sign in with Google Account</span>
+          <span>Sign in with Google</span>
         </button>
 
-        <!-- Direct Sign-In Input with Your Real Google Account -->
-        <div class="w-full pt-1 space-y-2 border-t border-slate-800/80">
-          <label class="block text-[10px] font-mono uppercase text-slate-400 text-left">Or quick-connect your Google address:</label>
-          <div class="flex gap-2">
-            <input 
-              type="email" 
-              id="directUserEmailInput" 
-              placeholder="e.g. yourname@gmail.com" 
-              class="flex-1 bg-[#07090e] border border-slate-700/80 focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white outline-none font-mono placeholder:text-slate-600"
-            >
-            <button 
-              id="directUserSignInBtn" 
-              class="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-slate-950 font-bold text-xs shrink-0 cursor-pointer transition-all"
-            >
-              Sign In
-            </button>
-          </div>
+        <!-- Or Email Direct Setup -->
+        <div class="w-full flex items-center gap-2 my-1">
+          <div class="h-px bg-slate-800 flex-1"></div>
+          <span class="text-[10px] text-slate-500 font-mono uppercase">or direct workspace</span>
+          <div class="h-px bg-slate-800 flex-1"></div>
         </div>
+
+        <div class="w-full flex gap-2">
+          <input 
+            type="email" 
+            id="gateDirectEmailInput" 
+            placeholder="your-google-account@gmail.com" 
+            class="flex-1 bg-[#06080e] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-sky-500 font-mono placeholder:text-slate-600"
+            onkeydown="if(event.key === 'Enter') handleDirectEmailSubmit()"
+          >
+          <button 
+            type="button" 
+            onclick="handleDirectEmailSubmit()" 
+            class="px-3 py-2 bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-xs font-bold rounded-xl transition-all"
+          >
+            Enter
+          </button>
+        </div>
+
+        <!-- Setup Google OAuth Client ID Link -->
+        <button 
+          type="button" 
+          onclick="openGoogleClientIdSetupModal()" 
+          class="text-[10px] text-slate-400 hover:text-sky-400 font-mono transition-colors flex items-center gap-1.5 cursor-pointer pt-2"
+        >
+          <i class="fa-solid fa-gear"></i> Configure Google OAuth Client ID
+        </button>
       </div>
 
-      <div class="text-[10px] text-slate-500 font-mono">
-        Permanent account-partitioned storage active
+      <div class="text-[10px] text-slate-500 font-mono border-t border-slate-800/80 pt-2.5">
+        Isolated Cloud Account Partitioning Active
       </div>
     </div>
   </div>
 
-  <!-- Interactive Google Account Selector Modal -->
-  <div id="googleAccountPickerModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-[#0f1422] border border-slate-700 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl relative">
+  <!-- ==================== GOOGLE CLIENT ID CONFIG MODAL ==================== -->
+  <div id="googleAuthSetupModal" class="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#0d1322] border border-slate-700 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl relative text-left max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span class="text-sm font-bold text-white">Select Google Account</span>
+          <i class="fa-solid fa-key text-orange-400"></i>
+          <span class="text-sm font-bold text-white">Google OAuth 2.0 Setup</span>
         </div>
-        <button id="closeGooglePickerBtn" class="text-slate-400 hover:text-white p-1 cursor-pointer">
+        <button onclick="closeGoogleClientIdSetupModal()" class="text-slate-400 hover:text-white p-1 cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <p class="text-[11px] text-slate-300 leading-relaxed">
-        Choose an account to sign in and restore your saved parts, project folders, and approved manifests:
-      </p>
-
-      <!-- Dynamic Saved Account Suggestions or Input -->
-      <div id="googleAccountsList" class="space-y-2">
-        <!-- Injected dynamically via JS or allows entering personal Google account -->
+      <div class="space-y-2 text-[11px] text-slate-300">
+        <p class="leading-relaxed">
+          Follow these 3 quick steps in Google Cloud Console to allow your device's Google accounts to open:
+        </p>
+        <div class="bg-[#06080e] p-2.5 rounded-xl border border-slate-800 space-y-1.5 font-mono text-[10px]">
+          <div><strong class="text-orange-400">1. Origin to add:</strong></div>
+          <div class="text-sky-300 select-all break-all bg-slate-900 p-1.5 rounded border border-slate-700">https://raynewater.github.io</div>
+          <div class="pt-1"><strong class="text-emerald-400">2. Type:</strong> Web application</div>
+        </div>
       </div>
 
-      <div class="space-y-2 pt-2 border-t border-slate-800">
-        <label class="block text-[10px] font-mono uppercase text-slate-400">Use another Google email:</label>
-        <div class="flex gap-2">
-          <input 
-            type="email" 
-            id="modalPickerCustomEmail" 
-            placeholder="your-google-email@gmail.com" 
-            class="flex-1 bg-[#07090e] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-sky-500 font-mono"
-          >
-          <button 
-            id="modalPickerContinueBtn" 
-            class="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs shrink-0 cursor-pointer"
-          >
-            Select
-          </button>
-        </div>
+      <div class="space-y-2">
+        <label class="block text-[10px] font-mono uppercase text-slate-400">Paste Your Google Web Client ID:</label>
+        <input 
+          type="text" 
+          id="configGoogleClientIdInput" 
+          placeholder="e.g. 123456789-xxxx.apps.googleusercontent.com" 
+          class="w-full bg-[#06080e] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-sky-500 font-mono placeholder:text-slate-600"
+        >
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+        <a 
+          href="https://console.cloud.google.com/apis/credentials" 
+          target="_blank" 
+          class="text-[10px] text-sky-400 hover:underline flex items-center gap-1 font-mono"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Google Cloud
+        </a>
+        <button 
+          type="button"
+          onclick="saveGoogleClientId()"
+          class="px-4 py-1.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs cursor-pointer transition-all"
+        >
+          Save &amp; Connect
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== HEADER (NON-BLOCKING LAUNCH BRANDING) ==================== -->
-  <header class="sticky top-0 z-40 bg-[#0a0d16]/95 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+  <!-- ==================== APP HEADER ==================== -->
+  <header class="sticky top-0 z-40 bg-[#070b14]/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
-      
-      <!-- Brand & Creator -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-500 to-sky-400 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-orange-500/20 pulse-badge">
-          <i class="fa-solid fa-microchip text-lg"></i>
+      <!-- Title & Branding -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-slate-950 font-black text-sm shadow-md">
+          <i class="fa-solid fa-microchip"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="font-extrabold text-base tracking-wide text-white">CircuitCore</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/40 font-mono font-bold">PRO</span>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-sm text-white tracking-wide">CircuitCore</span>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">PRO</span>
           </div>
-          <p class="text-[11px] text-slate-400">
-            Repair Procurement Engine • <strong class="text-sky-400 font-semibold tracking-wide">Created by RayneWater</strong>
-          </p>
+          <div class="text-[10px] text-slate-400 font-medium">Repair Procurement Engine • Created by RayneWater</div>
         </div>
       </div>
 
-      <!-- Real-Time Task & Service Status Indicator -->
+      <!-- Right Header Actions (Status Pill & Account Pill) -->
       <div class="flex items-center gap-2">
-        <div id="serviceStatusPill" class="px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800/60 flex items-center gap-1.5 font-mono text-[11px] shadow-sm transition-all duration-300">
-          <i id="serviceStatusIcon" class="fa-solid fa-circle-notch fa-spin text-[10px]"></i>
-          <span id="serviceStatusText">Loading Services...</span>
+        <div id="serviceStatusPill" class="px-2.5 py-1 rounded-full text-[11px] font-mono flex items-center gap-1.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 transition-all">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Idle • Active</span>
         </div>
 
-        <!-- Account Profile / Cloud Sync Button -->
-        <button id="openAccountModalBtn" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#141b2a] hover:bg-[#1d273f] border border-slate-700/80 text-xs text-slate-300 font-medium transition-all active:scale-95 shadow cursor-pointer">
-          <span id="userAvatar" class="w-4 h-4 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[9px] font-bold">
-            <i class="fa-solid fa-user"></i>
-          </span>
-          <span id="userAccountLabel" class="text-[11px] font-mono">Guest</span>
+        <button 
+          type="button" 
+          onclick="openAccountDrawer()" 
+          id="userAccountBtn" 
+          class="px-2.5 py-1 rounded-full text-[11px] font-mono flex items-center gap-1.5 bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 active:scale-95 transition-all"
+        >
+          <i class="fa-solid fa-user text-orange-400 text-xs"></i>
+          <span id="headerUserLabel">Guest</span>
         </button>
       </div>
-
     </div>
   </header>
 
-  <!-- ==================== SEARCH / COMMAND BAR ==================== -->
-  <div class="p-4 bg-[#0a0f1c] border-b border-slate-800/80">
-    <div class="max-w-4xl mx-auto space-y-2.5">
-      <div class="relative">
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="max-w-4xl mx-auto w-full px-4 pt-4 space-y-4 flex-1">
+
+    <!-- SEARCH & COMMAND RUNNER -->
+    <section class="glass-card rounded-2xl p-3 space-y-2">
+      <div class="flex items-center gap-2 bg-[#060913] border border-slate-700 rounded-xl px-3 py-2 focus-within:border-orange-500 transition-colors">
+        <i class="fa-solid fa-terminal text-orange-400 text-xs"></i>
         <input 
           type="text" 
           id="commandInput" 
-          placeholder="Enter device and part: e.g. S21 Ultra OLED screen + battery..." 
-          class="w-full bg-[#07090e] border border-slate-700/80 rounded-xl px-4 py-2.5 pl-10 pr-20 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-all font-mono"
+          placeholder="Enter brand, model, and part: e.g. S21 Ultra OLED screen + battery" 
+          class="bg-transparent text-xs text-white placeholder:text-slate-500 outline-none w-full font-mono"
+          onkeydown="if(event.key === 'Enter') runQueryCommand()"
         >
-        <i class="fa-solid fa-terminal absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
         <button 
-          id="runCmdBtn" 
-          class="absolute right-1.5 top-1.5 px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-400 active:scale-95 text-slate-950 font-black text-xs transition-all shadow cursor-pointer"
+          type="button" 
+          onclick="runQueryCommand()" 
+          class="px-3 py-1 bg-orange-500 hover:bg-orange-400 active:scale-95 text-slate-950 font-bold text-xs rounded-lg transition-all"
         >
           Run
         </button>
       </div>
 
-      <!-- Quick Preset Buttons -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-[11px] custom-scroll">
-        <span class="text-slate-500 text-[10px] uppercase font-mono tracking-wider shrink-0">Fast Presets:</span>
-        <div id="presetChipsContainer" class="flex items-center gap-2"></div>
-        <button id="openNewPresetModalBtn" class="px-2.5 py-1 rounded-full bg-orange-500/20 hover:bg-orange-500/30 active:scale-95 border border-orange-500/40 text-orange-300 whitespace-nowrap transition-all cursor-pointer font-bold flex items-center gap-1">
-          <i class="fa-solid fa-plus text-[10px]"></i> New Preset
+      <!-- Custom Presets Row -->
+      <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 text-xs">
+        <span class="text-[10px] font-mono text-slate-500 uppercase shrink-0">Presets:</span>
+        <div id="presetsContainer" class="flex items-center gap-1.5">
+          <!-- Dynamically populated presets -->
+        </div>
+        <button 
+          type="button" 
+          onclick="openNewPresetModal()" 
+          class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono shrink-0 border border-slate-700 flex items-center gap-1"
+        >
+          <i class="fa-solid fa-plus text-[10px]"></i> Add
         </button>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Live Triage Search Indicator (Appears when Run is triggered) -->
-  <div id="searchIndicator" class="hidden max-w-4xl mx-auto px-4 pt-3">
-    <div class="bg-gradient-to-r from-orange-500/15 via-[#0f172a] to-sky-500/15 border border-orange-500/40 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-lg shadow-orange-500/10">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400">
-          <i class="fa-solid fa-spinner fa-spin text-sm"></i>
-        </div>
-        <div>
-          <div class="text-xs font-bold text-white flex items-center gap-2">
-            <span>Triaging Chinese Platforms...</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-orange-500/20 text-orange-400">PDD + SG Direct</span>
+    <!-- ACTIVE TAB VIEWS -->
+    <div id="tabContentArea" class="space-y-4">
+      <!-- Shortlist Tab Content (Default) -->
+      <div id="shortlistView" class="space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+          <div class="flex items-center gap-2">
+            <span>TRIAGE CANDIDATES</span>
+            <span id="shortlistCountBadge" class="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">0</span>
           </div>
-          <p id="searchIndicatorQuery" class="text-[11px] text-slate-400 font-mono truncate max-w-[240px] sm:max-w-md">Query...</p>
-        </div>
-      </div>
-      <span class="text-[10px] font-mono text-emerald-400 shrink-0 font-semibold flex items-center gap-1">
-        <i class="fa-solid fa-filter"></i> Filtering Scams
-      </span>
-    </div>
-  </div>
-
-  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
-  <main class="flex-1 p-4 max-w-4xl w-full mx-auto pb-36">
-
-    <!-- 1. TAB: SHORTLIST -->
-    <section id="view-shortlist" class="space-y-3">
-      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Vetted Candidates (Awaiting RayneWater Review)</span>
-        <span class="font-mono text-orange-400 text-[11px] flex items-center gap-1">
-          <i class="fa-solid fa-shield-halved"></i> Anti-Bait Filters Active
-        </span>
-      </div>
-      <div id="shortlist-container" class="space-y-3"></div>
-    </section>
-
-    <!-- 2. TAB: APPROVED -->
-    <section id="view-approved" class="space-y-3 hidden">
-      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Approved Sourcing Manifest (Ready for Procurement)</span>
-        <button id="exportManifestBtn" class="px-2.5 py-1 rounded bg-[#141b2a] hover:bg-[#1d273f] text-sky-400 text-[11px] border border-slate-700 font-semibold transition-colors flex items-center gap-1.5">
-          <i class="fa-solid fa-download"></i> Export JSON
-        </button>
-      </div>
-      <div id="approved-container" class="space-y-3"></div>
-    </section>
-
-    <!-- 3. TAB: TRASH -->
-    <section id="view-trash" class="space-y-3 hidden">
-      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Filtered Scams &amp; Rejected Variants</span>
-        <button id="emptyTrashBtn" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold transition-colors">
-          <i class="fa-solid fa-trash-can mr-1"></i> Empty Trash
-        </button>
-      </div>
-      <div id="trash-container" class="space-y-3"></div>
-    </section>
-
-    <!-- 4. TAB: FOLDERS -->
-    <section id="view-folders" class="space-y-4 hidden">
-      <div class="bg-gradient-to-r from-cyan-500/10 via-[#0e1320] to-blue-500/10 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 uppercase font-bold">
-            Project Organization
+          <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+            <i class="fa-solid fa-shield-check"></i> Anti-Scam Guardrails Active
           </span>
-          <h2 class="font-black text-base text-white mt-1 flex items-center gap-2">
-            <i class="fa-solid fa-folder-tree text-cyan-400"></i> Repair Folders &amp; Batch Kits
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Group related screens, batteries, gaskets, and boards by customer or device project.</p>
         </div>
-        <button id="openNewFolderModalBtn" class="px-3 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-cyan-500/20 shrink-0">
-          <i class="fa-solid fa-folder-plus"></i> Create Folder
-        </button>
+        <div id="shortlistItemsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Shortlisted candidate cards -->
+        </div>
       </div>
-      <div id="folders-container" class="space-y-4"></div>
-    </section>
 
-    <!-- 5. TAB: MEMORY LOG -->
-    <section id="view-memory" class="space-y-4 hidden">
-      <div class="bg-gradient-to-r from-orange-500/10 via-[#0e1320] to-sky-500/10 p-5 rounded-2xl border border-slate-800 space-y-3">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 uppercase font-bold">
-              Memory Anchor
-            </span>
-            <h2 class="font-black text-base text-white mt-1 flex items-center gap-2">
-              <i class="fa-solid fa-database text-orange-400"></i> Electronics Repair &amp; Procurement Log (RayneWater)
-            </h2>
+      <!-- Approved Tab View -->
+      <div id="approvedView" class="hidden space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+          <div class="flex items-center gap-2">
+            <span>APPROVED PROCUREMENT MANIFEST</span>
+            <span id="approvedCountBadge" class="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">0</span>
           </div>
-          <a 
-            href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" 
-            target="_blank" 
-            class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
-      
+          <button onclick="exportManifestJSON()" class="text-orange-400 hover:underline text-[11px] flex items-center gap-1">
+            <i class="fa-solid fa-download"></i> Export Manifest
+          </button>
+        </div>
+        <div id="approvedItemsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Approved cards -->
+        </div>
+      </div>
+
+      <!-- Folders Tab View -->
+      <div id="foldersView" class="hidden space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+          <span>PROJECT REPAIR BATCHES</span>
+          <button onclick="openNewFolderModal()" class="px-2.5 py-1 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold rounded-lg text-[11px] flex items-center gap-1">
+            <i class="fa-solid fa-folder-plus"></i> New Folder
+          </button>
+        </div>
+        <div id="foldersGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <!-- Folders render here -->
+        </div>
+      </div>
+
+      <!-- Trash Tab View -->
+      <div id="trashView" class="hidden space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+          <span>REJECTED &amp; SCAM BAIT PURGE</span>
+          <button onclick="emptyTrash()" class="text-red-400 hover:underline text-[11px] flex items-center gap-1">
+            <i class="fa-solid fa-trash-can"></i> Empty Trash
+          </button>
+        </div>
+        <div id="trashItemsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Trash cards -->
+        </div>
+      </div>
+
+      <!-- Memory Log Tab View -->
+      <div id="memoryLogView" class="hidden space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+          <span>RAYNEWATER AUDIT LOG &amp; GOOGLE SHEET</span>
+          <a href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" target="_blank" class="text-sky-400 hover:underline text-[11px] flex items-center gap-1">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Master Sheet
+          </a>
+        </div>
+        <div id="memoryLogsContainer" class="space-y-2">
+          <!-- Memory log entries -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== ELEVATED BOTTOM ACTION BAR ==================== -->
+  <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 w-[95%] max-w-md bg-[#0b101d]/95 backdrop-blur-lg border border-slate-700/80 rounded-2xl shadow-2xl p-1.5 flex items-center justify-between">
+    <button onclick="switchTab('shortlist')" id="navBtn-shortlist" class="flex-1 py-2 rounded-xl text-center flex flex-col items-center gap-1 transition-all text-orange-400 bg-orange-500/15">
+      <i class="fa-solid fa-list-check text-sm"></i>
+      <span class="text-[10px] font-mono font-medium">Shortlist</span>
+    </button>
+    <button onclick="switchTab('approved')" id="navBtn-approved" class="flex-1 py-2 rounded-xl text-center flex flex-col items-center gap-1 transition-all text-slate-400 hover:text-white">
+      <i class="fa-solid fa-circle-check text-sm"></i>
+      <span class="text-[10px] font-mono font-medium">Approved</span>
+    </button>
+    <button onclick="switchTab('folders')" id="navBtn-folders" class="flex-1 py-2 rounded-xl text-center flex flex-col items-center gap-1 transition-all text-slate-400 hover:text-white">
+      <i class="fa-solid fa-folder text-sm"></i>
+      <span class="text-[10px] font-mono font-medium">Folders</span>
+    </button>
+    <button onclick="switchTab('trash')" id="navBtn-trash" class="flex-1 py-2 rounded-xl text-center flex flex-col items-center gap-1 transition-all text-slate-400 hover:text-white">
+      <i class="fa-solid fa-trash text-sm"></i>
+      <span class="text-[10px] font-mono font-medium">Trash</span>
+    </button>
+    <button onclick="switchTab('memory')" id="navBtn-memory" class="flex-1 py-2 rounded-xl text-center flex flex-col items-center gap-1 transition-all text-slate-400 hover:text-white">
+      <i class="fa-solid fa-database text-sm"></i>
+      <span class="text-[10px] font-mono font-medium">Memory</span>
+    </button>
+  </nav>
+
+  <!-- ==================== ACCOUNT & CLOUD MODAL ==================== -->
+  <div id="accountModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl relative text-left">
+      <d
