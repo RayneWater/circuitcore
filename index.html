@@ -32,6 +32,18 @@
       50% { opacity: 0.8; transform: scale(1.05); }
     }
     .boot-pulse { animation: pulseGlow 2s infinite ease-in-out; }
+    
+    /* Hardware CSS fade-out: guaranteed to vanish even if JS is delayed */
+    @keyframes fadeOutBoot {
+      0% { opacity: 1; pointer-events: auto; }
+      80% { opacity: 1; pointer-events: auto; }
+      99% { opacity: 0; pointer-events: auto; }
+      100% { opacity: 0; pointer-events: none; visibility: hidden; display: none; }
+    }
+    .boot-overlay-anim {
+      animation: fadeOutBoot 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
     .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -39,8 +51,8 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
 
-  <!-- Full Launch Animation Boot Screen -->
-  <div id="bootScreen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-700">
+  <!-- Full Launch Animation Boot Screen (Pure CSS Auto-Dismiss + Tap to Skip) -->
+  <div id="bootScreen" onclick="this.style.display='none'" class="boot-overlay-anim fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
     <div class="relative flex items-center justify-center mb-6">
       <div class="absolute w-28 h-28 rounded-full bg-orange-500/20 blur-xl boot-pulse"></div>
       <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-500 to-sky-400 flex items-center justify-center shadow-lg shadow-orange-500/20 border border-white/20">
@@ -55,6 +67,7 @@
       <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
       Created by RayneWater
     </div>
+    <span class="text-[10px] text-slate-600 mt-4 font-mono">Tap anywhere to skip</span>
   </div>
 
   <!-- Sticky Top Header -->
@@ -363,22 +376,4 @@
         deepLink: '#',
         specs: [
           'Flagged by auto-triage: Price below ¥25 threshold for OLED screens',
-          'Bait-and-switch SKU: Contains only plastic suction cup and screwdrivers',
-          'No display or digitizer included in package'
-        ]
-      },
-      {
-        id: 's21u-scam-2',
-        title: 'Incell Thick-Bezel Screen Listed as "Original OLED"',
-        partCode: 'SCAM-BAIT-02',
-        device: 'Samsung S21 Ultra',
-        category: 'scam',
-        platform: 'AliExpress',
-        priceCNY: 89.00,
-        priceSGD: 16.80,
-        shipping: 'Free to SG',
-        status: 'trash',
-        searchToken: 'S21 Ultra Incell LCD Screen',
-        deepLink: '#',
-        specs: [
-          'Flagged by anti
+        
