@@ -209,8 +209,41 @@
           </div>
         </div>
 
+        <!-- Desktop Navigation Bar (Adaptive Header Tabs) -->
+        <div class="hidden md:flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1.5 rounded-full">
+          <button id="deskNavBtn-shortlist" onclick="switchTab('shortlist')" class="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-orange-400 bg-orange-500/15 border border-orange-500/30 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-list-check text-xs"></i>
+            <span>Shortlist</span>
+            <span id="deskBadgeShortlist" class="text-[10px] px-1.5 py-0.2 bg-orange-500/20 rounded-full font-bold">2</span>
+          </button>
+          <button id="deskNavBtn-approved" onclick="switchTab('approved')" class="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-circle-check text-xs"></i>
+            <span>Approved</span>
+            <span id="deskBadgeApproved" class="text-[10px] px-1.5 py-0.2 bg-slate-800 rounded-full font-bold">1</span>
+          </button>
+          <button id="deskNavBtn-folders" onclick="switchTab('folders')" class="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-folder-tree text-xs"></i>
+            <span>Folders</span>
+          </button>
+          <button id="deskNavBtn-trash" onclick="switchTab('trash')" class="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+            <span>Trash</span>
+          </button>
+          <button id="deskNavBtn-memory" onclick="switchTab('memory')" class="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-database text-xs"></i>
+            <span>Memory</span>
+            <span class="text-[10px] px-1.5 py-0.2 bg-sky-950 border border-sky-500/30 text-sky-400 rounded-full font-bold">12</span>
+          </button>
+        </div>
+
         <!-- Right Side: User Profile & Session Header -->
         <div class="flex items-center gap-3">
+          <!-- Live Engine Status Badge -->
+          <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-[10px] font-mono text-emerald-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>ENGINE ONLINE</span>
+          </div>
+
           <div id="userProfileBadge" class="hidden sm:flex items-center gap-2 bg-slate-900/90 border border-slate-800 py-1.5 px-3 rounded-full cursor-pointer hover:border-slate-700 transition-colors" onclick="openSignOutModal()">
             <img id="userAvatarImg" src="" alt="Avatar" class="w-6 h-6 rounded-full border border-orange-500/50 hidden">
             <i id="userAvatarFallback" class="fa-solid fa-user-circle text-orange-400 text-lg"></i>
@@ -224,7 +257,7 @@
     </header>
 
     <!-- Query Bar & Quick Triage Launcher -->
-    <section class="w-full px-3 sm:px-5 pt-4 pb-2">
+    <section class="w-full px-3 sm:px-5 lg:px-8 pt-4 pb-2">
       <div class="w-full glass-card rounded-2xl p-2.5 sm:p-3 border border-slate-800/80 flex flex-col sm:flex-row gap-2">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
@@ -245,8 +278,8 @@
       </div>
     </section>
 
-    <!-- Main Content Area (With bottom padding so the floating dock doesn't cover anything) -->
-    <main class="w-full flex-1 px-3 sm:px-5 pt-2 pb-28 flex flex-col">
+    <!-- Main Content Area (Adaptive bottom padding: pb-28 on mobile, pb-10 on desktop) -->
+    <main class="w-full flex-1 px-3 sm:px-5 lg:px-8 pt-2 pb-28 md:pb-10 flex flex-col">
 
       <!-- ================= TAB: SHORTLIST ================= -->
       <section id="tabShortlist" class="space-y-4">
@@ -265,8 +298,8 @@
           </div>
         </div>
 
-        <!-- Shortlist Cards Grid -->
-        <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+        <!-- Shortlist Cards Grid: Adaptive cols for tablet and desktop -->
+        <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
           <!-- Populated by renderShortlist() -->
         </div>
       </section>
@@ -289,7 +322,7 @@
         </div>
 
         <!-- Approved Cards Grid -->
-        <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+        <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
           <!-- Populated by renderApproved() -->
         </div>
       </section>
@@ -348,24 +381,24 @@
           </div>
 
           <!-- Filter Pills -->
-          <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800">
-            <button onclick="filterMemoryLogs('ALL')" id="memChip-ALL" class="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-orange-500 text-slate-950">ALL (12)</button>
-            <button onclick="filterMemoryLogs('OAuth & Auth')" id="memChip-OAuth" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">OAuth & Auth</button>
-            <button onclick="filterMemoryLogs('Hardware & Specs')" id="memChip-HW" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">Hardware & Specs</button>
-            <button onclick="filterMemoryLogs('Platform & Shipping')" id="memChip-Ship" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">Platform & Shipping</button>
-          </div>
+        <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800">
+          <button onclick="filterMemoryLogs('ALL')" id="memChip-ALL" class="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-orange-500 text-slate-950">ALL (12)</button>
+          <button onclick="filterMemoryLogs('OAuth & Auth')" id="memChip-OAuth" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">OAuth & Auth</button>
+          <button onclick="filterMemoryLogs('Hardware & Specs')" id="memChip-HW" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">Hardware & Specs</button>
+          <button onclick="filterMemoryLogs('Platform & Shipping')" id="memChip-Ship" class="px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-800 hover:text-white">Platform & Shipping</button>
         </div>
+      </div>
 
-        <!-- Logs Container -->
-        <div id="memoryLogsContainer" class="space-y-3">
-          <!-- Populated by renderMemoryLogs() -->
-        </div>
-      </section>
+      <!-- Logs Container -->
+      <div id="memoryLogsContainer" class="space-y-3 w-full min-w-0">
+        <!-- Populated by renderMemoryLogs() -->
+      </div>
+    </section>
 
     </main>
 
-    <!-- ==================== ELEVATED FLOATING BOTTOM TAB DOCK ==================== -->
-    <nav class="fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 w-[94%] max-w-lg glass-panel rounded-full p-1.5 border border-slate-700/80 shadow-2xl shadow-black/80">
+    <!-- ==================== ELEVATED FLOATING BOTTOM TAB DOCK (MOBILE ONLY) ==================== -->
+    <nav class="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 w-[94%] max-w-lg glass-panel rounded-full p-1.5 border border-slate-700/80 shadow-2xl shadow-black/80">
       <div id="bottomNavScroller" class="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth px-1">
         
         <button id="navBtn-shortlist" onclick="switchTab('shortlist')" class="px-3.5 py-2 rounded-full text-xs font-bold font-mono text-orange-400 bg-orange-500/15 border border-orange-500/30 flex items-center gap-1.5 shrink-0 transition-all">
@@ -619,10 +652,10 @@
         priceSgd: 91.50,
         status: 'shortlist',
         badge: 'Teardown Pull with Chassis',
-        imageUrl: 'https://wsrv.nl/?url=images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700&q=80',
+        imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700&auto=format&fit=crop&q=80',
         gallery: [
-          'https://wsrv.nl/?url=images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700&q=80',
-          'https://wsrv.nl/?url=images.unsplash.com/photo-1580910051074-3eb694886505?w=700&q=80'
+          'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=700&auto=format&fit=crop&q=80'
         ],
         frameAuth: 'Authentic Samsung teardown frame assembly. Original anodized Phantom Black aluminum midframe intact with graphite thermal copper sheet. Zero bending or impact dents.',
         icSpecs: 'Original Driver IC with LTPO backplane supporting 10Hz-120Hz dynamic adaptive refresh. Fully supports original S-Pen Wacom digitizer and ultrasonic fingerprint scanner.',
@@ -638,9 +671,9 @@
         priceSgd: 16.00,
         status: 'approved',
         badge: 'Service Pack Cell • 5000mAh',
-        imageUrl: 'https://wsrv.nl/?url=images.unsplash.com/photo-1580910051074-3eb694886505?w=700&q=80',
+        imageUrl: 'https://images.unsplash.com/photo-1619725002198-6a689b72f41d?w=700&auto=format&fit=crop&q=80',
         gallery: [
-          'https://wsrv.nl/?url=images.unsplash.com/photo-1580910051074-3eb694886505?w=700&q=80'
+          'https://images.unsplash.com/photo-1619725002198-6a689b72f41d?w=700&auto=format&fit=crop&q=80'
         ],
         frameAuth: 'Brand new 0-cycle lithium pouch cell with authentic 2D matrix data matrix and Samsung SDI factory serial stamp.',
         icSpecs: 'Integrated Texas Instruments (TI BQ) battery protection and fuel gauge IC. Reports authentic battery health, cycle count, and temperature telemetry to One UI kernel.',
@@ -656,9 +689,9 @@
         priceSgd: 1.60,
         status: 'shortlist',
         badge: 'Pre-Cut Die-Cut OEM Spec',
-        imageUrl: 'https://wsrv.nl/?url=images.unsplash.com/photo-1581092160607-ee22621dd758?w=700&q=80',
+        imageUrl: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=700&auto=format&fit=crop&q=80',
         gallery: [
-          'https://wsrv.nl/?url=images.unsplash.com/photo-1581092160607-ee22621dd758?w=700&q=80'
+          'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=700&auto=format&fit=crop&q=80'
         ],
         frameAuth: 'Factory laser die-cut double-sided acrylic adhesive gasket matching exact camera housing and chassis perimeter grooves.',
         icSpecs: 'Non-conductive pressure-activated adhesive backing with alignment locator film. Provides factory-grade acoustic and IP68 water resistance restoration.',
@@ -1061,9 +1094,13 @@
       
       const badgeShortlist = document.getElementById('badgeShortlist');
       const badgeApproved = document.getElementById('badgeApproved');
+      const deskBadgeShortlist = document.getElementById('deskBadgeShortlist');
+      const deskBadgeApproved = document.getElementById('deskBadgeApproved');
       
       if (badgeShortlist) badgeShortlist.innerText = shortlistCount;
       if (badgeApproved) badgeApproved.innerText = approvedCount;
+      if (deskBadgeShortlist) deskBadgeShortlist.innerText = shortlistCount;
+      if (deskBadgeApproved) deskBadgeApproved.innerText = approvedCount;
     }
 
     // ==========================================
@@ -1076,15 +1113,27 @@
       const tabs = ['shortlist', 'approved', 'folders', 'trash', 'memory'];
       tabs.forEach(t => {
         const el = document.getElementById(`tab${capitalize(t)}`);
-        const btn = document.getElementById(`navBtn-${t}`);
+        const mobileBtn = document.getElementById(`navBtn-${t}`);
+        const deskBtn = document.getElementById(`deskNavBtn-${t}`);
+        
         if (el) el.classList.toggle('hidden', t !== tab);
         
-        if (btn) {
+        // Update Mobile Pill Dock
+        if (mobileBtn) {
           if (t === tab) {
-            btn.className = "px-3.5 py-2 rounded-full text-xs font-bold font-mono text-orange-400 bg-orange-500/15 border border-orange-500/30 flex items-center gap-1.5 shrink-0 transition-all";
-            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            mobileBtn.className = "px-3.5 py-2 rounded-full text-xs font-bold font-mono text-orange-400 bg-orange-500/15 border border-orange-500/30 flex items-center gap-1.5 shrink-0 transition-all";
+            mobileBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           } else {
-            btn.className = "px-3.5 py-2 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800/60 flex items-center gap-1.5 shrink-0 transition-all";
+            mobileBtn.className = "px-3.5 py-2 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800/60 flex items-center gap-1.5 shrink-0 transition-all";
+          }
+        }
+
+        // Update Desktop Header Tabs
+        if (deskBtn) {
+          if (t === tab) {
+            deskBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-orange-400 bg-orange-500/15 border border-orange-500/30 flex items-center gap-1.5 transition-all";
+          } else {
+            deskBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold font-mono text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-all";
           }
         }
       });
@@ -1318,34 +1367,34 @@
         : masterMemoryLogs.filter(l => l.category === filterCategory);
 
       container.innerHTML = logs.map(log => `
-        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800/80 hover:border-slate-700 transition-all space-y-2">
+        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800/80 hover:border-slate-700 transition-all space-y-2.5 w-full min-w-0 overflow-hidden">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-mono font-bold text-orange-400 bg-orange-950/60 border border-orange-500/30 px-2 py-0.5 rounded">
+              <span class="text-xs font-mono font-bold text-orange-400 bg-orange-950/60 border border-orange-500/30 px-2 py-0.5 rounded shrink-0">
                 ${log.id}
               </span>
-              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-950/60 border border-sky-500/30 text-sky-300">
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-950/60 border border-sky-500/30 text-sky-300 shrink-0">
                 ${log.category}
               </span>
             </div>
             <span class="text-[11px] font-mono text-slate-500">${log.date}</span>
           </div>
 
-          <h3 class="text-xs sm:text-sm font-bold text-white leading-snug">
+          <h3 class="text-xs sm:text-sm font-bold text-white leading-snug break-words">
             ${log.title}
           </h3>
 
-          <div class="text-[11px] font-mono text-slate-400">
+          <div class="text-[11px] font-mono text-slate-400 break-words">
             Scope: <span class="text-slate-300">${log.scope}</span>
           </div>
 
-          <p class="text-xs text-slate-300 leading-relaxed font-sans bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+          <p class="text-xs text-slate-300 leading-relaxed font-sans bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 break-words whitespace-normal overflow-hidden">
             ${log.notes}
           </p>
 
-          <div class="pt-2 flex items-center justify-between text-[10px] font-mono text-slate-500 border-t border-slate-800/80">
-            <span class="truncate max-w-[260px] sm:max-w-md">${log.params}</span>
-            <span class="text-emerald-400 font-bold flex items-center gap-1 shrink-0">
+          <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px] font-mono text-slate-500 border-t border-slate-800/80">
+            <span class="break-all text-slate-400">${log.params}</span>
+            <span class="text-emerald-400 font-bold flex items-center gap-1 shrink-0 self-start sm:self-auto">
               <i class="fa-solid fa-circle-check text-[9px]"></i> ${log.status}
             </span>
           </div>
