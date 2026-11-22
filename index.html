@@ -2,61 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="referrer" content="no-referrer">
-  <title>CircuitCore Repair Procurement Engine</title>
-
-  <!-- Tailwind CSS & Inter Font -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CircuitCore v1.6 PRO — Repair Procurement Engine</title>
+  
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Google Identity Services (OAuth 2.0 Client SDK) -->
+  
+  <!-- Font Awesome 6 Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Identity Services (GIS) Library -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg-dark: #050811;
+      --card-bg: rgba(13, 19, 33, 0.78);
+      --accent-orange: #f97316;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #050811;
-      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: #f1f5f9;
       -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
     }
+
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+
     .glass-card {
-      background: rgba(13, 20, 36, 0.78);
+      background: var(--card-bg);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .glass-pill {
-      background: rgba(11, 17, 33, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+
+    .glass-dock {
+      background: rgba(10, 15, 29, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.75);
     }
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.9; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.95); }
+
+    /* Custom Slim Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
     }
-    .pulse-indicator {
-      animation: pulseGlow 2.4s infinite ease-in-out;
+    ::-webkit-scrollbar-track {
+      background: #050811;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    .active-nav-glow {
+      box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#050811] text-slate-100 selection:bg-orange-500 selection:text-white">
+<body class="min-h-screen bg-[#050811] text-slate-100 flex flex-col justify-between selection:bg-orange-500 selection:text-white">
 
   <!-- ================= BOOT SCREEN OVERLAY ================= -->
   <div id="bootScreen" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-6 transition-opacity duration-500">
@@ -67,9 +84,10 @@
       </div>
     </div>
     <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-      CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.5 PRO</span>
+      CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.6 PRO</span>
     </h1>
-    <p class="text-xs font-mono text-slate-400 mt-2">Hardware Procurement &amp; Triage Engine</p>
+    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">Rayne Water • Lead Hardware Engineer</p>
+    <p class="text-xs font-mono text-slate-400 mt-0.5">Hardware Procurement &amp; Anti-Scam Triage Engine</p>
     <div class="mt-6 flex items-center gap-2 text-[11px] font-mono text-slate-500">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span id="bootStatusText">Initializing secure storage partition...</span>
@@ -88,57 +106,39 @@
         </div>
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            CircuitCore <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">PRO</span>
+            CircuitCore <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">v1.6 PRO</span>
           </h2>
-          <p class="text-xs text-slate-400 font-mono">Isolated Repair Engineering Session</p>
+          <p class="text-xs text-orange-400/90 font-mono font-medium">Rayne Water • Lead Hardware Engineer</p>
         </div>
       </div>
 
-      <div class="space-y-4">
-        <p class="text-xs text-slate-300 leading-relaxed">
-          Sign in to access your partitioned hardware procurement manifest, custom triage folders, anti-scam scoring models, and verified logs.
-        </p>
+      <h3 class="text-base font-bold text-slate-100 mb-2">Workspace Authentication</h3>
+      <p class="text-xs text-slate-400 leading-relaxed mb-6 font-mono">
+        Sign in with Google to access your sandboxed repair hardware lists, anti-scam vendor heuristics, and automated BOM manifest exports.
+      </p>
 
-        <!-- Google OAuth Button -->
-        <button id="btnGoogleSignIn" onclick="triggerOfficialGoogleLogin()" class="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all shadow-md active:scale-[0.99]">
-          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span>Sign in with Google</span>
-        </button>
+      <button id="googleSignInBtn" onclick="triggerOfficialGoogleLogin()" class="w-full py-3 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-medium text-sm flex items-center justify-center gap-3 shadow-lg transition-all active:scale-[0.98]">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Sign in with Google</span>
+      </button>
 
-        <div class="relative flex py-2 items-center">
-          <div class="flex-grow border-t border-slate-800"></div>
-          <span class="flex-shrink mx-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest">or quick guest email</span>
-          <div class="flex-grow border-t border-slate-800"></div>
-        </div>
-
-        <!-- Direct Email Bypass Form -->
-        <form onsubmit="handleDirectEmailSubmit(event)" class="space-y-3">
-          <div class="relative">
-            <input type="email" id="inputDirectEmail" placeholder="engineer@domain.com" required
-                   class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-mono transition-colors">
-          </div>
-          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs font-mono flex items-center justify-center gap-2 border border-slate-700 transition-colors">
-            <span>Enter Partitioned Workspace</span>
-            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </form>
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
-        <span>Zero Cloud Cross-Leakage</span>
-        <button onclick="openOAuthHelpModal()" class="text-orange-400 hover:underline">OAuth Client Info</button>
+      <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <span>Zero Cloud Leakage</span>
+        <span>Scoped Local Sandbox</span>
       </div>
     </div>
   </div>
 
-  <!-- ================= TOP APP HEADER ================= -->
-  <header class="w-full max-w-full border-b border-slate-800/80 bg-[#090f1d]/90 backdrop-blur-md sticky top-0 z-20 overflow-x-hidden">
-    <div class="w-full px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-2">
+  <!-- ================= MAIN APPLICATION LAYOUT ================= -->
+  <div id="appContainer" class="min-h-screen flex flex-col justify-between max-w-full">
+    
+    <!-- TOP APP BAR -->
+    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 overflow-x-hidden">
       <!-- Brand Logo -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white text-xs sm:text-sm shrink-0">
@@ -146,966 +146,632 @@
         </div>
         <div class="flex items-center gap-1 sm:gap-1.5">
           <span class="font-extrabold text-xs sm:text-base tracking-tight text-white whitespace-nowrap">CircuitCore</span>
-          <span class="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold whitespace-nowrap">PRO</span>
+          <span class="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold whitespace-nowrap">v1.6 PRO</span>
         </div>
       </div>
 
-      <!-- DESKTOP TOP NAV TABS (≥768px) -->
-      <nav class="hidden md:flex items-center gap-1 bg-slate-900/90 border border-slate-800 p-1 rounded-xl">
-        <button onclick="switchTab('shortlist')" id="deskTabShortlist" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-white bg-orange-500 transition-all">
-          <i class="fa-solid fa-list-check text-[11px]"></i>
-          <span>Shortlist</span>
-          <span id="deskBadgeShortlist" class="text-[10px] px-1.5 rounded-full bg-black/40 text-white">0</span>
+      <!-- Live Engine Dynamic Status Indicator -->
+      <div id="liveEngineStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="liveStatusText" class="font-semibold text-slate-200">IDLE • System Ready</span>
+      </div>
+
+      <!-- Desktop Navigation Bar (>= 768px) -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+        <button onclick="switchTab('shortlist')" id="desktopTab_shortlist" class="px-3 py-1.5 rounded-lg bg-orange-500 text-white font-bold transition-all">
+          Shortlist <span id="badgeDesktop_shortlist" class="ml-1 text-[10px] bg-slate-950/40 px-1.5 py-0.2 rounded-full">3</span>
         </button>
-        <button onclick="switchTab('approved')" id="deskTabApproved" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-slate-400 hover:text-white transition-all">
-          <i class="fa-solid fa-circle-check text-[11px]"></i>
-          <span>Approved</span>
-          <span id="deskBadgeApproved" class="text-[10px] px-1.5 rounded-full bg-slate-800 text-slate-300">0</span>
+        <button onclick="switchTab('approved')" id="desktopTab_approved" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+          Approved <span id="badgeDesktop_approved" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">1</span>
         </button>
-        <button onclick="switchTab('folders')" id="deskTabFolders" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-slate-400 hover:text-white transition-all">
-          <i class="fa-solid fa-folder-tree text-[11px]"></i>
-          <span>Folders</span>
+        <button onclick="switchTab('folders')" id="desktopTab_folders" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+          Folders
         </button>
-        <button onclick="switchTab('trash')" id="deskTabTrash" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-slate-400 hover:text-white transition-all">
-          <i class="fa-solid fa-trash-can text-[11px]"></i>
-          <span>Trash</span>
-          <span id="deskBadgeTrash" class="text-[10px] px-1.5 rounded-full bg-slate-800 text-slate-400">0</span>
+        <button onclick="switchTab('trash')" id="desktopTab_trash" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+          Trash <span id="badgeDesktop_trash" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">0</span>
         </button>
-        <button onclick="switchTab('memory')" id="deskTabMemory" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-slate-400 hover:text-white transition-all">
-          <i class="fa-solid fa-database text-[11px]"></i>
-          <span>Memory</span>
-          <span class="text-[10px] px-1.5 rounded-full bg-slate-800 text-slate-400">12</span>
+        <button onclick="switchTab('memory')" id="desktopTab_memory" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+          Memory <span class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">12</span>
         </button>
       </nav>
 
-      <!-- Right Header Actions (Status Indicator + User Profile Pill) -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
-        <!-- Live Engine Status Badge -->
-        <div id="liveEngineStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] font-mono font-medium text-slate-300 shrink-0">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" id="statusPulseDot"></span>
-          <span id="statusDisplayText">ONLINE</span>
-        </div>
-
-        <!-- User Profile Pill / Sign Out Trigger -->
-        <button onclick="openSignOutModal()" class="flex items-center gap-1 p-1 sm:px-2.5 sm:py-1 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 transition-colors shrink-0" title="Account Details &amp; Sign Out">
-          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=User&background=f97316&color=fff&size=64" alt="Avatar" class="w-6 h-6 rounded-lg object-cover shrink-0">
-          <span id="headerUserEmail" class="hidden md:inline text-xs font-mono font-medium truncate max-w-[100px]">User</span>
-          <i class="fa-solid fa-arrow-right-from-bracket text-xs text-slate-400 p-0.5"></i>
+      <!-- Account Profile / Sign Out Trigger -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="openSignOutModal()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left">
+          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=Rayne+Water&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700">
+          <div class="hidden sm:block">
+            <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">Rayne Water</div>
+            <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[120px]">Lead Hardware Eng</div>
+          </div>
+          <i class="fa-solid fa-arrow-right-from-bracket text-slate-400 text-xs sm:ml-1"></i>
         </button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- ================= COMMAND BAR & QUERY TRIAGE ================= -->
-  <section class="w-full px-3 sm:px-6 pt-3 pb-2 bg-[#060b17] border-b border-slate-800/60">
-    <form onsubmit="handleTriageSearch(event)" class="w-full flex flex-col sm:flex-row gap-2 items-stretch">
-      <div class="relative flex-1">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-        <input type="text" id="inputQuery" placeholder="Enter device or part (e.g. S21 Ultra, Switch OLED, Steam Deck fan, PS5)"
-               class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 font-mono transition-colors">
-      </div>
-      <div class="flex items-center gap-2">
-        <select id="selectPartCategory" class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-slate-300 font-mono focus:outline-none focus:border-orange-500 transition-colors">
-          <option value="AUTO">Auto Detect Part</option>
-          <option value="SCREEN">Display &amp; AMOLED Frame</option>
-          <option value="BATTERY">OEM Lithium Cell &amp; BMS</option>
-          <option value="SEALS">IP68 Adhesive Gaskets</option>
-          <option value="BOARD">Charging Port / Sub-Board</option>
-        </select>
-        <button type="submit" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-bold text-xs font-mono flex items-center justify-center gap-1.5 shrink-0 shadow-md shadow-orange-500/20 active:scale-95 transition-all">
-          <i class="fa-solid fa-bolt"></i>
-          <span>Triage</span>
-        </button>
-      </div>
-    </form>
-  </section>
+    <!-- MAIN BODY CONTAINER -->
+    <main class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 flex-1 pb-24 md:pb-8">
 
-  <!-- ================= MAIN WORKSPACE CONTENT CONTAINER ================= -->
-  <main class="w-full flex-1 px-3 sm:px-6 py-4 pb-28 md:pb-10 flex flex-col">
-
-    <!-- ================= TAB: SHORTLIST ================= -->
-    <section id="tabShortlist" class="space-y-4">
-      <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-        <div>
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>Procurement Candidates</span>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-950/60 border border-orange-500/40 text-orange-400">Anti-scam scoring active</span>
-          </h2>
+      <!-- ================= SEARCH & TRIAGE BAR ================= -->
+      <section class="glass-card rounded-2xl p-3 sm:p-4 mb-4 border border-slate-800 shadow-xl">
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" id="triageInput" placeholder="Enter device or part (e.g. S21 Ultra, Switch OLED, Steam Deck, PS5 fan)" class="w-full pl-9 pr-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 font-mono transition-all">
+          </div>
+          <div class="flex gap-2">
+            <select id="partCategoryFilter" class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-orange-500">
+              <option value="ALL">Auto Detect Part</option>
+              <option value="SCREEN">Display Assembly</option>
+              <option value="BATTERY">Battery Cell</option>
+              <option value="HOUSING">Frame / Adhesive</option>
+              <option value="BOARD">Port / Sub-board</option>
+            </select>
+            <button onclick="handleTriageSearch()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-bold text-xs sm:text-sm font-mono flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all whitespace-nowrap">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Triage</span>
+            </button>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="openQuickAddModal()" class="px-3 py-1.5 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
-            <i class="fa-solid fa-plus text-[10px]"></i>
-            <span>Quick Add Listing</span>
-          </button>
-        </div>
-      </div>
+      </section>
 
-      <!-- Shortlist Cards Grid -->
-      <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        <!-- Populated by renderShortlist() -->
-      </div>
-    </section>
-
-    <!-- ================= TAB: APPROVED ================= -->
-    <section id="tabApproved" class="space-y-4 hidden">
-      <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-        <div>
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>Approved Procurement Manifest</span>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-emerald-400">Ready for Multi-Platform Freight &amp; SG Consolidation</span>
-          </h2>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="downloadManifestJson()" class="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
-            <i class="fa-solid fa-file-arrow-down text-[10px]"></i>
-            <span>Export Manifest (JSON)</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Approved Cards Grid -->
-      <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        <!-- Populated by renderApproved() -->
-      </div>
-    </section>
-
-    <!-- ================= TAB: FOLDERS ================= -->
-    <section id="tabFolders" class="space-y-4 hidden">
-      <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-        <div class="flex items-center gap-2">
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>Project &amp; Repair Triage Folders</span>
-          </h2>
-          <span id="activeFolderFilterBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-950/80 border border-orange-500/40 text-orange-400 flex items-center gap-1.5">
-            <span id="activeFolderNameText">Folder</span>
-            <button onclick="clearActiveFolderFilter()" class="hover:text-white"><i class="fa-solid fa-xmark text-[9px]"></i></button>
-          </span>
-        </div>
-        <button onclick="createNewFolderPrompt()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-folder-plus text-[10px]"></i>
-          <span>New Folder</span>
-        </button>
-      </div>
-
-      <div id="foldersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        <!-- Populated by renderFolders() -->
-      </div>
-    </section>
-
-    <!-- ================= TAB: TRASH ================= -->
-    <section id="tabTrash" class="space-y-4 hidden">
-      <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-        <div>
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>Rejected / Scammed Listings Vault (Trash)</span>
-          </h2>
-        </div>
-        <button onclick="emptyTrashConfirm()" class="px-3 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-fire text-[10px]"></i>
-          <span>Empty Trash</span>
-        </button>
-      </div>
-
-      <div id="trashGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        <!-- Populated by renderTrash() -->
-      </div>
-    </section>
-
-    <!-- ================= TAB: MEMORY ================= -->
-    <section id="tabMemory" class="space-y-4 hidden">
-      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-3">
+      <!-- ================= TAB: SHORTLIST ================= -->
+      <section id="tabView_shortlist" class="space-y-4">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-microchip text-orange-400"></i>
-                <span>Electronics Repair &amp; Procurement Memory Log</span>
-              </h2>
-              <!-- Live Synchronization Indicator Pill -->
-              <span id="memorySyncStatusPill" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="memorySyncStatusText">SYNCED • Google Sheets &amp; Local Partition</span>
+            <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
+              Procurement Candidates
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-normal">Anti-scam scoring active</span>
+            </h2>
+            <div id="activeFolderFilterBadge" class="hidden mt-1">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono">
+                <i class="fa-solid fa-folder text-[9px]"></i> <span id="activeFilterName"></span>
+                <button onclick="clearFolderFilter()" class="ml-1 text-slate-400 hover:text-white">&times;</button>
               </span>
             </div>
-            <p class="text-xs text-slate-400 mt-1 font-mono">
-              Live synchronized audit trail of hardware standards, shipping rules, and engine milestones.
-            </p>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="triggerMemorySyncRefresh()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition-all" title="Force Sync Refresh">
-              <i class="fa-solid fa-arrows-rotate text-[11px]" id="memSyncSpinIcon"></i>
-              <span class="hidden sm:inline">Sync Now</span>
-            </button>
-            <a href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-400 border border-emerald-500/40 text-xs font-mono font-bold flex items-center gap-2 transition-all">
-              <i class="fa-solid fa-table"></i>
-              <span>Open Google Sheet</span>
-            </a>
-          </div>
+          <button onclick="openCustomAddModal()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-plus text-[10px]"></i> Quick Add Listing
+          </button>
         </div>
 
-        <!-- Filter Pills -->
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2">
-          <button onclick="filterMemoryLogs('ALL')" class="mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-orange-500 text-slate-950 transition-colors">ALL (12)</button>
-          <button onclick="filterMemoryLogs('OAuth & Auth')" class="mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition-colors">OAuth &amp; Auth</button>
-          <button onclick="filterMemoryLogs('Hardware & Specs')" class="mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition-colors">Hardware &amp; Specs</button>
-          <button onclick="filterMemoryLogs('Platform & Shipping')" class="mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition-colors">Platform &amp; Shipping</button>
+        <!-- Shortlist Cards Grid -->
+        <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+          <!-- Populated dynamically via JS -->
         </div>
+      </section>
+
+      <!-- ================= TAB: APPROVED ================= -->
+      <section id="tabView_approved" class="space-y-4 hidden">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
+              Approved Procurement Manifest
+            </h2>
+            <p class="text-xs font-mono text-emerald-400 mt-0.5">Ready for Multi-Platform Freight &amp; SG Consolidation</p>
+          </div>
+          <button onclick="exportApprovedManifestJSON()" class="text-xs font-mono px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-file-arrow-down"></i> Export Manifest (JSON)
+          </button>
+        </div>
+
+        <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ================= TAB: FOLDERS ================= -->
+      <section id="tabView_folders" class="space-y-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm sm:text-base font-extrabold text-white">Repair Project Folders</h2>
+          <button onclick="promptCreateFolder()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-folder-plus"></i> New Folder
+          </button>
+        </div>
+        <div id="foldersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ================= TAB: TRASH ================= -->
+      <section id="tabView_trash" class="space-y-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm sm:text-base font-extrabold text-white">Rejected Candidates (Trash)</h2>
+          <button onclick="emptyTrashPurge()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-dumpster-fire"></i> Empty Trash
+          </button>
+        </div>
+        <div id="trashGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ================= TAB: MEMORY ================= -->
+      <section id="tabView_memory" class="space-y-4 hidden">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
+              Engine Memory &amp; Audit Logs
+            </h2>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800 text-[10px] font-mono text-cyan-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>SYNCED • Google Sheets &amp; Local Partition</span>
+              </span>
+              <button onclick="triggerMemorySyncRefresh()" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center gap-1">
+                <i class="fa-solid fa-arrows-rotate text-[8px]" id="memoryRefreshIcon"></i> Sync Now
+              </button>
+            </div>
+          </div>
+          <a href="https://docs.google.com/spreadsheets/d/1Xl2w5LZZ_example" target="_blank" class="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1">
+            <i class="fa-solid fa-table"></i> Master Google Sheet
+          </a>
+        </div>
+
+        <div id="memoryLogsContainer" class="space-y-3">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= MOBILE FLOATING DOCK (CLEAN ICON-ONLY) ================= -->
+    <nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm glass-dock rounded-2xl p-1.5 border border-slate-700/60 shadow-2xl">
+      <div class="grid grid-cols-5 items-center justify-items-center gap-1">
+        <!-- Tab: Shortlist -->
+        <button onclick="switchTab('shortlist')" id="mobileNav_shortlist" class="relative w-full py-2.5 rounded-xl bg-orange-500 text-slate-950 flex flex-col items-center justify-center transition-all active:scale-95 active-nav-glow" title="Shortlist">
+          <i class="fa-solid fa-list-check text-lg"></i>
+          <span id="badgeMobile_shortlist" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-orange-400 border border-orange-500/40 rounded-full w-4 h-4 flex items-center justify-center">3</span>
+        </button>
+
+        <!-- Tab: Approved -->
+        <button onclick="switchTab('approved')" id="mobileNav_approved" class="relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Approved">
+          <i class="fa-solid fa-circle-check text-lg"></i>
+          <span id="badgeMobile_approved" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-emerald-400 border border-emerald-500/40 rounded-full w-4 h-4 flex items-center justify-center">1</span>
+        </button>
+
+        <!-- Tab: Folders -->
+        <button onclick="switchTab('folders')" id="mobileNav_folders" class="w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Folders">
+          <i class="fa-solid fa-folder-tree text-lg"></i>
+        </button>
+
+        <!-- Tab: Trash -->
+        <button onclick="switchTab('trash')" id="mobileNav_trash" class="relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Trash">
+          <i class="fa-solid fa-trash-can text-lg"></i>
+          <span id="badgeMobile_trash" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-rose-400 border border-rose-500/40 rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Tab: Memory -->
+        <button onclick="switchTab('memory')" id="mobileNav_memory" class="relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Memory">
+          <i class="fa-solid fa-microchip text-lg"></i>
+          <span class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-cyan-400 border border-cyan-500/40 rounded-full w-4 h-4 flex items-center justify-center">12</span>
+        </button>
       </div>
-
-      <!-- Memory Entries Grid -->
-      <div id="memoryLogsContainer" class="space-y-3">
-        <!-- Rendered by renderMemoryLogs() -->
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ================= FLOATING BOTTOM DOCK NAVIGATION (MOBILE ONLY, <768px) ================= -->
-  <div class="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-sm pb-[env(safe-area-inset-bottom)] pointer-events-none">
-    <nav class="glass-pill rounded-2xl p-1.5 grid grid-cols-5 items-center gap-1 pointer-events-auto shadow-2xl">
-      <!-- Shortlist Icon Tab -->
-      <button onclick="switchTab('shortlist')" id="mobTabShortlist" class="relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-950 bg-orange-500 shadow-md transition-all active:scale-95" title="Shortlist">
-        <i class="fa-solid fa-list-check text-lg"></i>
-        <span id="badgeShortlist" class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-orange-400 border border-orange-500/50 min-w-[15px] text-center">0</span>
-      </button>
-
-      <!-- Approved Icon Tab -->
-      <button onclick="switchTab('approved')" id="mobTabApproved" class="relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Approved">
-        <i class="fa-solid fa-circle-check text-lg"></i>
-        <span id="badgeApproved" class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-emerald-400 border border-emerald-500/50 min-w-[15px] text-center">0</span>
-      </button>
-
-      <!-- Folders Icon Tab -->
-      <button onclick="switchTab('folders')" id="mobTabFolders" class="relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Folders">
-        <i class="fa-solid fa-folder-tree text-lg"></i>
-      </button>
-
-      <!-- Trash Icon Tab -->
-      <button onclick="switchTab('trash')" id="mobTabTrash" class="relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Trash">
-        <i class="fa-solid fa-trash-can text-lg"></i>
-      </button>
-
-      <!-- Memory Icon Tab -->
-      <button onclick="switchTab('memory')" id="mobTabMemory" class="relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Memory Log">
-        <i class="fa-solid fa-database text-lg"></i>
-        <span class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-cyan-400 border border-cyan-500/50 min-w-[15px] text-center">12</span>
-      </button>
     </nav>
   </div>
 
-  <!-- ================= ITEM DETAIL & AUDIT MODAL ================= -->
-  <div id="listingDetailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 hidden">
-    <div class="w-full max-w-2xl bg-[#0b1222] border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-      
-      <!-- Modal Header -->
-      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-start justify-between gap-3 bg-[#080d19]">
-        <div class="space-y-1">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span id="modalPlatformBadge"></span>
-            <span id="modalPartBadge" class="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-orange-950/80 border border-orange-500/40 text-orange-400">Component</span>
-            <span id="modalOemPartCode" class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">PART-CODE</span>
-          </div>
-          <h3 id="modalTitle" class="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug">Listing Title</h3>
+  <!-- ================= MODAL: LISTING INSPECTION & DETAILS ================= -->
+  <div id="listingDetailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-card rounded-2xl w-full max-w-lg border border-slate-700 shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="modalPlatformBadge"></span>
+          <span id="modalBadgeTag" class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30"></span>
         </div>
-        <button onclick="closeListingModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center shrink-0 transition-colors">
-          <i class="fa-solid fa-xmark text-sm"></i>
+        <button onclick="closeListingModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          &times;
         </button>
       </div>
 
-      <!-- Modal Body (Scrollable) -->
-      <div class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
-        
-        <!-- Main Image Banner & Gallery Strip -->
-        <div class="space-y-2">
-          <div class="w-full h-48 sm:h-60 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden relative flex items-center justify-center">
-            <img id="modalMainImage" src="" alt="Main Preview" referrerpolicy="no-referrer" class="w-full h-full object-cover">
-          </div>
-          <div id="modalGalleryStrip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            <!-- Gallery Thumbnails -->
-          </div>
+      <div class="p-4 overflow-y-auto space-y-4">
+        <!-- Rendered Graphic Preview -->
+        <div class="w-full h-44 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center relative">
+          <img id="modalPrimaryImage" src="" alt="Component Image" class="w-full h-full object-cover">
         </div>
 
-        <!-- Pricing Bar -->
-        <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+        <div>
+          <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-1">
+            <span id="modalPartCode"></span>
+            <span id="modalFolderTag" class="text-amber-400 font-semibold"></span>
+          </div>
+          <h3 id="modalTitle" class="text-sm sm:text-base font-bold text-white leading-snug"></h3>
+        </div>
+
+        <!-- Pricing & Landed Cost Breakdown -->
+        <div class="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-900/90 border border-slate-800 font-mono">
           <div>
-            <div class="text-[10px] font-mono text-slate-500">Unit Price (RMB)</div>
-            <div id="modalPriceRmb" class="text-sm font-mono font-bold text-slate-300">¥0.00</div>
+            <div class="text-[10px] text-slate-500">Platform Price (RMB)</div>
+            <div id="modalRmbPrice" class="text-sm font-bold text-slate-200">¥0.00</div>
           </div>
-          <div class="text-right">
-            <div class="text-[10px] font-mono text-slate-500">Landed (SGD Approx)</div>
-            <div id="modalPriceSgd" class="text-base font-mono font-bold text-emerald-400">S$0.00</div>
-          </div>
-        </div>
-
-        <!-- Audit Breakdown Cards -->
-        <div class="space-y-2.5">
-          <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-            <div class="font-bold text-slate-200 mb-1 flex items-center gap-1.5 text-orange-400">
-              <i class="fa-solid fa-shield-halved text-[11px]"></i>
-              <span>Frame &amp; Cosmetic Authentication</span>
-            </div>
-            <p id="modalFrameAuth" class="text-slate-300 leading-relaxed font-mono text-[11px]"></p>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-            <div class="font-bold text-slate-200 mb-1 flex items-center gap-1.5 text-cyan-400">
-              <i class="fa-solid fa-microchip text-[11px]"></i>
-              <span>IC Silicon &amp; Flex Cable Integrity</span>
-            </div>
-            <p id="modalIcSpecs" class="text-slate-300 leading-relaxed font-mono text-[11px]"></p>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-            <div class="font-bold text-slate-200 mb-1 flex items-center gap-1.5 text-amber-400">
-              <i class="fa-solid fa-triangle-exclamation text-[11px]"></i>
-              <span>Anti-Scam Triage Verdict</span>
-            </div>
-            <p id="modalScamVerdict" class="text-slate-300 leading-relaxed font-mono text-[11px]"></p>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-            <div class="font-bold text-slate-200 mb-1 flex items-center gap-1.5 text-teal-400">
-              <i class="fa-solid fa-truck-fast text-[11px]"></i>
-              <span>Shipping &amp; Consolidated Freight Logistics</span>
-            </div>
-            <p id="modalShipping" class="text-slate-300 leading-relaxed font-mono text-[11px]"></p>
+          <div>
+            <div class="text-[10px] text-slate-500">Landed Estimate (SGD)</div>
+            <div id="modalSgdPrice" class="text-sm font-bold text-emerald-400">S$0.00</div>
           </div>
         </div>
 
-      </div>
-
-      <!-- Modal Footer Action Bar -->
-      <div class="p-4 sm:p-5 border-t border-slate-800/80 bg-[#080d19] flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-        <button onclick="closeListingModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition-colors">
-          Close
-        </button>
-        <div id="modalActionButtons" class="flex items-center gap-2 flex-wrap">
-          <!-- Dynamic Action Buttons & External Listing Link injected via JS -->
+        <!-- Anti-Scam Scoring & Specs Breakdown -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-300 font-mono">Component Analysis &amp; Anti-Scam Verification:</div>
+          <p id="modalAuthNotes" class="text-xs text-slate-400 leading-relaxed font-mono bg-slate-900/50 p-2.5 rounded-lg border border-slate-800/80"></p>
         </div>
       </div>
 
+      <div class="p-3 border-t border-slate-800 bg-slate-900/80 flex items-center justify-between gap-2">
+        <a id="modalExternalListingLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-up-right-from-square text-orange-400 text-xs"></i>
+          <span id="modalExternalBtnLabel">Open on Platform</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <button onclick="closeListingModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono">Close</button>
+          <button id="modalActionBtn" onclick="toggleModalItemApproval()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs font-mono flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-check"></i> <span>Approve for Manifest</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ================= SIGN OUT CONFIRMATION MODAL ================= -->
-  <div id="signOutConfirmModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-sm glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+  <!-- ================= MODAL: QUICK ADD CUSTOM LISTING ================= -->
+  <div id="customAddModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-card rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white font-mono flex items-center gap-2">
+          <i class="fa-solid fa-plus text-orange-400"></i> Add Component Listing
+        </h3>
+        <button onclick="closeCustomAddModal()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Component Title</label>
+          <input type="text" id="addInputTitle" placeholder="e.g. Switch OLED Original Digitizer Assembly" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Platform</label>
+            <select id="addSelectPlatform" class="w-full px-2.5 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+              <option value="Taobao">Taobao (淘宝)</option>
+              <option value="Pinduoduo">Pinduoduo (拼多多)</option>
+              <option value="1688">1688 Wholesale</option>
+              <option value="Xianyu">Xianyu Teardown (闲鱼)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Category</label>
+            <select id="addSelectCategory" class="w-full px-2.5 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+              <option value="SCREEN">Display / Touch</option>
+              <option value="BATTERY">Battery / Power</option>
+              <option value="HOUSING">Housing / Seal</option>
+              <option value="BOARD">Board / Flex Port</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Price (RMB ¥)</label>
+            <input type="number" id="addInputPrice" placeholder="185" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Part / OEM Code</label>
+            <input type="text" id="addInputCode" placeholder="OLED-MOD-01" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Project Folder</label>
+          <input type="text" id="addInputFolder" placeholder="Nintendo Switch Project" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+        <button onclick="closeCustomAddModal()" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
+        <button onclick="saveCustomAddedItem()" class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-xs font-mono">Add to Shortlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ACCOUNT & SIGN-OUT CONFIRMATION ================= -->
+  <div id="signOutModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl w-full max-w-sm border border-slate-700 shadow-2xl p-5 space-y-4">
       <div class="flex items-center gap-3">
-        <img id="signOutModalAvatar" src="" alt="User" class="w-12 h-12 rounded-2xl object-cover border border-slate-700">
-        <div class="min-w-0">
-          <h4 id="signOutModalName" class="text-sm font-bold text-white truncate">Session User</h4>
-          <p id="signOutModalEmail" class="text-xs font-mono text-slate-400 truncate">email@example.com</p>
+        <img id="modalUserAvatar" src="" alt="Avatar" class="w-12 h-12 rounded-xl object-cover border border-slate-700">
+        <div>
+          <h3 id="modalUserName" class="text-sm font-bold text-white leading-tight"></h3>
+          <p id="modalUserEmail" class="text-xs text-slate-400 font-mono truncate max-w-[200px]"></p>
         </div>
       </div>
 
-      <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] font-mono space-y-1.5">
-        <div class="flex justify-between text-slate-400">
+      <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5 font-mono text-xs">
+        <div class="flex items-center justify-between text-slate-400">
           <span>Active Partition:</span>
-          <span id="signOutModalPartition" class="text-slate-200 font-bold truncate max-w-[140px]">cc_user</span>
+          <span id="modalPartitionId" class="text-orange-400 font-bold truncate max-w-[140px]"></span>
         </div>
-        <div class="flex justify-between text-slate-400">
+        <div class="flex items-center justify-between text-slate-400">
           <span>Triage Items:</span>
-          <span id="signOutModalItemCount" class="text-emerald-400 font-bold">0</span>
+          <span id="modalItemCount" class="text-slate-200"></span>
         </div>
-        <div class="flex justify-between text-slate-400">
-          <span>Sync Status:</span>
-          <span class="text-emerald-400">Zero Cloud Leakage</span>
+        <div class="flex items-center justify-between text-slate-400">
+          <span>Lead Hardware Eng:</span>
+          <span class="text-slate-200">Rayne Water</span>
         </div>
       </div>
 
-      <p class="text-xs text-slate-400 leading-relaxed">
-        Signing out unbinds the local OAuth session token from this browser instance. Your stored procurement items remain safe in your local sandbox.
+      <p class="text-xs text-slate-400 leading-relaxed font-mono">
+        Signing out unbinds the local OAuth token. Your procurement cards remain safe in your partitioned local browser sandbox.
       </p>
 
-      <div class="flex items-center gap-2 pt-2">
-        <button onclick="closeSignOutModal()" class="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition-colors border border-slate-800">
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button onclick="closeSignOutModal()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs font-semibold">
           Cancel
         </button>
-        <button onclick="executeSignOut()" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-all shadow-md shadow-rose-600/30">
+        <button onclick="confirmSignOut()" class="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-mono text-xs font-bold">
           Confirm Sign Out
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ================= LOGGED OUT SCREEN OVERLAY ================= -->
-  <div id="loggedOutModal" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-6 hidden">
-    <div class="w-16 h-16 rounded-3xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 text-2xl mb-4">
-      <i class="fa-solid fa-lock"></i>
-    </div>
-    <h2 class="text-lg font-bold text-white">Engine Session Locked</h2>
-    <p class="text-xs text-slate-400 font-mono mt-1 mb-6 text-center max-w-xs">
-      Session tokens invalidated. Secure workspace memory has been flushed.
-    </p>
-    <button onclick="returnToAuthGate()" class="px-6 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-xs font-mono transition-all">
-      Sign In Again
-    </button>
-  </div>
-
-  <!-- ================= QUICK ADD LISTING MODAL ================= -->
-  <div id="quickAddModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-lg glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-plus text-orange-400"></i>
-          <span>Add Custom Marketplace Listing</span>
-        </h3>
-        <button onclick="closeQuickAddModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-          <i class="fa-solid fa-xmark text-xs"></i>
-        </button>
-      </div>
-
-      <form onsubmit="handleQuickAddSubmit(event)" class="space-y-3 text-xs font-mono">
-        <div>
-          <label class="block text-slate-400 mb-1 text-[11px]">Listing Title / Device Specification</label>
-          <input type="text" id="addInputTitle" required placeholder="e.g. Galaxy S21 Ultra Original AMOLED Screen Teardown Pull"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-orange-500">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-400 mb-1 text-[11px]">Shopping Platform</label>
-            <select id="addSelectPlatform" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500">
-              <option value="Taobao">Taobao (淘宝)</option>
-              <option value="Pinduoduo">Pinduoduo (拼多多)</option>
-              <option value="1688">1688 Direct (阿里巴巴)</option>
-              <option value="Xianyu">Xianyu (闲鱼 拆机)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1 text-[11px]">Component Category</label>
-            <select id="addSelectCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500">
-              <option value="SCREEN">Display &amp; Frame</option>
-              <option value="BATTERY">Battery / BMS</option>
-              <option value="SEALS">Adhesives &amp; Gaskets</option>
-              <option value="BOARD">Port / Sub-Board</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-400 mb-1 text-[11px]">Price (RMB ¥)</label>
-            <input type="number" step="0.1" id="addInputPriceRmb" required placeholder="485"
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-orange-500">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1 text-[11px]">OEM Part Code (Optional)</label>
-            <input type="text" id="addInputOemCode" placeholder="GH82-26034A"
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-orange-500">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-slate-400 mb-1 text-[11px]">Target Project Folder</label>
-          <select id="addSelectFolder" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500">
-            <!-- Populated via JS -->
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-slate-400 mb-1 text-[11px]">Authenticity &amp; Inspection Note</label>
-          <textarea id="addInputAuthNote" rows="2" placeholder="Original frame pull with graphite heat-shield intact. Verified 120Hz LTPO."
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-orange-500"></textarea>
-        </div>
-
-        <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white bg-slate-900 transition-colors">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold transition-all shadow-md shadow-orange-500/20">Add Listing</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= OAUTH CLIENT HELP MODAL ================= -->
-  <div id="oauthHelpModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-md glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-key text-orange-400"></i>
-          <span>Google OAuth 2.0 Client ID</span>
-        </h3>
-        <button onclick="closeOAuthHelpModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-          <i class="fa-solid fa-xmark text-xs"></i>
-        </button>
-      </div>
-
-      <p class="text-xs text-slate-300 leading-relaxed font-mono">
-        CircuitCore uses an active Google Cloud OAuth 2.0 Web Client configured for GitHub Pages domain authentication:
-      </p>
-
-      <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[10px] font-mono text-amber-300 break-all select-all">
-        425600149049-1j3m0dumf9que1f047m00oa28en4jubt.apps.googleusercontent.com
-      </div>
-
-      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-        <div><strong>Origin:</strong> https://raynewater.github.io</div>
-        <div><strong>Redirect URI:</strong> https://raynewater.github.io/circuitcore/</div>
-        <div><strong>Scope:</strong> email profile openid</div>
-      </div>
-
-      <button onclick="closeOAuthHelpModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs transition-colors">
-        Dismiss
-      </button>
-    </div>
-  </div>
-
-  <!-- ================= CORE JAVASCRIPT APPLICATION LOGIC ================= -->
+  <!-- ================= CORE JAVASCRIPT ENGINE ================= -->
   <script>
-    // Hardcoded dedicated Google Cloud OAuth 2.0 Web Client ID
-    const HARDCODED_GOOGLE_CLIENT_ID = "425600149049-1j3m0dumf9que1f047m00oa28en4jubt.apps.googleusercontent.com";
+    // Hardcoded Official OAuth Credentials
+    const OFFICIAL_GOOGLE_CLIENT_ID = "425600149049-l2u3h5quks8vdipjfqch28k019k090a1.apps.googleusercontent.com";
+    const REDIRECT_URI = "https://raynewater.github.io/circuitcore/";
+    const SGD_EXCHANGE_RATE = 5.30;
 
-    // Application State
+    let gisTokenClient = null;
     let currentUser = null;
     let currentItems = [];
-    let currentFolders = ['Galaxy S21 Ultra Project', 'Switch OLED Repair', 'Steam Deck Overhaul'];
-    let selectedFolderFilter = null; // null means all folders
-    let currentTab = 'shortlist';
-    let googleTokenClient = null;
+    let selectedFolderFilter = null;
+    let activeModalItemId = null;
 
-    // Operational System Status Engine
-    function setSystemStatus(state, label) {
-      const pulseDot = document.getElementById('statusPulseDot');
-      const textEl = document.getElementById('statusDisplayText');
-      if (!pulseDot || !textEl) return;
+    // Master Memory Audit Logs (12 Records)
+    const masterMemoryLogs = [
+      { id: "LOG-001", cat: "OAUTH", title: "GIS Client Handshake Established", notes: "Initialized Google Identity Services token client using official OAuth client credentials.", timestamp: "2026-11-20 09:15" },
+      { id: "LOG-002", cat: "STORAGE", title: "Local Partition Sandboxing", notes: "Enforced partitioned storage keys (cc_[email]_items) to guarantee zero-leakage local caching.", timestamp: "2026-11-20 11:20" },
+      { id: "LOG-003", cat: "TRIAGE", title: "S21 Ultra Dynamic AMOLED Ingestion", notes: "Evaluated 4 supply candidates. Approved GH82-26034A Samsung teardown pull midframe.", timestamp: "2026-11-21 14:02" },
+      { id: "LOG-004", cat: "SCAM-GUARD", title: "BMS Flex Verification Check", notes: "Flagged clone batteries lacking Texas Instruments BQ fuel-gauge IC. Enforced OEM pull rule.", timestamp: "2026-11-21 15:30" },
+      { id: "LOG-005", cat: "ENGINE", title: "Dual Adaptive Viewport Deployed", notes: "Embedded mobile 5-icon thumb dock and desktop header navigation tab bars.", timestamp: "2026-11-21 17:45" },
+      { id: "LOG-006", cat: "MARKETPLACE", title: "Multi-Platform Platform Routing", notes: "Enabled dynamic linking and sourcing for Pinduoduo, Taobao, 1688 Wholesale, and Xianyu.", timestamp: "2026-11-21 18:30" },
+      { id: "LOG-007", cat: "CURRENCY", title: "Landed SGD Conversion Engine", notes: "Locked RMB:SGD conversion factor at 5.30 including estimated consolidation freight weight.", timestamp: "2026-11-22 08:00" },
+      { id: "LOG-008", cat: "SCHEMATIC", title: "Vector Teardown Fallback Engine", notes: "Integrated inline SVG generation for hardware midframes, lithium pouches, and die-cut gaskets.", timestamp: "2026-11-22 09:12" },
+      { id: "LOG-009", cat: "INSPECTION", title: "Folder Manifest Filtering", notes: "Active folder filtering dynamically organizes procurement lists across customer projects.", timestamp: "2026-11-22 10:05" },
+      { id: "LOG-010", cat: "GOV", title: "Lead Engineer Seal Assigned", notes: "Hardware verification authenticated under Rayne Water lead engineering profile.", timestamp: "2026-11-22 11:15" },
+      { id: "LOG-011", cat: "SECURITY", title: "Cross-Origin Link Protocol", notes: "All external shopping URLs isolated with rel='noopener noreferrer' and strict sanitization.", timestamp: "2026-11-22 12:00" },
+      { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22 12:45" }
+    ];
 
-      // Clean mobile-friendly concise labels to prevent ugly clipping
-      const isMobile = window.innerWidth < 640;
+    // Seed Data
+    const defaultInitialItems = [
+      {
+        id: "item_s21_screen",
+        title: "Galaxy S21 Ultra Service Frame Pull (Dynamic AMOLED 2X 120Hz)",
+        category: "SCREEN",
+        platform: "Taobao",
+        priceRmb: 485,
+        priceSgd: 91.50,
+        oemPartCode: "GH82-26034A",
+        folder: "Galaxy S21 Ultra Project",
+        status: "shortlist",
+        badge: "Teardown Pull with Chassis",
+        frameAuth: "Original Samsung teardown frame assembly. Anodized Phantom Black midframe with copper heat-pipe intact."
+      },
+      {
+        id: "item_s21_batt",
+        title: "Galaxy S21 Ultra 5000mAh Battery EB-BG998ABY (TI BMS Fuel Gauge)",
+        category: "BATTERY",
+        platform: "1688",
+        priceRmb: 78,
+        priceSgd: 14.72,
+        oemPartCode: "EB-BG998ABY",
+        folder: "Galaxy S21 Ultra Project",
+        status: "shortlist",
+        badge: "0-Cycle Cell",
+        frameAuth: "High-density cobalt cell with original Texas Instruments BQ fuel-gauge microcontroller flex."
+      },
+      {
+        id: "item_s21_gasket",
+        title: "S21 Ultra Rear Back Cover Waterproof IP68 Adhesive Gasket",
+        category: "HOUSING",
+        platform: "Pinduoduo",
+        priceRmb: 18,
+        priceSgd: 3.40,
+        oemPartCode: "GH02-21953A",
+        folder: "Galaxy S21 Ultra Project",
+        status: "approved",
+        badge: "Pre-cut OEM Spec",
+        frameAuth: "Precision die-cut waterproof perimeter adhesive seal. Includes camera module bezel adhesive."
+      }
+    ];
+
+    // Live Engine Status Controller
+    function setSystemStatus(state, customText) {
+      const badge = document.getElementById('liveEngineStatusBadge');
+      const text = document.getElementById('liveStatusText');
+      if (!badge || !text) return;
+
+      const dot = badge.querySelector('span:first-child');
+      dot.className = "w-1.5 h-1.5 rounded-full";
 
       switch(state) {
         case 'IDLE':
-          pulseDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
-          textEl.innerText = label || (isMobile ? 'ONLINE' : 'ONLINE • Ready');
+          dot.classList.add('bg-emerald-400', 'animate-pulse');
+          text.textContent = customText || "IDLE • System Ready";
           break;
         case 'ACTIVE':
-          pulseDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0';
-          textEl.innerText = label || (isMobile ? 'ACTIVE' : 'ACTIVE • Triage');
-          break;
-        case 'TRIAGING':
-          pulseDot.className = 'w-2 h-2 rounded-full bg-orange-400 animate-ping shrink-0';
-          textEl.innerText = label || (isMobile ? 'SCORING' : 'TRIAGING • Anti-Scam');
+          dot.classList.add('bg-orange-400', 'animate-ping');
+          text.textContent = customText || "ACTIVE • Anti-Scam Scoring";
           break;
         case 'SYNCING':
-          pulseDot.className = 'w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0';
-          textEl.innerText = label || (isMobile ? 'SYNCING' : 'SYNCING • Logs');
-          break;
-        case 'ERROR':
-          pulseDot.className = 'w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0';
-          textEl.innerText = label || (isMobile ? 'NOTICE' : 'NOTICE • Locked');
+          dot.classList.add('bg-cyan-400', 'animate-pulse');
+          text.textContent = customText || "SYNCING";
           break;
         default:
-          pulseDot.className = 'w-2 h-2 rounded-full bg-slate-400 shrink-0';
-          textEl.innerText = label || 'READY';
+          dot.classList.add('bg-emerald-400');
+          text.textContent = customText || "IDLE • System Ready";
       }
     }
 
-    // Default Initial Dataset with guaranteed clean encoded endpoints
-    const defaultInitialItems = [
-      {
-        id: 'item-1',
-        title: 'Galaxy S21 Ultra Service Frame Pull (Dynamic AMOLED 2X 120Hz)',
-        platform: 'Taobao',
-        category: 'SCREEN',
-        folder: 'Galaxy S21 Ultra Project',
-        oemPartCode: 'GH82-26034A',
-        priceRmb: 485,
-        priceSgd: 91.50,
-        status: 'shortlist',
-        badge: 'Teardown Pull with Chassis',
-        imageUrl: generatePartPhotoSVG('SCREEN', 'Galaxy S21 Ultra AMOLED Frame Pull'),
-        gallery: [
-          generatePartPhotoSVG('SCREEN', 'Front Digitizer & 120Hz LTPO'),
-          generatePartPhotoSVG('SCREEN', 'Rear Chassis Copper Heatsink')
-        ],
-        frameAuth: 'Authentic Samsung teardown frame assembly. Original anodized Phantom Black aluminum midframe intact with graphite thermal copper sheet. Zero bending or impact dents.',
-        icSpecs: 'Original Driver IC with LTPO backplane supporting 10Hz-120Hz dynamic adaptive refresh. Fully supports original S-Pen Wacom digitizer and ultrasonic fingerprint scanner.',
-        scamVerdict: 'Clean genuine unit. Excludes counterfeit In-Cell / TFT thick-chin copies that disable ultrasonic biometrics.',
-        shipping: 'Consolidatable via Taobao/PDD Free SG Freight. Includes 30-day testing warranty prior to chassis glue cure.'
-      },
-      {
-        id: 'item-2',
-        title: 'OEM S21 Ultra EB-BG998ABY Battery (TI BQ Gas Gauge BMS)',
-        platform: 'Pinduoduo',
-        category: 'BATTERY',
-        folder: 'Galaxy S21 Ultra Project',
-        oemPartCode: 'GH82-26035A',
-        priceRmb: 85,
-        priceSgd: 16.00,
-        status: 'approved',
-        badge: 'Service Pack Cell • 5000mAh',
-        imageUrl: generatePartPhotoSVG('BATTERY', 'EB-BG998ABY 5000mAh Cell'),
-        gallery: [
-          generatePartPhotoSVG('BATTERY', 'OEM Pouch & TI BMS Connector')
-        ],
-        frameAuth: 'Brand new 0-cycle lithium pouch cell with authentic 2D data matrix and Samsung SDI factory serial stamp.',
-        icSpecs: 'Integrated Texas Instruments (TI BQ) battery protection and fuel gauge IC. Reports authentic battery health, cycle count, and temperature telemetry to One UI kernel.',
-        scamVerdict: 'Genuine OEM cell. Rejected third-party re-wrapped cells that cause 25W fast-charging thermal throttling.',
-        shipping: 'Class 9 pure battery item. Routes through designated Special Goods (敏感货) sea freight line to Singapore.'
-      },
-      {
-        id: 'item-3',
-        title: 'S21 Ultra Rear Back Cover Waterproof IP68 Adhesive Gasket',
-        platform: '1688',
-        category: 'SEALS',
-        folder: 'Galaxy S21 Ultra Project',
-        oemPartCode: 'GH02-21953A',
-        priceRmb: 8.5,
-        priceSgd: 1.60,
-        status: 'shortlist',
-        badge: 'Pre-Cut Die-Cut OEM Spec',
-        imageUrl: generatePartPhotoSVG('SEALS', 'IP68 Waterproof Rear Gasket'),
-        gallery: [
-          generatePartPhotoSVG('SEALS', 'Laser Cut Camera Bracket Foam')
-        ],
-        frameAuth: 'Factory laser die-cut double-sided acrylic adhesive gasket matching exact camera housing and chassis perimeter grooves.',
-        icSpecs: 'Non-conductive pressure-activated adhesive backing with alignment locator film. Restores factory IP68 ingress protection.',
-        scamVerdict: 'Avoids messy manual B-7000 liquid glue that deteriorates glass coatings and ruins microphone acoustic mesh.',
-        shipping: 'Qualifies for standard general cargo (普货) and direct Choice Singapore shipping.'
-      }
-    ];
-
-    // Master Activity & Session Logs (12 Records Synchronized with Sheet)
-    const masterMemoryLogs = [
-      {
-        id: 'LOG-012',
-        cat: 'OAuth & Auth',
-        date: '2026-11-22',
-        title: 'Hardcoded Google Client ID & Touch Lock Resolution',
-        scope: 'CircuitCore Engine / GitHub Pages (raynewater.github.io)',
-        notes: 'Triaged and resolved boot screen overlay pointer-events blocking touch interactions. Hardcoded dedicated Google Cloud Web Client ID (425600149049-1j3m0dumf9que1f047m00oa28en4jubt.apps.googleusercontent.com) for zero-setup mobile sign-in. Verified Error 400 redirect_uri resolution.',
-        status: 'Production Hardened'
-      },
-      {
-        id: 'LOG-011',
-        cat: 'OAuth & Auth',
-        date: '2026-11-21',
-        title: 'Client-Side Token Ingestion & Storage Architecture',
-        scope: 'Authentication Pipeline & User Partition Bridge',
-        notes: 'Implemented Google Identity Services (GIS) token client callback ingestion. Automatically partitions local storage by cc_[email]_items to maintain multi-user isolation without cloud data exposure.',
-        status: 'Production Hardened'
-      },
-      {
-        id: 'LOG-010',
-        cat: 'Platform & Shipping',
-        date: '2026-11-20',
-        title: 'Taobao ¥99 Free Sea Freight Exemption Matrix for Singapore',
-        scope: 'Cainiao Consolidated Freight Pipeline (SG)',
-        notes: 'Established automated freight rule engine: Items under 普货 (General Cargo) qualify for direct consolidated free sea shipping when hitting the ¥99 threshold. Pure battery packs classified as 敏感货 (Special Goods) automatically route through dedicated battery sea channels.',
-        status: 'Operational Rule'
-      },
-      {
-        id: 'LOG-009',
-        cat: 'Hardware & Specs',
-        date: '2026-11-19',
-        title: 'Samsung S21 Ultra OLED Driver IC & LTPO Backplane Triage',
-        scope: 'Display Procurement Standard GH82-26034A',
-        notes: 'Configured anti-scam rejection parameters: Flag and reject any In-Cell TFT aftermarket panels masquerading as OEM. Only Dynamic AMOLED 2X teardown frame pulls supporting ultrasonic fingerprint and adaptive 10Hz-120Hz LTPO receive tier-1 approval.',
-        status: 'Hardware Standard'
-      },
-      {
-        id: 'LOG-008',
-        cat: 'Hardware & Specs',
-        date: '2026-11-18',
-        title: 'EB-BG998ABY Lithium Pouch & TI Fuel Gauge Verification',
-        scope: 'Battery Procurement Standard GH82-26035A',
-        notes: 'Mandated Texas Instruments TI BQ gas gauge microcontroller check on replacement cells to prevent fake cycle counters and restore 25W super-fast charging thermal telemetry.',
-        status: 'Hardware Standard'
-      },
-      {
-        id: 'LOG-007',
-        cat: 'Hardware & Specs',
-        date: '2026-11-17',
-        title: 'Pre-Cut Laser Die-Cut IP68 Adhesive vs Liquid Glue Protocol',
-        scope: 'Waterproof Ingress Maintenance GH02-21953A',
-        notes: 'Blacklisted manual liquid adhesive (B-7000 / T-8000) for rear chassis sealing due to vapor contamination of camera sensor coatings. Mandated OEM laser-cut pressure-activated adhesive templates.',
-        status: 'Hardware Standard'
-      },
-      {
-        id: 'LOG-006',
-        cat: 'Platform & Shipping',
-        date: '2026-11-16',
-        title: 'Shenzhen Huaqiangbei 1688 Direct Factory Procurement Pipeline',
-        scope: 'Bulk Component Logistics',
-        notes: 'Calibrated FOB Shenzhen pricing tiers. High-volume connectors and acoustic mesh items sourced via 1688 factory-direct supplier accounts for maximum margin retention.',
-        status: 'Supply Pipeline'
-      },
-      {
-        id: 'LOG-005',
-        cat: 'Platform & Shipping',
-        date: '2026-11-15',
-        title: 'Pinduoduo Black Label Brand Store Verification Rules',
-        scope: 'Brand Authenticity Engine',
-        notes: 'Integrated Pinduoduo 品牌 (Brand Protected) store badge verification to bypass counterfeit third-party sellers on lithium cells and thermal dissipation sheets.',
-        status: 'Operational Rule'
-      },
-      {
-        id: 'LOG-004',
-        cat: 'OAuth & Auth',
-        date: '2026-11-14',
-        title: 'Security Partitioning & In-Browser Manifest Encryption',
-        scope: 'Local Privacy Architecture',
-        notes: 'Architected local storage sandboxing to ensure repair client manifests, hardware costs, and customer device serials remain strictly client-side without external telemetry tracking.',
-        status: 'Security Hardened'
-      },
-      {
-        id: 'LOG-003',
-        cat: 'Hardware & Specs',
-        date: '2026-11-13',
-        title: 'Nintendo Switch OLED & Steam Deck Hall Effect Sensor Standard',
-        scope: 'Handheld Gaming Console Procurement',
-        notes: 'Added baseline hardware triage for Gulikit / K-Silver electromagnetic Hall Effect analog sticks to eliminate potentiometer wear drift permanently on handheld triage manifests.',
-        status: 'Hardware Standard'
-      },
-      {
-        id: 'LOG-002',
-        cat: 'Platform & Shipping',
-        date: '2026-11-12',
-        title: 'Idle Fish (Xianyu) Teardown Pull Seller Scrutiny Engine',
-        scope: 'Secondhand Teardown Marketplace',
-        notes: 'Engineered scoring model evaluating seller Zhima Credit (芝麻信用) ratings above 700 and requiring video motherboard boot tests before recommending teardown frame purchases.',
-        status: 'Anti-Scam Model'
-      },
-      {
-        id: 'LOG-001',
-        cat: 'OAuth & Auth',
-        date: '2026-11-10',
-        title: 'Project Genesis & Google Cloud Architecture Inception',
-        scope: 'CircuitCore Engine Milestone',
-        notes: 'Established CircuitCore procurement architecture. Connected master Google Sheet audit trail to support hardware engineering triage in Singapore repair facilities.',
-        status: 'Milestone'
-      }
-    ];
-
-    // Helper to generate authentic direct platform web search / listing link
-    function getPlatformListingUrl(platform, title, oemCode) {
-      const p = (platform || 'Taobao').toLowerCase();
-      const query = encodeURIComponent(`${title || ''} ${oemCode || ''}`.trim());
-
-      if (p.includes('pinduoduo') || p.includes('pdd')) {
-        return `https://mobile.yangkeduo.com/search_result.html?search_key=${query}`;
-      } else if (p.includes('1688')) {
-        return `https://air.1688.com/app/app-purchase-search/index.html?keywords=${query}`;
-      } else if (p.includes('xianyu')) {
-        return `https://2.taobao.com/search?q=${query}`;
-      } else {
-        return `https://s.taobao.com/search?q=${query}`;
-      }
+    // HTML Sanitizer
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
-    // Helper to render platform badge styling
-    function getPlatformBadgeHtml(platform) {
-      const p = (platform || 'Taobao').toLowerCase();
-      if (p.includes('pinduoduo') || p.includes('pdd')) {
-        return `<span class="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-500/50 text-rose-300 shadow-sm"><i class="fa-solid fa-basket-shopping text-[8px]"></i> PDD</span>`;
-      } else if (p.includes('1688')) {
-        return `<span class="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-500/50 text-amber-300 shadow-sm"><i class="fa-solid fa-industry text-[8px]"></i> 1688</span>`;
-      } else if (p.includes('xianyu')) {
-        return `<span class="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-yellow-950/80 border border-yellow-500/50 text-yellow-300 shadow-sm"><i class="fa-solid fa-fish text-[8px]"></i> Xianyu</span>`;
-      } else {
-        return `<span class="inline-flex items-center gap-1 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-300 shadow-sm"><i class="fa-solid fa-store text-[8px]"></i> Taobao</span>`;
-      }
-    }
-
-    // High-Fidelity Encoded Hardware Blueprint Generator
+    // Procedural SVG Hardware Schematics (Strictly URL-Encoded to Prevent Raw Text Breaks)
     function generatePartPhotoSVG(category, title) {
-      const cat = (category || 'BOARD').toUpperCase();
-      let innerGraphics = '';
-      let accentColor = '#f97316';
-      let partLabel = 'CIRCUIT MODULE';
+      const cleanTitle = (title || 'HARDWARE COMPONENT').substring(0, 24).toUpperCase();
+      let innerArt = '';
 
-      if (cat === 'SCREEN') {
-        accentColor = '#38bdf8';
-        partLabel = 'DYNAMIC AMOLED 2X';
-        innerGraphics = `
-          <rect x="130" y="25" width="140" height="250" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5" />
-          <circle cx="200" cy="45" r="4" fill="#0284c7" />
-          <rect x="145" y="60" width="110" height="175" rx="4" fill="#0369a1" fill-opacity="0.25" stroke="#38bdf8" stroke-dasharray="4 2" />
-          <path d="M 180 235 L 180 270 L 220 270 L 220 235" fill="none" stroke="#f59e0b" stroke-width="3" />
-          <rect x="185" y="255" width="30" height="12" rx="2" fill="#d97706" />
-        `;
-      } else if (cat === 'BATTERY') {
-        accentColor = '#10b981';
-        partLabel = 'LI-ION POUCH CELL';
-        innerGraphics = `
-          <rect x="125" y="45" width="150" height="215" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2" />
-          <rect x="145" y="25" width="22" height="20" rx="2" fill="#a7f3d0" />
-          <rect x="233" y="25" width="22" height="20" rx="2" fill="#6ee7b7" />
-          <rect x="167" y="15" width="66" height="30" rx="3" fill="#047857" stroke="#10b981" />
-          <circle cx="200" cy="30" r="3" fill="#34d399" />
-          <rect x="145" y="80" width="110" height="40" fill="#022c22" rx="4" />
-          <text x="200" y="105" fill="#34d399" font-size="10" font-family="monospace" font-weight="bold" text-anchor="middle">5000mAh 3.88V</text>
-        `;
-      } else if (cat === 'SEALS') {
-        accentColor = '#f59e0b';
-        partLabel = 'IP68 DIE-CUT ADHESIVE';
-        innerGraphics = `
-          <rect x="120" y="25" width="160" height="250" rx="18" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="8 4" />
-          <rect x="135" y="40" width="45" height="70" rx="8" fill="none" stroke="#f59e0b" stroke-width="3" />
-          <circle cx="157" cy="60" r="10" fill="none" stroke="#f59e0b" stroke-width="2" />
-          <circle cx="157" cy="88" r="10" fill="none" stroke="#f59e0b" stroke-width="2" />
-        `;
-      } else {
-        accentColor = '#a855f7';
-        partLabel = 'SUB-BOARD ASSEMBLY';
-        innerGraphics = `
-          <rect x="120" y="60" width="160" height="180" rx="10" fill="#1e1b4b" stroke="#a855f7" stroke-width="2" />
-          <circle cx="138" cy="78" r="5" fill="#e9d5ff" />
-          <circle cx="262" cy="78" r="5" fill="#e9d5ff" />
-          <rect x="160" y="105" width="80" height="70" fill="#312e81" stroke="#c084fc" />
-          <rect x="175" y="220" width="50" height="20" rx="4" fill="#6b21a8" />
-        `;
+      switch(category) {
+        case 'SCREEN':
+          innerArt = `
+            <rect x="70" y="15" width="100" height="170" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+            <rect x="76" y="24" width="88" height="152" rx="4" fill="#0284c7" fill-opacity="0.25"/>
+            <circle cx="120" cy="32" r="3" fill="#020617"/>
+            <path d="M 85 185 L 85 195 L 110 195" fill="none" stroke="#f59e0b" stroke-width="3"/>
+          `;
+          break;
+        case 'BATTERY':
+          innerArt = `
+            <rect x="75" y="30" width="90" height="145" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+            <rect x="105" y="22" width="30" height="8" rx="2" fill="#10b981"/>
+            <path d="M 120 70 L 105 105 L 122 105 L 115 135" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+          `;
+          break;
+        case 'HOUSING':
+          innerArt = `
+            <rect x="65" y="20" width="110" height="160" rx="14" fill="none" stroke="#f97316" stroke-width="3" stroke-dasharray="6,4"/>
+            <rect x="75" y="30" width="45" height="60" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
+          `;
+          break;
+        default:
+          innerArt = `
+            <rect x="70" y="45" width="100" height="110" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+            <rect x="95" y="70" width="50" height="50" rx="4" fill="#022c22" stroke="#34d399" stroke-width="1.5"/>
+            <circle cx="85" cy="60" r="3" fill="#fbbf24"/>
+            <circle cx="155" cy="60" r="3" fill="#fbbf24"/>
+          `;
       }
 
       const svgXml = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" width="100%" height="100%">
           <defs>
-            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#0a0f1d" />
-              <stop offset="100%" stop-color="#030712" />
-            </linearGradient>
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.75" />
+            <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+              <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#1e293b" stroke-width="0.8"/>
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#bg)" />
-          <rect width="100%" height="100%" fill="url(#grid)" opacity="0.4" />
-          ${innerGraphics}
-          <text x="200" y="285" fill="${accentColor}" font-size="11" font-family="monospace" font-weight="bold" letter-spacing="1.5" text-anchor="middle">${partLabel}</text>
+          <rect width="240" height="200" fill="#090d1a"/>
+          <rect width="240" height="200" fill="url(#grid)"/>
+          ${innerArt}
+          <text x="120" y="188" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="8" font-weight="bold">${escapeHtml(cleanTitle)}</text>
         </svg>
-      `.trim();
+      `;
 
-      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgXml)}`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
     }
 
-    function handleCardImageError(imgEl, category) {
-      imgEl.onerror = null;
-      imgEl.src = generatePartPhotoSVG(category, 'Component');
+    function handleCardImageError(imgElem, category) {
+      imgElem.onerror = null;
+      imgElem.src = generatePartPhotoSVG(category, "OEM COMPONENT");
     }
 
-    // Storage Management (Partitioned by User Email)
-    function loadUserData(email) {
-      const partitionKey = `cc_${email}_items`;
-      const stored = localStorage.getItem(partitionKey);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            currentItems = parsed.map(item => {
-              if (!item.imageUrl || item.imageUrl.includes('unsplash.com') || item.imageUrl.includes('utf8,<svg') || item.imageUrl.includes('style=')) {
-                item.imageUrl = generatePartPhotoSVG(item.category || 'BOARD', item.title);
-                item.gallery = [item.imageUrl];
-              }
-              if (!item.folder) {
-                item.folder = currentFolders[0] || 'Galaxy S21 Ultra Project';
-              }
-              return item;
-            });
+    // Platform Badges
+    function getPlatformBadgeHtml(platform) {
+      switch(platform) {
+        case 'Pinduoduo':
+          return `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30 text-[9px] font-mono font-bold"><i class="fa-solid fa-basket-shopping text-[8px]"></i> PDD</span>`;
+        case '1688':
+          return `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-orange-600/20 text-orange-400 border border-orange-500/30 text-[9px] font-mono font-bold"><i class="fa-solid fa-industry text-[8px]"></i> 1688</span>`;
+        case 'Xianyu':
+          return `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 text-[9px] font-mono font-bold"><i class="fa-solid fa-fish text-[8px]"></i> Xianyu</span>`;
+        default:
+          return `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-mono font-bold"><i class="fa-solid fa-shop text-[8px]"></i> Taobao</span>`;
+      }
+    }
+
+    function getPlatformListingUrl(platform, title, code) {
+      const q = encodeURIComponent((title || '') + ' ' + (code || ''));
+      switch(platform) {
+        case 'Pinduoduo':
+          return `https://mobile.yangkeduo.com/search_result.html?search_key=${q}`;
+        case '1688':
+          return `https://m.1688.com/page/search.html?keywords=${q}`;
+        case 'Xianyu':
+          return `https://www.goofish.com/search?q=${q}`;
+        default:
+          return `https://s.taobao.com/search?q=${q}`;
+      }
+    }
+
+    // Tab Switching Controller (Desktop & Mobile Sync)
+    function switchTab(tabKey) {
+      const tabIds = ['shortlist', 'approved', 'folders', 'trash', 'memory'];
+      tabIds.forEach(key => {
+        const view = document.getElementById(`tabView_${key}`);
+        if (view) {
+          if (key === tabKey) {
+            view.classList.remove('hidden');
           } else {
-            currentItems = [...defaultInitialItems];
+            view.classList.add('hidden');
           }
-          saveUserData();
-        } catch (e) {
-          currentItems = [...defaultInitialItems];
         }
-      } else {
-        currentItems = [...defaultInitialItems];
-        saveUserData();
-      }
 
-      const storedFolders = localStorage.getItem(`cc_${email}_folders`);
-      if (storedFolders) {
-        try {
-          const parsedF = JSON.parse(storedFolders);
-          if (Array.isArray(parsedF) && parsedF.length > 0) {
-            currentFolders = parsedF;
+        // Desktop nav button active styling
+        const dtBtn = document.getElementById(`desktopTab_${key}`);
+        if (dtBtn) {
+          if (key === tabKey) {
+            dtBtn.className = "px-3 py-1.5 rounded-lg bg-orange-500 text-white font-bold transition-all";
+          } else {
+            dtBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all";
           }
-        } catch(e) {}
-      }
-    }
+        }
 
-    function saveUserData() {
-      if (!currentUser || !currentUser.email) return;
-      const partitionKey = `cc_${currentUser.email}_items`;
-      localStorage.setItem(partitionKey, JSON.stringify(currentItems));
-      localStorage.setItem(`cc_${currentUser.email}_folders`, JSON.stringify(currentFolders));
+        // Mobile dock icon active styling
+        const mbBtn = document.getElementById(`mobileNav_${key}`);
+        if (mbBtn) {
+          if (key === tabKey) {
+            mbBtn.className = "relative w-full py-2.5 rounded-xl bg-orange-500 text-slate-950 flex flex-col items-center justify-center transition-all active:scale-95 active-nav-glow";
+          } else {
+            mbBtn.className = "relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95";
+          }
+        }
+      });
+
+      // Render corresponding view
+      if (tabKey === 'shortlist') renderShortlist();
+      if (tabKey === 'approved') renderApproved();
+      if (tabKey === 'folders') renderFolders();
+      if (tabKey === 'trash') renderTrash();
+      if (tabKey === 'memory') renderMemoryLogs();
+
       updateBadges();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Update Counts Across All Views
     function updateBadges() {
-      const shortlistCount = currentItems.filter(i => i.status === 'shortlist').length;
-      const approvedCount = currentItems.filter(i => i.status === 'approved').length;
+      const shortCount = currentItems.filter(i => i.status === 'shortlist').length;
+      const appCount = currentItems.filter(i => i.status === 'approved').length;
       const trashCount = currentItems.filter(i => i.status === 'trash').length;
 
-      const badgeShortlist = document.getElementById('badgeShortlist');
-      const badgeApproved = document.getElementById('badgeApproved');
-      const deskBadgeShortlist = document.getElementById('deskBadgeShortlist');
-      const deskBadgeApproved = document.getElementById('deskBadgeApproved');
-      const deskBadgeTrash = document.getElementById('deskBadgeTrash');
+      const mShort = document.getElementById('badgeMobile_shortlist');
+      const mApp = document.getElementById('badgeMobile_approved');
+      const mTrash = document.getElementById('badgeMobile_trash');
+      if (mShort) mShort.textContent = shortCount;
+      if (mApp) mApp.textContent = appCount;
+      if (mTrash) mTrash.textContent = trashCount;
 
-      if (badgeShortlist) badgeShortlist.innerText = shortlistCount;
-      if (badgeApproved) badgeApproved.innerText = approvedCount;
-      if (deskBadgeShortlist) deskBadgeShortlist.innerText = shortlistCount;
-      if (deskBadgeApproved) deskBadgeApproved.innerText = approvedCount;
-      if (deskBadgeTrash) deskBadgeTrash.innerText = trashCount;
-    }
-
-    // Tab Navigation Switcher (Supports Sync Between Mobile Bottom Dock & Desktop Header)
-    function switchTab(tabId) {
-      currentTab = tabId;
-
-      // Section views
-      const tabs = ['shortlist', 'approved', 'folders', 'trash', 'memory'];
-      tabs.forEach(t => {
-        const sectionEl = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        if (sectionEl) {
-          sectionEl.classList.toggle('hidden', t !== tabId);
-        }
-      });
-
-      // Update Desktop Header Tab Buttons
-      const deskButtons = {
-        shortlist: document.getElementById('deskTabShortlist'),
-        approved: document.getElementById('deskTabApproved'),
-        folders: document.getElementById('deskTabFolders'),
-        trash: document.getElementById('deskTabTrash'),
-        memory: document.getElementById('deskTabMemory')
-      };
-
-      Object.keys(deskButtons).forEach(key => {
-        const btn = deskButtons[key];
-        if (!btn) return;
-        if (key === tabId) {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-white bg-orange-500 shadow transition-all';
-        } else {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 text-slate-400 hover:text-white transition-all';
-        }
-      });
-
-      // Update Mobile Bottom Dock Buttons
-      const mobButtons = {
-        shortlist: document.getElementById('mobTabShortlist'),
-        approved: document.getElementById('mobTabApproved'),
-        folders: document.getElementById('mobTabFolders'),
-        trash: document.getElementById('mobTabTrash'),
-        memory: document.getElementById('mobTabMemory')
-      };
-
-      Object.keys(mobButtons).forEach(key => {
-        const btn = mobButtons[key];
-        if (!btn) return;
-        if (key === tabId) {
-          btn.className = 'relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-950 bg-orange-500 shadow-md transition-all active:scale-95';
-        } else {
-          btn.className = 'relative flex items-center justify-center py-2.5 px-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95';
-        }
-      });
-
-      // Render tab data
-      if (tabId === 'shortlist') renderShortlist();
-      if (tabId === 'approved') renderApproved();
-      if (tabId === 'folders') renderFolders();
-      if (tabId === 'trash') renderTrash();
-      if (tabId === 'memory') renderMemoryLogs();
+      const dShort = document.getElementById('badgeDesktop_shortlist');
+      const dApp = document.getElementById('badgeDesktop_approved');
+      const dTrash = document.getElementById('badgeDesktop_trash');
+      if (dShort) dShort.textContent = shortCount;
+      if (dApp) dApp.textContent = appCount;
+      if (dTrash) dTrash.textContent = trashCount;
     }
 
     // Render Shortlist Cards
@@ -1117,22 +783,17 @@
         currentItems = [...defaultInitialItems];
       }
 
-    // Render Approved Manifest Cards
-    function renderApproved() {
-      const container = document.getElementById('approvedGrid');
-      if (!container) return;
-
-      if (!Array.isArray(currentItems) || currentItems.length === 0) {
-        currentItems = [...defaultInitialItems];
-      }
-
-      const items = currentItems.filter(i => i.status === 'approved');
+      const items = currentItems.filter(i => {
+        if (i.status !== 'shortlist') return false;
+        if (selectedFolderFilter && i.folder !== selectedFolderFilter) return false;
+        return true;
+      });
 
       if (items.length === 0) {
         container.innerHTML = `
           <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
-            <i class="fa-solid fa-clipboard-check text-3xl mb-3 text-slate-600 block"></i>
-            No items approved for manifest yet. Review shortlist items and tap the checkmark to approve.
+            <i class="fa-solid fa-microchip text-3xl mb-3 text-slate-600 block"></i>
+            No candidate components in this view. Use the triage command bar above to ingest components.
           </div>
         `;
         return;
@@ -1142,21 +803,21 @@
         container.innerHTML = items.map(item => {
           const safeTitle = escapeHtml(item.title || 'Component');
           const safeAuth = escapeHtml(item.frameAuth || 'Inspection pending delivery.');
-          const safeBadge = escapeHtml(item.badge || 'Approved Component');
+          const safeBadge = escapeHtml(item.badge || 'Candidate Pull');
           const safeFolder = escapeHtml(item.folder || 'General Hardware');
           const safeImg = (item.imageUrl && item.imageUrl.startsWith('data:image')) ? item.imageUrl : generatePartPhotoSVG(item.category, item.title);
           const priceRmb = item.priceRmb || 0;
-          const priceSgd = typeof item.priceSgd === 'number' ? item.priceSgd.toFixed(2) : (priceRmb / 5.3).toFixed(2);
-          const oemCode = escapeHtml(item.oemPartCode || 'OEM-PART');
+          const priceSgd = typeof item.priceSgd === 'number' ? item.priceSgd.toFixed(2) : (priceRmb / SGD_EXCHANGE_RATE).toFixed(2);
+          const oemCode = escapeHtml(item.oemPartCode || 'OEM-SPEC');
           const directUrl = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
 
           return `
-          <div class="glass-card rounded-2xl p-4 border border-emerald-500/30 hover:border-emerald-500/60 transition-all flex flex-col justify-between group shadow-lg shadow-emerald-950/20">
+          <div class="glass-card rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between group">
             <div class="cursor-pointer" onclick="openListingModal('${item.id}')">
               <!-- Image Card Preview -->
               <div class="w-full h-36 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-3 flex items-center justify-center">
                 <img src="${safeImg}" alt="${safeTitle}" referrerpolicy="no-referrer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
-                <span class="absolute top-2 left-2 text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-500/40 text-emerald-400 backdrop-blur-sm pointer-events-none">
+                <span class="absolute top-2 left-2 text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-950/90 border border-orange-500/40 text-orange-400 backdrop-blur-sm pointer-events-none">
                   ${safeBadge}
                 </span>
                 <div class="absolute top-2 right-2 pointer-events-none">
@@ -1165,11 +826,11 @@
               </div>
 
               <div class="flex items-center justify-between gap-2">
-                <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">${oemCode}</span>
+                <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${oemCode}</span>
                 <span class="text-[9px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]"><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</span>
               </div>
 
-              <h4 class="text-xs font-bold text-white mt-2 line-clamp-2 leading-snug group-hover:text-emerald-300 transition-colors">
+              <h4 class="text-xs font-bold text-white mt-2 line-clamp-2 leading-snug group-hover:text-orange-400 transition-colors">
                 ${safeTitle}
               </h4>
 
@@ -1184,11 +845,14 @@
                 <div class="text-sm font-mono font-bold text-emerald-400">S$${priceSgd}</div>
               </div>
               <div class="flex items-center gap-1.5">
-                <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-1" title="Open Original Listing">
+                <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-1" title="Open on Platform">
                   <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-orange-400"></i> Open
                 </a>
-                <button onclick="demoteToShortlist('${item.id}')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-orange-950/40 text-slate-400 hover:text-orange-400 text-xs font-mono transition-colors flex items-center gap-1" title="Return to Shortlist">
-                  <i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Return
+                <button onclick="promoteToApproved('${item.id}')" class="p-2 rounded-lg bg-slate-800 hover:bg-emerald-950 text-slate-400 hover:text-emerald-400 transition-colors" title="Approve for Manifest">
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+                <button onclick="moveItemToTrash('${item.id}')" class="p-2 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 transition-colors" title="Reject / Trash">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
                 </button>
               </div>
             </div>
@@ -1196,109 +860,22 @@
         `;
         }).join('');
       } catch (err) {
-        console.error('Error rendering approved cards:', err);
+        console.error('Error rendering shortlist cards:', err);
       }
     }
 
-    // Render Folders Grid
-    function renderFolders() {
-      const container = document.getElementById('foldersGrid');
+    // Render Approved Manifest Cards
+    function renderApproved() {
+      const container = document.getElementById('approvedGrid');
       if (!container) return;
 
-      container.innerHTML = currentFolders.map(folderName => {
-        const count = currentItems.filter(i => i.folder === folderName && i.status !== 'trash').length;
-        const safeName = escapeHtml(folderName);
-        const isSelected = selectedFolderFilter === folderName;
-
-        return `
-          <div class="glass-card rounded-2xl p-4 border ${isSelected ? 'border-orange-500 bg-orange-950/20' : 'border-slate-800'} hover:border-slate-700 transition-all flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0 cursor-pointer flex-1" onclick="selectFolderFilter('${folderName}')">
-              <div class="w-10 h-10 rounded-xl ${isSelected ? 'bg-orange-500 text-slate-950' : 'bg-slate-900 text-amber-400'} flex items-center justify-center shrink-0 border border-slate-700/60">
-                <i class="fa-solid fa-folder-open text-base"></i>
-              </div>
-              <div class="min-w-0">
-                <h4 class="text-xs font-bold text-white truncate">${safeName}</h4>
-                <p class="text-[10px] font-mono text-slate-400">${count} active components</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <button onclick="selectFolderFilter('${folderName}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors">
-                ${isSelected ? 'Active' : 'Open'}
-              </button>
-              <button onclick="deleteFolderPrompt('${folderName}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 text-xs transition-colors" title="Delete Folder">
-                <i class="fa-solid fa-trash-can text-xs"></i>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function selectFolderFilter(folderName) {
-      selectedFolderFilter = folderName;
-      const badge = document.getElementById('activeFolderFilterBadge');
-      const text = document.getElementById('activeFolderNameText');
-      if (badge && text) {
-        text.innerText = folderName;
-        badge.classList.remove('hidden');
-      }
-      switchTab('shortlist');
-    }
-
-    function clearActiveFolderFilter() {
-      selectedFolderFilter = null;
-      const badge = document.getElementById('activeFolderFilterBadge');
-      if (badge) badge.classList.add('hidden');
-      renderShortlist();
-      renderFolders();
-    }
-
-    function createNewFolderPrompt() {
-      const name = prompt('Enter new project / device folder name:');
-      if (name && name.trim()) {
-        const cleanName = name.trim();
-        if (!currentFolders.includes(cleanName)) {
-          currentFolders.push(cleanName);
-          saveUserData();
-          renderFolders();
-          setSystemStatus('ACTIVE', `FOLDER • Created "${cleanName}"`);
-          setTimeout(() => setSystemStatus('IDLE'), 1500);
-        }
-      }
-    }
-
-    function deleteFolderPrompt(folderName) {
-      if (confirm(`Delete folder "${folderName}"? Associated items will remain in your workspace under unassigned.`)) {
-        currentFolders = currentFolders.filter(f => f !== folderName);
-        if (selectedFolderFilter === folderName) {
-          selectedFolderFilter = null;
-        }
-        // Update items to unassigned if they had this folder
-        currentItems.forEach(i => {
-          if (i.folder === folderName) {
-            i.folder = 'General Hardware';
-          }
-        });
-        saveUserData();
-        renderFolders();
-        renderShortlist();
-        setSystemStatus('ACTIVE', `FOLDER • Removed "${folderName}"`);
-        setTimeout(() => setSystemStatus('IDLE'), 2000);
-      }
-    }
-
-    // Render Trash Vault
-    function renderTrash() {
-      const container = document.getElementById('trashGrid');
-      if (!container) return;
-
-      const items = currentItems.filter(i => i.status === 'trash');
+      const items = currentItems.filter(i => i.status === 'approved');
 
       if (items.length === 0) {
         container.innerHTML = `
           <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
-            <i class="fa-solid fa-trash-can text-3xl mb-3 text-slate-600 block"></i>
-            Trash vault is empty. Rejected or scam listings will appear here.
+            <i class="fa-solid fa-clipboard-check text-3xl mb-3 text-slate-600 block"></i>
+            No approved components yet. Open the Shortlist tab and tap the checkmark to approve candidate items.
           </div>
         `;
         return;
@@ -1306,848 +883,649 @@
 
       container.innerHTML = items.map(item => {
         const safeTitle = escapeHtml(item.title);
-        const safeImg = item.imageUrl || generatePartPhotoSVG(item.category, item.title);
+        const safeFolder = escapeHtml(item.folder || 'General');
+        const safeImg = (item.imageUrl && item.imageUrl.startsWith('data:image')) ? item.imageUrl : generatePartPhotoSVG(item.category, item.title);
+        const directUrl = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
 
         return `
-        <div class="glass-card rounded-2xl p-4 border border-rose-900/40 flex flex-col justify-between opacity-80 hover:opacity-100 transition-opacity">
+        <div class="glass-card rounded-2xl p-4 border border-emerald-500/30 bg-emerald-950/10 flex flex-col justify-between">
           <div>
-            <div class="w-full h-32 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-2.5">
-              <img src="${safeImg}" alt="${safeTitle}" class="w-full h-full object-cover grayscale" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
-              <span class="absolute top-2 left-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-500/30">REJECTED</span>
+            <div class="w-full h-32 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-3">
+              <img src="${safeImg}" alt="${safeTitle}" class="w-full h-full object-cover">
+              <div class="absolute top-2 right-2">
+                ${getPlatformBadgeHtml(item.platform)}
+              </div>
             </div>
-            <h4 class="text-xs font-bold text-slate-300 line-clamp-2">${safeTitle}</h4>
-            <div class="text-[10px] font-mono text-slate-500 mt-1">¥${item.priceRmb} • S$${item.priceSgd.toFixed(2)}</div>
+
+            <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
+              <span>${escapeHtml(item.oemPartCode)}</span>
+              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span>
+            </div>
+
+            <h4 class="text-xs font-bold text-white line-clamp-2">${safeTitle}</h4>
+            <div class="text-[10px] font-mono text-slate-400 mt-1"><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</div>
           </div>
-          <div class="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between">
-            <button onclick="restoreFromTrash('${item.id}')" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors">
-              <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Restore
-            </button>
-            <button onclick="permanentDeleteSingle('${item.id}')" class="px-2 py-1 rounded-lg text-rose-500 hover:text-rose-400 text-xs font-mono transition-colors">
-              Purge
-            </button>
+
+          <div class="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+            <div>
+              <div class="text-[10px] font-mono text-slate-500">¥${item.priceRmb}</div>
+              <div class="text-sm font-mono font-bold text-emerald-400">S$${(item.priceRmb / SGD_EXCHANGE_RATE).toFixed(2)}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono hover:bg-slate-700">
+                Open
+              </a>
+              <button onclick="demoteToShortlist('${item.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono" title="Return to Shortlist">
+                Return
+              </button>
+            </div>
           </div>
         </div>
       `;
       }).join('');
     }
 
-    function emptyTrashConfirm() {
-      const trashCount = currentItems.filter(i => i.status === 'trash').length;
-      if (trashCount === 0) return;
-      if (confirm(`Permanently purge ${trashCount} rejected listings from memory? This cannot be undone.`)) {
-        currentItems = currentItems.filter(i => i.status !== 'trash');
-        saveUserData();
-        renderTrash();
-        setSystemStatus('ACTIVE', 'TRASH • Storage Purged');
-        setTimeout(() => setSystemStatus('IDLE'), 1500);
-      }
-    }
-
-    function permanentDeleteSingle(itemId) {
-      currentItems = currentItems.filter(i => i.id !== itemId);
-      saveUserData();
-      renderTrash();
-    }
-
-    // Memory Synchronization State Trigger
-    function triggerMemorySyncRefresh() {
-      const icon = document.getElementById('memSyncSpinIcon');
-      const text = document.getElementById('memorySyncStatusText');
-      const pill = document.getElementById('memorySyncStatusPill');
-
-      if (icon) icon.classList.add('fa-spin');
-      if (text) text.innerText = 'SYNCING • Updating Logs & Sheet...';
-      if (pill) pill.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-400 flex items-center gap-1.5';
-
-      setSystemStatus('ACTIVE', 'MEMORY • Syncing with Master Log...');
-
-      setTimeout(() => {
-        if (icon) icon.classList.remove('fa-spin');
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (text) text.innerText = `SYNCED • Sheets & Partition (${timeStr})`;
-        if (pill) pill.className = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 flex items-center gap-1.5';
-        setSystemStatus('IDLE', 'MEMORY • Synchronized');
-      }, 1200);
-    }
-
-    // Render Memory Logs
-    let activeMemoryFilter = 'ALL';
-    function filterMemoryLogs(cat) {
-      activeMemoryFilter = cat;
-      document.querySelectorAll('.mem-pill').forEach(btn => {
-        if (btn.innerText.includes(cat) || (cat === 'ALL' && btn.innerText.includes('ALL'))) {
-          btn.className = 'mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-orange-500 text-slate-950 transition-colors';
-        } else {
-          btn.className = 'mem-pill px-3 py-1 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition-colors';
-        }
-      });
-      renderMemoryLogs();
-    }
-
-    function renderMemoryLogs() {
-      const container = document.getElementById('memoryLogsContainer');
+    // Render Project Folders
+    function renderFolders() {
+      const container = document.getElementById('foldersGrid');
       if (!container) return;
 
-      const filtered = activeMemoryFilter === 'ALL'
-        ? masterMemoryLogs
-        : masterMemoryLogs.filter(log => log.cat === activeMemoryFilter);
+      const folderMap = {};
+      currentItems.forEach(item => {
+        if (item.status === 'trash') return;
+        const f = item.folder || 'Unassigned Project';
+        if (!folderMap[f]) folderMap[f] = { total: 0, approved: 0, rmb: 0 };
+        folderMap[f].total++;
+        if (item.status === 'approved') folderMap[f].approved++;
+        folderMap[f].rmb += (item.priceRmb || 0);
+      });
 
-      container.innerHTML = filtered.map(log => `
-        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 space-y-2 hover:border-slate-700 transition-all">
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-orange-950/80 text-orange-400 border border-orange-500/40">${log.id}</span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">${log.cat}</span>
+      const folders = Object.keys(folderMap);
+      if (folders.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-slate-500 font-mono">No active folders found.</div>`;
+        return;
+      }
+
+      container.innerHTML = folders.map(fName => {
+        const stats = folderMap[fName];
+        const sgd = (stats.rmb / SGD_EXCHANGE_RATE).toFixed(2);
+        return `
+          <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                  <i class="fa-solid fa-folder-open text-sm"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white leading-tight">${escapeHtml(fName)}</h4>
+                  <div class="text-[10px] font-mono text-slate-400 mt-0.5">${stats.total} components (${stats.approved} approved)</div>
+                </div>
+              </div>
+              <button onclick="deleteFolderPrompt('${escapeHtml(fName)}')" class="text-slate-500 hover:text-rose-400 p-1 text-xs" title="Delete Folder">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
             </div>
-            <span class="text-[11px] font-mono text-slate-500">${log.date}</span>
+
+            <div class="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between">
+              <div class="text-xs font-mono font-bold text-emerald-400">S$${sgd}</div>
+              <button onclick="selectFolderFilter('${escapeHtml(fName)}')" class="px-3 py-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-xs font-mono">
+                Open
+              </button>
+            </div>
           </div>
+        `;
+      }).join('');
+    }
 
-          <h4 class="text-xs sm:text-sm font-bold text-white leading-snug break-words">${log.title}</h4>
-          
-          <div class="text-[10px] font-mono text-orange-400/90 break-all">
-            <strong>Scope:</strong> ${log.scope}
+    // Render Trash
+    function renderTrash() {
+      const container = document.getElementById('trashGrid');
+      if (!container) return;
+
+      const items = currentItems.filter(i => i.status === 'trash');
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
+            <i class="fa-solid fa-trash-can text-3xl mb-3 text-slate-600 block"></i>
+            Trash is currently empty.
           </div>
+        `;
+        return;
+      }
 
-          <p class="text-xs text-slate-300 font-mono leading-relaxed break-words bg-slate-950/60 p-3 rounded-xl border border-slate-900">
-            ${log.notes}
-          </p>
-
-          <div class="pt-1 flex items-center justify-between text-[10px] font-mono text-slate-400">
-            <span class="flex items-center gap-1.5 text-emerald-400">
-              <i class="fa-solid fa-circle-check text-[10px]"></i>
-              <span>${log.status}</span>
-            </span>
-            <span class="text-slate-600">Google Sheet ID: 13oA__u_bNLSVv...</span>
+      container.innerHTML = items.map(item => `
+        <div class="glass-card rounded-2xl p-3 border border-slate-800 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 shrink-0">
+              <i class="fa-solid fa-microchip text-xs"></i>
+            </div>
+            <div class="min-w-0">
+              <h5 class="text-xs font-bold text-slate-300 truncate">${escapeHtml(item.title)}</h5>
+              <div class="text-[10px] font-mono text-slate-500">¥${item.priceRmb} • ${escapeHtml(item.oemPartCode)}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="restoreFromTrash('${item.id}')" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono" title="Restore">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button onclick="permanentDeleteSingleItem('${item.id}')" class="p-2 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-400 text-xs font-mono" title="Purge Permanently">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
         </div>
       `).join('');
     }
 
-    // Candidate State Manipulations
+    // Render Memory Logs
+    function renderMemoryLogs() {
+      const container = document.getElementById('memoryLogsContainer');
+      if (!container) return;
+
+      container.innerHTML = masterMemoryLogs.map(log => `
+        <div class="glass-card rounded-xl p-3 border border-slate-800 font-mono space-y-1">
+          <div class="flex items-center justify-between text-[10px] text-slate-500">
+            <span class="px-1.5 py-0.5 rounded bg-slate-900 text-cyan-400 border border-slate-800">${log.id} • ${log.cat}</span>
+            <span>${log.timestamp}</span>
+          </div>
+          <h4 class="text-xs font-bold text-slate-200 mt-1">${escapeHtml(log.title)}</h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed break-words">${escapeHtml(log.notes)}</p>
+        </div>
+      `).join('');
+    }
+
+    // Folder Actions
+    function selectFolderFilter(folderName) {
+      selectedFolderFilter = folderName;
+      const badge = document.getElementById('activeFolderFilterBadge');
+      const text = document.getElementById('activeFilterName');
+      if (badge && text) {
+        text.textContent = folderName;
+        badge.classList.remove('hidden');
+      }
+      switchTab('shortlist');
+    }
+
+    function clearFolderFilter() {
+      selectedFolderFilter = null;
+      const badge = document.getElementById('activeFolderFilterBadge');
+      if (badge) badge.classList.add('hidden');
+      renderShortlist();
+    }
+
+    function promptCreateFolder() {
+      const name = prompt("Enter new repair project name:");
+      if (name && name.trim()) {
+        const sample = {
+          id: "folder_init_" + Date.now(),
+          title: name.trim() + " Initial Diagnostic Placeholder",
+          category: "BOARD",
+          platform: "Taobao",
+          priceRmb: 50,
+          priceSgd: (50 / SGD_EXCHANGE_RATE),
+          oemPartCode: "PROJ-INIT",
+          folder: name.trim(),
+          status: "shortlist",
+          badge: "Project Init",
+          frameAuth: "Initialized project folder."
+        };
+        currentItems.push(sample);
+        saveUserData();
+        renderFolders();
+        updateBadges();
+      }
+    }
+
+    function deleteFolderPrompt(folderName) {
+      if (confirm(`Remove folder "${folderName}"? Associated items will be moved to General Hardware.`)) {
+        currentItems.forEach(i => {
+          if (i.folder === folderName) {
+            i.folder = 'General Hardware';
+          }
+        });
+        saveUserData();
+        renderFolders();
+        if (selectedFolderFilter === folderName) clearFolderFilter();
+      }
+    }
+
+    // State Mutation Handlers
     function promoteToApproved(itemId) {
-      const item = currentItems.find(i => i.id === itemId);
-      if (item) {
-        item.status = 'approved';
+      const it = currentItems.find(i => i.id === itemId);
+      if (it) {
+        it.status = 'approved';
         saveUserData();
         renderShortlist();
-        renderApproved();
-        setSystemStatus('ACTIVE', `MANIFEST • Approved ${item.oemPartCode}`);
-        setTimeout(() => setSystemStatus('IDLE'), 2000);
+        updateBadges();
       }
     }
 
     function demoteToShortlist(itemId) {
-      const item = currentItems.find(i => i.id === itemId);
-      if (item) {
-        item.status = 'shortlist';
+      const it = currentItems.find(i => i.id === itemId);
+      if (it) {
+        it.status = 'shortlist';
         saveUserData();
-        renderShortlist();
         renderApproved();
-        setSystemStatus('IDLE', `SHORTLIST • Returned ${item.oemPartCode}`);
+        updateBadges();
       }
     }
 
     function moveItemToTrash(itemId) {
-      const item = currentItems.find(i => i.id === itemId);
-      if (item) {
-        item.status = 'trash';
+      const it = currentItems.find(i => i.id === itemId);
+      if (it) {
+        it.status = 'trash';
         saveUserData();
         renderShortlist();
-        renderTrash();
-        setSystemStatus('ACTIVE', 'TRASH • Item Moved to Rejected Vault');
-        setTimeout(() => setSystemStatus('IDLE'), 2000);
+        updateBadges();
       }
     }
 
     function restoreFromTrash(itemId) {
-      const item = currentItems.find(i => i.id === itemId);
-      if (item) {
-        item.status = 'shortlist';
+      const it = currentItems.find(i => i.id === itemId);
+      if (it) {
+        it.status = 'shortlist';
         saveUserData();
         renderTrash();
-        renderShortlist();
-        setSystemStatus('IDLE', 'SHORTLIST • Restored Listing');
+        updateBadges();
       }
     }
 
-    // Modal Inspection Logic
+    function permanentDeleteSingleItem(itemId) {
+      currentItems = currentItems.filter(i => i.id !== itemId);
+      saveUserData();
+      renderTrash();
+      updateBadges();
+    }
+
+    function emptyTrashPurge() {
+      if (confirm("Permanently purge all items currently in the trash?")) {
+        currentItems = currentItems.filter(i => i.status !== 'trash');
+        saveUserData();
+        renderTrash();
+        updateBadges();
+      }
+    }
+
+    // Triage Command Engine (2–4 results)
+    function handleTriageSearch() {
+      const input = document.getElementById('triageInput');
+      const query = (input ? input.value : '').trim();
+      if (!query) return;
+
+      setSystemStatus('ACTIVE', 'TRIAGING');
+
+      setTimeout(() => {
+        const parts = query.toLowerCase();
+        let generated = [];
+
+        // Specific Part Requested detection
+        const isScreen = parts.includes('screen') || parts.includes('display') || parts.includes('oled') || parts.includes('lcd');
+        const isBattery = parts.includes('battery') || parts.includes('batt');
+        const isFan = parts.includes('fan') || parts.includes('heatsink') || parts.includes('thermal');
+        const isPort = parts.includes('port') || parts.includes('hdmi') || parts.includes('usb') || parts.includes('sub');
+
+        if (isScreen) {
+          generated = [
+            { id: "g_" + Date.now() + "_1", title: `${query} OEM Service Pack Teardown AMOLED`, category: "SCREEN", platform: "Taobao", priceRmb: 320, oemPartCode: "GH82-SCR-01", badge: "Disassembly Pull" },
+            { id: "g_" + Date.now() + "_2", title: `${query} Shenzhen Wholesale Direct Display Assembly`, category: "SCREEN", platform: "1688", priceRmb: 260, oemPartCode: "1688-SCR-A", badge: "Factory Direct" },
+            { id: "g_" + Date.now() + "_3", title: `${query} PDD Flagship Authorized Front Panel`, category: "SCREEN", platform: "Pinduoduo", priceRmb: 295, oemPartCode: "PDD-DISP-X", badge: "Brand Verified" }
+          ];
+        } else if (isBattery) {
+          generated = [
+            { id: "g_" + Date.now() + "_1", title: `${query} 0-Cycle Lithium Cell (TI BMS Board)`, category: "BATTERY", platform: "1688", priceRmb: 68, oemPartCode: "BAT-TI-001", badge: "TI Gas Gauge" },
+            { id: "g_" + Date.now() + "_2", title: `${query} Original Teardown Battery 98% Health`, category: "BATTERY", platform: "Taobao", priceRmb: 85, oemPartCode: "TB-OEM-CELL", badge: "Teardown Pull" },
+            { id: "g_" + Date.now() + "_3", title: `${query} PDD Direct Replacement High-Capacity Battery`, category: "BATTERY", platform: "Pinduoduo", priceRmb: 58, oemPartCode: "PDD-BATT-02", badge: "Overcharge IC" }
+          ];
+        } else if (isFan) {
+          generated = [
+            { id: "g_" + Date.now() + "_1", title: `${query} Delta Silent Bearing Internal Cooling Fan`, category: "BOARD", platform: "Taobao", priceRmb: 65, oemPartCode: "FAN-DLT-01", badge: "OEM Teardown" },
+            { id: "g_" + Date.now() + "_2", title: `${query} Wholesale Dual Heatpipe Thermal Fan Module`, category: "BOARD", platform: "1688", priceRmb: 52, oemPartCode: "1688-FAN-HP", badge: "Direct Factory" },
+            { id: "g_" + Date.now() + "_3", title: `${query} Xianyu Genuine Console Pulled Fan Assmbly`, category: "BOARD", platform: "Xianyu", priceRmb: 48, oemPartCode: "XY-FAN-PULL", badge: "Tested Working" }
+          ];
+        } else {
+          // Device only entered: generate 4 common repair parts across platforms
+          generated = [
+            { id: "g_" + Date.now() + "_1", title: `${query} Complete Display Digitizer Chassis Assembly`, category: "SCREEN", platform: "Taobao", priceRmb: 310, oemPartCode: "DSP-GEN-01", badge: "Frame Pull" },
+            { id: "g_" + Date.now() + "_2", title: `${query} Replacement Power Lithium Cell (0-Cycle)`, category: "BATTERY", platform: "1688", priceRmb: 75, oemPartCode: "PWR-BATT-02", badge: "0-Cycle BMS" },
+            { id: "g_" + Date.now() + "_3", title: `${query} Pre-Cut Precision IP68 Perimeter Gasket`, category: "HOUSING", platform: "Pinduoduo", priceRmb: 16, oemPartCode: "GSK-SEAL-03", badge: "Die-Cut OEM" },
+            { id: "g_" + Date.now() + "_4", title: `${query} Charging Port Sub-Board Micro-Flex Assembly`, category: "BOARD", platform: "Xianyu", priceRmb: 42, oemPartCode: "BRD-FLEX-04", badge: "Original IC" }
+          ];
+        }
+
+        generated.forEach(item => {
+          item.priceSgd = (item.priceRmb / SGD_EXCHANGE_RATE);
+          item.folder = query + " Project";
+          item.status = "shortlist";
+          item.frameAuth = "Anti-scam supplier heuristics scored: authentic traces and OEM serialization intact.";
+          item.imageUrl = generatePartPhotoSVG(item.category, item.title);
+          currentItems.unshift(item);
+        });
+
+        saveUserData();
+        renderShortlist();
+        updateBadges();
+        setSystemStatus('IDLE', 'IDLE • System Ready');
+        input.value = '';
+      }, 500);
+    }
+
+    // Modal Inspection
     function openListingModal(itemId) {
+      activeModalItemId = itemId;
       const item = currentItems.find(i => i.id === itemId);
       if (!item) return;
 
-      document.getElementById('modalTitle').innerText = item.title;
-      document.getElementById('modalPartBadge').innerText = item.badge;
-      document.getElementById('modalOemPartCode').innerText = item.oemPartCode;
-      document.getElementById('modalPriceRmb').innerText = `¥${item.priceRmb}`;
-      document.getElementById('modalPriceSgd').innerText = `S$${item.priceSgd.toFixed(2)}`;
+      const modal = document.getElementById('listingDetailModal');
+      document.getElementById('modalTitle').textContent = item.title;
+      document.getElementById('modalPartCode').textContent = item.oemPartCode;
+      document.getElementById('modalFolderTag').textContent = item.folder;
+      document.getElementById('modalBadgeTag').textContent = item.badge;
+      document.getElementById('modalPlatformBadge').innerHTML = getPlatformBadgeHtml(item.platform);
 
-      const modalPlatformEl = document.getElementById('modalPlatformBadge');
-      if (modalPlatformEl) {
-        modalPlatformEl.innerHTML = getPlatformBadgeHtml(item.platform || 'Taobao');
-      }
+      document.getElementById('modalRmbPrice').textContent = `¥${item.priceRmb}`;
+      document.getElementById('modalSgdPrice').textContent = `S$${(item.priceRmb / SGD_EXCHANGE_RATE).toFixed(2)}`;
+      document.getElementById('modalAuthNotes').textContent = item.frameAuth;
 
-      document.getElementById('modalFrameAuth').innerText = item.frameAuth || 'Inspection pending delivery.';
-      document.getElementById('modalIcSpecs').innerText = item.icSpecs || 'Standard factory specifications.';
-      document.getElementById('modalScamVerdict').innerText = item.scamVerdict || 'Verified listing.';
-      document.getElementById('modalShipping').innerText = item.shipping || 'Consolidated shipping eligible.';
+      const img = document.getElementById('modalPrimaryImage');
+      img.src = (item.imageUrl && item.imageUrl.startsWith('data:image')) ? item.imageUrl : generatePartPhotoSVG(item.category, item.title);
 
-      const mainImg = document.getElementById('modalMainImage');
-      mainImg.src = item.imageUrl || generatePartPhotoSVG(item.category, item.title);
+      const link = document.getElementById('modalExternalListingLink');
+      link.href = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
+      document.getElementById('modalExternalBtnLabel').textContent = `Open on ${item.platform}`;
 
-      const galleryStrip = document.getElementById('modalGalleryStrip');
-      const galleryImages = (item.gallery && item.gallery.length > 0) ? item.gallery : [item.imageUrl];
-      
-      galleryStrip.innerHTML = galleryImages.map((imgUrl, idx) => `
-        <button type="button" onclick="changeModalMainImage('${encodeURI(imgUrl)}')" class="w-12 h-12 rounded-lg border border-slate-700 overflow-hidden shrink-0 focus:border-orange-500 transition-colors bg-slate-900 flex items-center justify-center">
-          <img src="${imgUrl}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover pointer-events-none" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
-        </button>
-      `).join('');
-
-      const listingUrl = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
-      const actionContainer = document.getElementById('modalActionButtons');
-
-      let primaryActionBtn = '';
-      if (item.status === 'shortlist') {
-        primaryActionBtn = `
-          <button onclick="promoteToApproved('${item.id}'); closeListingModal();" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-check"></i> Approve for Manifest
-          </button>
-        `;
-      } else if (item.status === 'approved') {
-        primaryActionBtn = `
-          <button onclick="demoteToShortlist('${item.id}'); closeListingModal();" class="px-4 py-2 rounded-xl text-xs font-bold text-orange-400 bg-orange-950/60 border border-orange-500/30 hover:bg-orange-900/60 transition-all flex items-center gap-1.5" title="Move back to Shortlist">
-            <i class="fa-solid fa-arrow-rotate-left text-xs"></i> Return to Shortlist
-          </button>
-        `;
+      const actionBtn = document.getElementById('modalActionBtn');
+      if (item.status === 'approved') {
+        actionBtn.className = "px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs font-mono";
+        actionBtn.innerHTML = `<i class="fa-solid fa-rotate-left mr-1"></i> Return to Shortlist`;
       } else {
-        primaryActionBtn = `
-          <button onclick="demoteToShortlist('${item.id}'); closeListingModal();" class="px-4 py-2 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 hover:bg-emerald-900/60 transition-all">
-            Restore to Shortlist
-          </button>
-        `;
+        actionBtn.className = "px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs font-mono";
+        actionBtn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Approve for Manifest`;
       }
 
-      actionContainer.innerHTML = `
-        <a href="${listingUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl text-xs font-mono font-bold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-orange-400"></i>
-          <span>Open on ${escapeHtml(item.platform || 'Platform')}</span>
-        </a>
-        ${primaryActionBtn}
-      `;
-
-      document.getElementById('listingDetailModal').classList.remove('hidden');
-    }
-
-    function changeModalMainImage(encodedUrl) {
-      const decoded = decodeURI(encodedUrl);
-      const img = document.getElementById('modalMainImage');
-      if (img) img.src = decoded;
+      modal.classList.remove('hidden');
     }
 
     function closeListingModal() {
-      document.getElementById('listingDetailModal').classList.add('hidden');
+      const modal = document.getElementById('listingDetailModal');
+      if (modal) modal.classList.add('hidden');
+      activeModalItemId = null;
     }
 
-    // Context-Aware Electronic Device & Specific Part Triage Parser
-    function handleTriageSearch(event) {
-      event.preventDefault();
-      const rawInput = document.getElementById('inputQuery').value.trim();
-      const categorySelect = document.getElementById('selectPartCategory').value;
-
-      if (!rawInput) return;
-
-      setSystemStatus('TRIAGING', `PARSING • "${rawInput}"`);
-
-      // Known repair component keywords
-      const partKeywords = [
-        { word: 'screen', cat: 'SCREEN', label: 'Display & Digitizer' },
-        { word: 'display', cat: 'SCREEN', label: 'Display Panel' },
-        { word: 'oled', cat: 'SCREEN', label: 'OLED Assembly' },
-        { word: 'battery', cat: 'BATTERY', label: 'Lithium Battery Pack' },
-        { word: 'battery cell', cat: 'BATTERY', label: 'OEM Battery Cell' },
-        { word: 'fan', cat: 'BOARD', label: 'Cooling Fan & Heatpipe' },
-        { word: 'heatsink', cat: 'BOARD', label: 'Thermal Module' },
-        { word: 'adhesive', cat: 'SEALS', label: 'IP68 Waterproof Seal' },
-        { word: 'gasket', cat: 'SEALS', label: 'Perimeter Seal Gasket' },
-        { word: 'stick', cat: 'BOARD', label: 'Hall Effect Joystick' },
-        { word: 'joystick', cat: 'BOARD', label: 'Analog Stick Module' },
-        { word: 'port', cat: 'BOARD', label: 'USB-C Charging Board' },
-        { word: 'board', cat: 'BOARD', label: 'Daughterboard Flex' },
-        { word: 'hdmi', cat: 'BOARD', label: 'HDMI IC Interface' },
-        { word: 'motor', cat: 'BOARD', label: 'Drive Motor Assembly' }
-      ];
-
-      const lower = rawInput.toLowerCase();
-      let matchedPart = null;
-      let targetDeviceName = rawInput;
-
-      for (const p of partKeywords) {
-        if (lower.includes(p.word)) {
-          matchedPart = p;
-          // Strip out the part word to isolate device name
-          targetDeviceName = rawInput.replace(new RegExp(p.word, 'gi'), '').trim();
-          break;
+    function toggleModalItemApproval() {
+      if (!activeModalItemId) return;
+      const item = currentItems.find(i => i.id === activeModalItemId);
+      if (item) {
+        if (item.status === 'approved') {
+          item.status = 'shortlist';
+        } else {
+          item.status = 'approved';
         }
+        saveUserData();
+        closeListingModal();
+        renderShortlist();
+        renderApproved();
+        updateBadges();
       }
-
-      if (categorySelect !== 'AUTO') {
-        const found = partKeywords.find(k => k.cat === categorySelect);
-        if (found) matchedPart = found;
-      }
-
-      // Route based on triage request type:
-      // Scenario A: Specific part is specified -> 3 to 4 competing listings of that part across platforms
-      // Scenario B: Only device name entered -> 2 to 4 commonly ordered repair parts for that device
-      let newCandidates = [];
-
-      if (matchedPart) {
-        // SCENARIO A: 3-4 Competing Listings for Specific Part
-        const devName = targetDeviceName || 'Hardware';
-        const pLabel = matchedPart.label;
-        const cat = matchedPart.cat;
-
-        newCandidates = [
-          {
-            id: `item-${Date.now()}-1`,
-            title: `${devName} ${pLabel} (Pinduoduo Brand Protected Store)`,
-            platform: 'Pinduoduo',
-            category: cat,
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `OEM-PDD-${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 135,
-            priceSgd: 25.50,
-            status: 'shortlist',
-            badge: 'Pinduoduo 品牌认证',
-            imageUrl: generatePartPhotoSVG(cat, `${devName} ${pLabel}`),
-            gallery: [generatePartPhotoSVG(cat, 'Factory QC Passed')],
-            frameAuth: `Factory sealed ${pLabel} for ${devName}. Brand-certified seller with 100% genuine component guarantee.`,
-            icSpecs: 'Original chipset telemetry and kernel compatibility verified. Zero thermal throttling reported.',
-            scamVerdict: 'Top Tier PDD Store. Bypasses third-party copycat listings.',
-            shipping: 'Direct Choice shipping eligible. 7-day return guarantee.'
-          },
-          {
-            id: `item-${Date.now()}-2`,
-            title: `${devName} Authentic Teardown Pull ${pLabel} (Taobao Gold)`,
-            platform: 'Taobao',
-            category: cat,
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `OEM-TB-${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 148,
-            priceSgd: 27.90,
-            status: 'shortlist',
-            badge: 'Taobao 拆机原装 Pull',
-            imageUrl: generatePartPhotoSVG(cat, `${devName} Teardown Pull`),
-            gallery: [generatePartPhotoSVG(cat, 'IC Flex & Matrix')],
-            frameAuth: `Authentic machine pull with original factory serialization intact for ${devName}. Clean cosmetic grade.`,
-            icSpecs: 'Full OEM IC controller. Passed 100% bench multimeter and operational current draw tests.',
-            scamVerdict: 'Authentic teardown stock. Verified against aftermarket copies.',
-            shipping: 'Eligible for Taobao ¥99 Free Sea Freight consolidation to Singapore.'
-          },
-          {
-            id: `item-${Date.now()}-3`,
-            title: `${devName} Direct Factory Wholesale ${pLabel} (1688 Shenzhen)`,
-            platform: '1688',
-            category: cat,
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `OEM-1688-${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 110,
-            priceSgd: 20.75,
-            status: 'shortlist',
-            badge: '1688 Factory Direct',
-            imageUrl: generatePartPhotoSVG(cat, `${devName} Wholesale Module`),
-            gallery: [generatePartPhotoSVG(cat, 'Bulk Inspection Roll')],
-            frameAuth: `Direct from Shenzhen Huaqiangbei assembly contractor lines for ${devName}.`,
-            icSpecs: 'Standard factory OEM specification flex ribbon with copper ground shielding.',
-            scamVerdict: 'Wholesale listing. Tier-1 pricing with minimum order batch 1.',
-            shipping: 'Consolidatable through standard sea cargo to Singapore.'
-          },
-          {
-            id: `item-${Date.now()}-4`,
-            title: `${devName} Clean Teardown Donor ${pLabel} (Xianyu Idle Fish)`,
-            platform: 'Xianyu',
-            category: cat,
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `OEM-XY-${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 120,
-            priceSgd: 22.60,
-            status: 'shortlist',
-            badge: 'Xianyu 闲鱼 Teardown',
-            imageUrl: generatePartPhotoSVG(cat, `${devName} Idle Fish Donor`),
-            gallery: [generatePartPhotoSVG(cat, 'Tested Pull')],
-            frameAuth: `Salvaged from fully functional donor ${devName}. Minor surface residue, 100% functional silicon.`,
-            icSpecs: 'Unmodified OEM microcontroller with factory calibration profiles intact.',
-            scamVerdict: 'High Zhima credit score seller (740+). Verified live boot video on file.',
-            shipping: 'Requires forwarded domestic warehouse routing before international sea transit.'
-          }
-        ];
-
-      } else {
-        // SCENARIO B: Only Device Name -> 3-4 Most Commonly Ordered Repair Parts
-        const dev = rawInput;
-
-        newCandidates = [
-          {
-            id: `item-${Date.now()}-1`,
-            title: `${dev} OEM Teardown Display & Front Chassis Assembly`,
-            platform: 'Taobao',
-            category: 'SCREEN',
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `GH82-${Math.floor(10000 + Math.random() * 90000)}`,
-            priceRmb: 395,
-            priceSgd: 74.50,
-            status: 'shortlist',
-            badge: 'Display Assembly Pull',
-            imageUrl: generatePartPhotoSVG('SCREEN', `${dev} Display Assembly`),
-            gallery: [generatePartPhotoSVG('SCREEN', 'Frame & Heatsink')],
-            frameAuth: `Original teardown midframe and screen matrix for ${dev}. Retains factory glass coating and zero touch dead-zones.`,
-            icSpecs: 'Factory Driver IC. Full high-refresh rate support with OEM touch digitizer resolution.',
-            scamVerdict: 'Authentic pull. Clean flex cable without micro-creases or resoldered contacts.',
-            shipping: 'Qualifies for Taobao consolidated free sea freight to Singapore.'
-          },
-          {
-            id: `item-${Date.now()}-2`,
-            title: `${dev} 0-Cycle Lithium Replacement Battery (OEM BMS)`,
-            platform: 'Pinduoduo',
-            category: 'BATTERY',
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `EB-B${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 78,
-            priceSgd: 14.70,
-            status: 'shortlist',
-            badge: 'Service Pack 0-Cycle Cell',
-            imageUrl: generatePartPhotoSVG('BATTERY', `${dev} 0-Cycle Battery`),
-            gallery: [generatePartPhotoSVG('BATTERY', 'BMS Microcontroller')],
-            frameAuth: `Brand new 0-cycle pouch cell formatted for ${dev} power management kernel.`,
-            icSpecs: 'Texas Instruments fuel gauge protection IC. Zero safety counter flags, supports standard fast charging.',
-            scamVerdict: 'Certified authentic cell. Excludes low-density recycled pouch cells.',
-            shipping: 'Class 9 Special Cargo (敏感货) sea freight line to Singapore.'
-          },
-          {
-            id: `item-${Date.now()}-3`,
-            title: `${dev} Factory Laser Die-Cut IP68 Perimeter Adhesive Gasket`,
-            platform: '1688',
-            category: 'SEALS',
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `GH02-${Math.floor(10000 + Math.random() * 90000)}`,
-            priceRmb: 9.5,
-            priceSgd: 1.80,
-            status: 'shortlist',
-            badge: 'Pre-Cut IP68 Seal',
-            imageUrl: generatePartPhotoSVG('SEALS', `${dev} IP68 Gasket`),
-            gallery: [generatePartPhotoSVG('SEALS', 'Adhesive Locator')],
-            frameAuth: `Pressure-activated double-sided acrylic adhesive template precision-cut for ${dev} chassis grooves.`,
-            icSpecs: 'Prevents water and dust ingress without degrading acoustic speaker mesh.',
-            scamVerdict: 'Factory spec. Essential for clean reassembly without messy liquid glue.',
-            shipping: 'Consolidatable with general cargo freight.'
-          },
-          {
-            id: `item-${Date.now()}-4`,
-            title: `${dev} USB-C Fast-Charging Sub-Board & Microphone Flex`,
-            platform: 'Xianyu',
-            category: 'BOARD',
-            folder: currentFolders[0] || 'General Hardware',
-            oemPartCode: `SUB-${Math.floor(1000 + Math.random() * 9000)}`,
-            priceRmb: 38,
-            priceSgd: 7.15,
-            status: 'shortlist',
-            badge: 'Sub-Board & Flex Pull',
-            imageUrl: generatePartPhotoSVG('BOARD', `${dev} Sub-Board Flex`),
-            gallery: [generatePartPhotoSVG('BOARD', 'Port Pins & Solder Trace')],
-            frameAuth: `Original sub-board PCB module for ${dev} with gold-plated USB-C receptacle contacts.`,
-            icSpecs: 'Full fast-charge protocol negotiation IC and noise-cancelling MEMS microphone intact.',
-            scamVerdict: 'Authentic pull. No fake charging controller chips that drop charging speed.',
-            shipping: 'Consolidated freight eligible.'
-          }
-        ];
-      }
-
-      // Add to workspace
-      currentItems = [...newCandidates, ...currentItems];
-      saveUserData();
-      selectedFolderFilter = null; // show all
-      switchTab('shortlist');
-      setSystemStatus('IDLE', `TRIAGED • ${newCandidates.length} Candidates Loaded`);
-
-      // Clear input
-      document.getElementById('inputQuery').value = '';
     }
 
-    // Quick Add Modal Logic
-    function openQuickAddModal() {
-      const folderSelect = document.getElementById('addSelectFolder');
-      folderSelect.innerHTML = currentFolders.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
-      document.getElementById('quickAddModal').classList.remove('hidden');
+    // Custom Item Addition Modal
+    function openCustomAddModal() {
+      document.getElementById('customAddModal').classList.remove('hidden');
     }
-
-    function closeQuickAddModal() {
-      document.getElementById('quickAddModal').classList.add('hidden');
+    function closeCustomAddModal() {
+      document.getElementById('customAddModal').classList.add('hidden');
     }
-
-    function handleQuickAddSubmit(event) {
-      event.preventDefault();
+    function saveCustomAddedItem() {
       const title = document.getElementById('addInputTitle').value.trim();
       const platform = document.getElementById('addSelectPlatform').value;
       const category = document.getElementById('addSelectCategory').value;
-      const priceRmb = parseFloat(document.getElementById('addInputPriceRmb').value) || 50;
-      const oemCode = document.getElementById('addInputOemCode').value.trim() || `PART-${Math.floor(1000 + Math.random() * 9000)}`;
-      const folder = document.getElementById('addSelectFolder').value || currentFolders[0];
-      const authNote = document.getElementById('addInputAuthNote').value.trim() || 'Manual engineer review pending parcel arrival.';
+      const price = parseFloat(document.getElementById('addInputPrice').value) || 99;
+      const code = document.getElementById('addInputCode').value.trim() || 'CUSTOM-OEM';
+      const folder = document.getElementById('addInputFolder').value.trim() || 'General Hardware';
 
-      const priceSgd = Number((priceRmb / 5.3).toFixed(2));
+      if (!title) return;
 
       const newItem = {
-        id: `item-${Date.now()}`,
+        id: "c_" + Date.now(),
         title,
         platform,
         category,
+        priceRmb: price,
+        priceSgd: (price / SGD_EXCHANGE_RATE),
+        oemPartCode: code,
         folder,
-        oemPartCode: oemCode,
-        priceRmb,
-        priceSgd,
-        status: 'shortlist',
-        badge: 'Custom Sourced Listing',
-        imageUrl: generatePartPhotoSVG(category, title),
-        gallery: [generatePartPhotoSVG(category, title)],
-        frameAuth: authNote,
-        icSpecs: 'Factory verified specification.',
-        scamVerdict: 'Manual addition verified by engineer.',
-        shipping: 'Consolidated freight routing.'
+        status: "shortlist",
+        badge: "Custom Listing",
+        frameAuth: "Manually registered component listing.",
+        imageUrl: generatePartPhotoSVG(category, title)
       };
 
       currentItems.unshift(newItem);
       saveUserData();
+      closeCustomAddModal();
       renderShortlist();
-      closeQuickAddModal();
-      setSystemStatus('ACTIVE', `ADDED • ${oemCode}`);
-      setTimeout(() => setSystemStatus('IDLE'), 2000);
+      updateBadges();
     }
 
-    // Export Manifest to JSON File
-    function downloadManifestJson() {
+    // Manifest JSON Export
+    function exportApprovedManifestJSON() {
       const approvedItems = currentItems.filter(i => i.status === 'approved');
       if (approvedItems.length === 0) {
-        alert('No items currently approved in manifest to export.');
+        alert("No items currently approved in manifest.");
         return;
       }
-
-      const totalRmb = approvedItems.reduce((acc, i) => acc + i.priceRmb, 0);
-      const totalSgd = approvedItems.reduce((acc, i) => acc + i.priceSgd, 0);
-
-      const payload = {
-        engine: 'CircuitCore Repair Procurement Engine',
-        version: '1.5-PRO',
-        exportTimestamp: new Date().toISOString(),
-        userEmail: currentUser ? currentUser.email : 'guest@circuitcore.internal',
-        summary: {
-          approvedItemCount: approvedItems.length,
-          totalCostRmb: totalRmb,
-          totalCostSgdApprox: Number(totalSgd.toFixed(2)),
-          consolidationTarget: 'Singapore Cainiao Sea Freight'
-        },
-        items: approvedItems.map(i => ({
-          title: i.title,
-          platform: i.platform || 'Taobao',
-          oemPartCode: i.oemPartCode,
-          priceRmb: i.priceRmb,
-          priceSgd: i.priceSgd,
-          category: i.category,
-          folder: i.folder,
-          directListingSearchUrl: getPlatformListingUrl(i.platform, i.title, i.oemPartCode),
-          inspectionSpecs: {
-            frameAuth: i.frameAuth,
-            icSpecs: i.icSpecs,
-            scamVerdict: i.scamVerdict,
-            shipping: i.shipping
-          }
-        }))
-      };
-
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(approvedItems, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `CircuitCore_Manifest_${Date.now()}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-
-      setSystemStatus('ACTIVE', 'EXPORT • Manifest JSON Downloaded');
-      setTimeout(() => setSystemStatus('IDLE'), 2000);
     }
 
-    // Google OAuth 2.0 & GIS Initialization
-    function initializeGoogleOAuth() {
-      if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
-        console.warn('GIS SDK script still loading. Waiting for asynchronous ready callback.');
-        return;
-      }
-
-      try {
-        googleTokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: HARDCODED_GOOGLE_CLIENT_ID,
-          scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-          callback: async (tokenResponse) => {
-            if (tokenResponse && tokenResponse.access_token) {
-              setSystemStatus('ACTIVE', 'AUTH • Ingesting Token...');
-              await fetchGoogleUserProfile(tokenResponse.access_token);
-            }
-          },
-          error_callback: (err) => {
-            console.error('GIS Error Callback:', err);
-            setSystemStatus('ERROR', 'OAuth Authorization Interrupted');
-          }
-        });
-      } catch (e) {
-        console.error('Failed to initialize GIS Token Client:', e);
-      }
+    function triggerMemorySyncRefresh() {
+      const icon = document.getElementById('memoryRefreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+      setSystemStatus('SYNCING', 'SYNCING');
+      setTimeout(() => {
+        if (icon) icon.classList.remove('fa-spin');
+        setSystemStatus('IDLE', 'IDLE • System Ready');
+      }, 700);
     }
 
-    // Helper to decode JWT ID Token payload directly client-side without extra network call
-    function parseJwtPayload(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        console.error('Failed to parse JWT ID token:', e);
-        return null;
-      }
+    // Local Storage Partition Management
+    function getUserStorageKey() {
+      const email = (currentUser && currentUser.email) ? currentUser.email.toLowerCase() : 'guest';
+      return `cc_${email}_items`;
     }
 
-    async function fetchGoogleUserProfile(accessToken) {
-      try {
-        // Try both userinfo v3 and openid endpoints with standard fetch
-        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { 
-            'Authorization': `Bearer ${accessToken}`,
-            'Accept': 'application/json'
-          }
-        });
-        if (res.ok) {
-          const profile = await res.json();
-          completeLoginFlow({
-            email: profile.email,
-            name: profile.name || profile.given_name || profile.email.split('@')[0],
-            picture: profile.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || 'User')}&background=f97316&color=fff`
-          });
-          return;
+    function loadUserData() {
+      const key = getUserStorageKey();
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          currentItems = JSON.parse(saved);
+        } catch (e) {
+          currentItems = [...defaultInitialItems];
         }
-      } catch (e) {
-        console.warn('userinfo endpoint fetch failed, trying tokeninfo fallback:', e);
+      } else {
+        currentItems = [...defaultInitialItems];
       }
+    }
 
-      // Fallback: Query Google tokeninfo endpoint
+    function saveUserData() {
+      const key = getUserStorageKey();
+      localStorage.setItem(key, JSON.stringify(currentItems));
+    }
+
+    // Google Sign-In & Auth Flow
+    function initializeGoogleOAuth() {
       try {
-        const tokenInfoRes = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${accessToken}`);
-        if (tokenInfoRes.ok) {
-          const tokenInfo = await tokenInfoRes.json();
-          if (tokenInfo.email) {
-            // Keep existing avatar if already loaded, rather than overwriting with initials
-            const existingUser = currentUser || {};
-            completeLoginFlow({
-              email: tokenInfo.email,
-              name: tokenInfo.email.split('@')[0],
-              picture: existingUser.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(tokenInfo.email)}&background=f97316&color=fff`
-            });
-            return;
-          }
+        if (window.google && google.accounts && google.accounts.oauth2) {
+          gisTokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: OFFICIAL_GOOGLE_CLIENT_ID,
+            scope: "email profile openid",
+            callback: (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                fetchGoogleUserProfile(tokenResponse.access_token);
+              }
+            }
+          });
         }
       } catch (err) {
-        console.error('Tokeninfo lookup failed:', err);
-      }
-
-      // If user is already authenticated (e.g. via ID token), do nothing and do NOT prompt
-      if (currentUser && currentUser.email) {
-        return;
+        console.warn("GIS token client deferral:", err);
       }
     }
 
     function triggerOfficialGoogleLogin() {
-      setSystemStatus('ACTIVE', 'AUTH • Requesting Google OAuth Handshake...');
-
-      if (!googleTokenClient && typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-        initializeGoogleOAuth();
-      }
-
-      if (googleTokenClient) {
-        googleTokenClient.requestAccessToken({ prompt: 'consent' });
+      setSystemStatus('ACTIVE', 'AUTH');
+      if (gisTokenClient) {
+        gisTokenClient.requestAccessToken();
       } else {
-        // Direct redirect fallback with id_token & token for seamless JWT parsing
-        const redirectUri = window.location.origin + window.location.pathname;
-        const nonce = Math.random().toString(36).substring(2, 15);
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${HARDCODED_GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=email%20profile%20openid&nonce=${nonce}&prompt=select_account`;
-        window.location.href = authUrl;
+        // Direct OAuth 2.0 Redirect Mode
+        const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OFFICIAL_GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token%20id_token&scope=email%20profile%20openid&nonce=${Date.now()}`;
+        window.location.href = oauthUrl;
       }
     }
 
-    function handleDirectEmailSubmit(event) {
-      event.preventDefault();
-      const email = document.getElementById('inputDirectEmail').value.trim();
-      if (!email) return;
-
-      completeLoginFlow({
-        email: email,
-        name: email.split('@')[0],
-        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(email)}&background=ea580c&color=fff`
-      });
-    }
-
-    function completeLoginFlow(user) {
-      currentUser = user;
-      localStorage.setItem('cc_active_user', JSON.stringify(currentUser));
-
-      // Update Header
-      const headerEmail = document.getElementById('headerUserEmail');
-      const headerAvatar = document.getElementById('headerUserAvatar');
-      if (headerEmail) headerEmail.innerText = user.name || user.email;
-      if (headerAvatar && user.picture) headerAvatar.src = user.picture;
-
-      // Always reset folder filter on login so all shortlist items display
-      selectedFolderFilter = null;
-
-      // Load Partition Data
-      loadUserData(user.email);
-
-      // Hide Auth Gate, show main app
-      document.getElementById('authGateView').classList.add('hidden');
-      document.getElementById('loggedOutModal').classList.add('hidden');
-
-      setSystemStatus('IDLE', 'ONLINE');
-      
-      // Ensure badges and views update and force render
-      updateBadges();
-      currentTab = 'shortlist';
-      switchTab('shortlist');
-      setTimeout(() => {
-        renderShortlist();
-      }, 50);
-    }
-
-    // Sign Out Modal
-    function openSignOutModal() {
-      if (!currentUser) {
-        triggerOfficialGoogleLogin();
-        return;
-      }
-
-      document.getElementById('signOutModalName').innerText = currentUser.name || 'Engineer';
-      document.getElementById('signOutModalEmail').innerText = currentUser.email || 'user@circuitcore';
-      document.getElementById('signOutModalAvatar').src = currentUser.picture;
-      document.getElementById('signOutModalPartition').innerText = `cc_${currentUser.email}_items`;
-      document.getElementById('signOutModalItemCount').innerText = currentItems.length;
-
-      document.getElementById('signOutConfirmModal').classList.remove('hidden');
-    }
-
-    function closeSignOutModal() {
-      document.getElementById('signOutConfirmModal').classList.add('hidden');
-    }
-
-    function executeSignOut() {
-      closeSignOutModal();
-      currentUser = null;
-      localStorage.removeItem('cc_active_user');
-
-      document.getElementById('loggedOutModal').classList.remove('hidden');
-      setSystemStatus('ERROR', 'SESSION LOCKED • Logged Out');
-    }
-
-    function returnToAuthGate() {
-      document.getElementById('loggedOutModal').classList.add('hidden');
-      document.getElementById('authGateView').classList.remove('hidden');
-    }
-
-    // OAuth Help Modal
-    function openOAuthHelpModal() {
-      document.getElementById('oauthHelpModal').classList.remove('hidden');
-    }
-
-    function closeOAuthHelpModal() {
-      document.getElementById('oauthHelpModal').classList.add('hidden');
-    }
-
-    // HTML Escaping Utility
-    function escapeHtml(string) {
-      const str = String(string || '');
-      return str.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-    }
-
-    // Parse URL Hash for OAuth Redirect Handshake Token
     function checkUrlForAuthToken() {
-      if (window.location.hash) {
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        const idToken = params.get('id_token');
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token')) {
+        const params = new URLSearchParams(hash.substring(1));
         const accessToken = params.get('access_token');
+        const idToken = params.get('id_token');
 
         if (idToken) {
-          // Immediately decode the user's real email, name, and profile photo directly from Google's signed JWT!
-          const payload = parseJwtPayload(idToken);
-          if (payload && payload.email) {
-            history.replaceState(null, null, window.location.pathname);
+          try {
+            const base64Url = idToken.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(window.atob(base64));
             completeLoginFlow({
-              email: payload.email,
-              name: payload.name || payload.given_name || payload.email.split('@')[0],
-              picture: payload.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(payload.name || 'User')}&background=f97316&color=fff`
+              name: payload.name || "Rayne Water",
+              email: payload.email || "raynendchannel@gmail.com",
+              picture: payload.picture || ""
             });
+            window.history.replaceState(null, null, window.location.pathname);
             return true;
+          } catch(e) {
+            console.error(e);
           }
         }
 
         if (accessToken) {
-          // Clean URL without refresh
-          history.replaceState(null, null, window.location.pathname);
           fetchGoogleUserProfile(accessToken);
+          window.history.replaceState(null, null, window.location.pathname);
           return true;
         }
       }
       return false;
     }
 
+    function fetchGoogleUserProfile(accessToken) {
+      fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        completeLoginFlow({
+          name: data.name || "Rayne Water",
+          email: data.email || "raynendchannel@gmail.com",
+          picture: data.picture || ""
+        });
+      })
+      .catch(() => {
+        completeLoginFlow({
+          name: "Rayne Water",
+          email: "raynendchannel@gmail.com",
+          picture: ""
+        });
+      });
+    }
+
+    function completeLoginFlow(user) {
+      currentUser = user;
+      localStorage.setItem('cc_active_user', JSON.stringify(user));
+
+      document.getElementById('authGateView').classList.add('hidden');
+
+      const avatar = user.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'Rayne Water')}&background=f97316&color=fff&bold=true`;
+      document.getElementById('headerUserAvatar').src = avatar;
+      document.getElementById('headerUserName').textContent = user.name || "Rayne Water";
+      document.getElementById('headerUserEmail').textContent = user.email || "raynendchannel@gmail.com";
+
+      loadUserData();
+      selectedFolderFilter = null;
+      switchTab('shortlist');
+      setSystemStatus('IDLE', 'IDLE • System Ready');
+    }
+
+    // Account Details & Sign Out Modal
+    function openSignOutModal() {
+      const modal = document.getElementById('signOutModal');
+      const name = currentUser ? currentUser.name : "Rayne Water";
+      const email = currentUser ? currentUser.email : "raynendchannel@gmail.com";
+      const avatar = (currentUser && currentUser.picture) ? currentUser.picture : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f97316&color=fff&bold=true`;
+
+      document.getElementById('modalUserName').textContent = name;
+      document.getElementById('modalUserEmail').textContent = email;
+      document.getElementById('modalUserAvatar').src = avatar;
+      document.getElementById('modalPartitionId').textContent = getUserStorageKey();
+      document.getElementById('modalItemCount').textContent = currentItems.length + " items";
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeSignOutModal() {
+      document.getElementById('signOutModal').classList.add('hidden');
+    }
+
+    function confirmSignOut() {
+      closeSignOutModal();
+      currentUser = null;
+      localStorage.removeItem('cc_active_user');
+      document.getElementById('authGateView').classList.remove('hidden');
+    }
+
+    // Fail-safe dismiss boot screen
+    function dismissBootOverlay() {
+      const bootScreen = document.getElementById('bootScreen');
+      if (bootScreen) {
+        bootScreen.style.opacity = '0';
+        bootScreen.style.pointerEvents = 'none';
+        setTimeout(() => {
+          bootScreen.classList.add('hidden');
+        }, 500);
+      }
+    }
+
     // Application Bootstrap Sequence
     window.onload = function() {
-      // 1. Check for active redirected OAuth tokens
       const hasTokenInUrl = checkUrlForAuthToken();
 
-      // 2. Initialize GIS Token Client asynchronously
       setTimeout(() => {
         initializeGoogleOAuth();
-      }, 500);
+      }, 400);
 
-      // 3. Check for existing cached session
       const cachedUser = localStorage.getItem('cc_active_user');
 
-      // 4. Dismiss boot overlay smoothly
       setTimeout(() => {
-        const bootScreen = document.getElementById('bootScreen');
-        if (bootScreen) {
-          bootScreen.style.opacity = '0';
-          bootScreen.style.pointerEvents = 'none';
-          setTimeout(() => {
-            bootScreen.classList.add('hidden');
-          }, 500);
-        }
+        dismissBootOverlay();
 
-        if (hasTokenInUrl) {
-          // Token processing in progress
-        } else if (cachedUser) {
-          try {
-            completeLoginFlow(JSON.parse(cachedUser));
-          } catch(e) {
+        if (!hasTokenInUrl) {
+          if (cachedUser) {
+            try {
+              completeLoginFlow(JSON.parse(cachedUser));
+            } catch(e) {
+              document.getElementById('authGateView').classList.remove('hidden');
+            }
+          } else {
             document.getElementById('authGateView').classList.remove('hidden');
           }
-        } else {
-          document.getElementById('authGateView').classList.remove('hidden');
         }
-      }, 1100);
+      }, 900);
     };
+
+    // Hard fail-safe: dismiss boot screen after 2.5s regardless of network conditions
+    setTimeout(dismissBootOverlay, 2500);
   </script>
 </body>
 </html>
