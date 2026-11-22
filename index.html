@@ -14,6 +14,49 @@
   <!-- Google Identity Services (GIS) Library -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+  <!-- PWA & Mobile Web App Standalone Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CircuitCore">
+  <meta name="theme-color" content="#050811">
+
+  <!-- Dynamic SVG App Icon & Touch Icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f97316'/%3E%3Cpath d='M35 30h30v40H35z' fill='%23050811'/%3E%3Cpath d='M43 40h14v20H43z' fill='%23f97316'/%3E%3Cpath d='M25 42h10m-10 16h10m30-16h10m-10 16h10M42 20v10m16-10v10M42 70v10m16-10v10' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f97316'/%3E%3Cpath d='M35 30h30v40H35z' fill='%23050811'/%3E%3Cpath d='M43 40h14v20H43z' fill='%23f97316'/%3E%3Cpath d='M25 42h10m-10 16h10m30-16h10m-10 16h10M42 20v10m16-10v10M42 70v10m16-10v10' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+
+  <!-- Embedded Web App Manifest for Native Home Screen Installation -->
+  <link rel="manifest" id="manifestPlaceholder">
+  <script>
+    (function() {
+      const manifestObj = {
+        name: "CircuitCore Repair Procurement Engine",
+        short_name: "CircuitCore",
+        description: "Hardware Procurement, Anti-Scam Triage & Multi-Platform Manifest Engine",
+        start_url: window.location.href.split('#')[0],
+        display: "standalone",
+        background_color: "#050811",
+        theme_color: "#050811",
+        icons: [
+          {
+            src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%23f97316'/%3E%3Cpath d='M65 55h62v82H65z' fill='%23050811'/%3E%3Cpath d='M80 75h32v42H80z' fill='%23f97316'/%3E%3Cpath d='M45 80h20m-20 32h20m62-32h20m-20 32h20M80 35v20m32-20v20M80 137v20m32-20v20' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E",
+            sizes: "192x192",
+            type: "image/svg+xml",
+            purpose: "any maskable"
+          },
+          {
+            src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23f97316'/%3E%3Cpath d='M170 145h172v222H170z' fill='%23050811'/%3E%3Cpath d='M215 198h82v116H215z' fill='%23f97316'/%3E%3Cpath d='M115 210h55m-55 86h55m172-86h55m-55 86h55M215 90v55m82-55v55M215 367v55m82-55v55' stroke='%23ffffff' stroke-width='22' stroke-linecap='round'/%3E%3C/svg%3E",
+            sizes: "512x512",
+            type: "image/svg+xml",
+            purpose: "any maskable"
+          }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+      document.getElementById('manifestPlaceholder').setAttribute('href', URL.createObjectURL(blob));
+    })();
+  </script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -84,9 +127,9 @@
       </div>
     </div>
     <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-      CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.6 PRO</span>
+      CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.7 PRO</span>
     </h1>
-    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">Rayne Water • Lead Hardware Engineer</p>
+    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">Rayne Water</p>
     <p class="text-xs font-mono text-slate-400 mt-0.5">Hardware Procurement &amp; Anti-Scam Triage Engine</p>
     <div class="mt-6 flex items-center gap-2 text-[11px] font-mono text-slate-500">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -106,9 +149,9 @@
         </div>
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            CircuitCore <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">v1.6 PRO</span>
+            CircuitCore <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">v1.7 PRO</span>
           </h2>
-          <p class="text-xs text-orange-400/90 font-mono font-medium">Rayne Water • Lead Hardware Engineer</p>
+          <p class="text-xs text-orange-400/90 font-mono font-medium">Rayne Water</p>
         </div>
       </div>
 
@@ -177,11 +220,16 @@
 
       <!-- Account Profile / Sign Out Trigger -->
       <div class="flex items-center gap-2 shrink-0">
+        <!-- Native Install App Button (Visible when installable) -->
+        <button id="pwaInstallBtn" onclick="triggerPWAInstall()" class="hidden px-2.5 py-1 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/40 text-xs font-mono font-bold flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-download text-[10px]"></i> <span class="hidden sm:inline">Install App</span>
+        </button>
+
         <button onclick="openSignOutModal()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left">
           <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=Rayne+Water&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700">
           <div class="hidden sm:block">
             <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">Rayne Water</div>
-            <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[120px]">Lead Hardware Eng</div>
+            <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[120px]">Workspace Verified</div>
           </div>
           <i class="fa-solid fa-arrow-right-from-bracket text-slate-400 text-xs sm:ml-1"></i>
         </button>
@@ -191,14 +239,14 @@
     <!-- MAIN BODY CONTAINER -->
     <main class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 flex-1 pb-24 md:pb-8">
 
-      <!-- ================= SEARCH & TRIAGE BAR (ONLY IN SHORTLIST) ================= -->
+      <!-- ================= SEARCH & TRIAGE BAR (ONLY ON SHORTLIST) ================= -->
       <section id="triageCommandSection" class="glass-card rounded-2xl p-3 sm:p-4 mb-4 border border-slate-800 shadow-xl">
         <div class="flex flex-col sm:flex-row gap-2">
           <div class="relative flex-1">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
               <i class="fa-solid fa-bolt text-orange-400"></i>
             </span>
-            <input type="text" id="triageInput" placeholder="Enter device or part to triage (e.g. S21 Ultra, Switch OLED, Steam Deck)" class="w-full pl-9 pr-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 font-mono transition-all">
+            <input type="text" id="triageInput" placeholder="Enter device or part to triage (e.g. S21 Ultra, Switch OLED, Steam Deck fan)" class="w-full pl-9 pr-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 font-mono transition-all">
           </div>
           <div class="flex gap-2">
             <select id="partCategoryFilter" class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-orange-500">
@@ -217,7 +265,7 @@
       </section>
 
       <!-- ================= TAB: SHORTLIST ================= -->
-      <section id="tabView_shortlist" class="space-y-4">
+      <section id="tabView_shortlist" class="space-y-3">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -236,22 +284,23 @@
           </button>
         </div>
 
-        <!-- In-Tab Search Bar -->
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+        <!-- In-Tab Keyword Search for Shortlist -->
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <input type="text" id="searchShortlistInput" oninput="renderShortlist()" placeholder="Search candidates by keyword, model, OEM code..." class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-all">
+          <input type="text" id="shortlistSearchFilter" oninput="renderShortlist()" placeholder="Search candidates by title, OEM part #, platform, notes..." class="w-full pl-9 pr-8 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-all">
+          <button onclick="clearSearchFilter('shortlistSearchFilter', renderShortlist)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 text-xs">&times;</button>
         </div>
 
         <!-- Shortlist Cards Grid -->
-        <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        <div id="shortlistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pt-1">
           <!-- Populated dynamically via JS -->
         </div>
       </section>
 
       <!-- ================= TAB: APPROVED ================= -->
-      <section id="tabView_approved" class="space-y-4 hidden">
+      <section id="tabView_approved" class="space-y-3 hidden">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -264,21 +313,22 @@
           </button>
         </div>
 
-        <!-- In-Tab Search Bar -->
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+        <!-- In-Tab Keyword Search for Approved -->
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <input type="text" id="searchApprovedInput" oninput="renderApproved()" placeholder="Search approved manifest items..." class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all">
+          <input type="text" id="approvedSearchFilter" oninput="renderApproved()" placeholder="Search approved manifest by component, OEM code, store..." class="w-full pl-9 pr-8 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all">
+          <button onclick="clearSearchFilter('approvedSearchFilter', renderApproved)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 text-xs">&times;</button>
         </div>
 
-        <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        <div id="approvedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pt-1">
           <!-- Populated dynamically via JS -->
         </div>
       </section>
 
       <!-- ================= TAB: FOLDERS ================= -->
-      <section id="tabView_folders" class="space-y-4 hidden">
+      <section id="tabView_folders" class="space-y-3 hidden">
         <div class="flex items-center justify-between">
           <h2 class="text-sm sm:text-base font-extrabold text-white">Repair Project Folders</h2>
           <button onclick="promptCreateFolder()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 transition-all flex items-center gap-1.5">
@@ -286,21 +336,22 @@
           </button>
         </div>
 
-        <!-- In-Tab Search Bar -->
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+        <!-- In-Tab Keyword Search for Folders -->
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <input type="text" id="searchFoldersInput" oninput="renderFolders()" placeholder="Search project folders..." class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all">
+          <input type="text" id="foldersSearchFilter" oninput="renderFolders()" placeholder="Search project folders by name..." class="w-full pl-9 pr-8 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all">
+          <button onclick="clearSearchFilter('foldersSearchFilter', renderFolders)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 text-xs">&times;</button>
         </div>
 
-        <div id="foldersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div id="foldersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
           <!-- Populated dynamically via JS -->
         </div>
       </section>
 
       <!-- ================= TAB: TRASH ================= -->
-      <section id="tabView_trash" class="space-y-4 hidden">
+      <section id="tabView_trash" class="space-y-3 hidden">
         <div class="flex items-center justify-between">
           <h2 class="text-sm sm:text-base font-extrabold text-white">Rejected Candidates (Trash)</h2>
           <button onclick="emptyTrashPurge()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 transition-all flex items-center gap-1.5">
@@ -308,21 +359,22 @@
           </button>
         </div>
 
-        <!-- In-Tab Search Bar -->
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+        <!-- In-Tab Keyword Search for Trash -->
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <input type="text" id="searchTrashInput" oninput="renderTrash()" placeholder="Search rejected candidates..." class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-all">
+          <input type="text" id="trashSearchFilter" oninput="renderTrash()" placeholder="Search trashed items by title, serial, or code..." class="w-full pl-9 pr-8 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-all">
+          <button onclick="clearSearchFilter('trashSearchFilter', renderTrash)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 text-xs">&times;</button>
         </div>
 
-        <div id="trashGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div id="trashGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
           <!-- Populated dynamically via JS -->
         </div>
       </section>
 
       <!-- ================= TAB: MEMORY ================= -->
-      <section id="tabView_memory" class="space-y-4 hidden">
+      <section id="tabView_memory" class="space-y-3 hidden">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -343,15 +395,16 @@
           </a>
         </div>
 
-        <!-- In-Tab Search Bar -->
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+        <!-- In-Tab Keyword Search for Memory -->
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <input type="text" id="searchMemoryInput" oninput="renderMemoryLogs()" placeholder="Search memory logs by keyword or tag..." class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+          <input type="text" id="memorySearchFilter" oninput="renderMemoryLogs()" placeholder="Search memory logs by LOG-ID, category, keyword, or note..." class="w-full pl-9 pr-8 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+          <button onclick="clearSearchFilter('memorySearchFilter', renderMemoryLogs)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 text-xs">&times;</button>
         </div>
 
-        <div id="memoryLogsContainer" class="space-y-3">
+        <div id="memoryLogsContainer" class="space-y-3 pt-1">
           <!-- Populated dynamically via JS -->
         </div>
       </section>
@@ -533,7 +586,7 @@
           <span id="modalItemCount" class="text-slate-200"></span>
         </div>
         <div class="flex items-center justify-between text-slate-400">
-          <span>Lead Hardware Eng:</span>
+          <span>Operator:</span>
           <span class="text-slate-200">Rayne Water</span>
         </div>
       </div>
@@ -565,21 +618,42 @@
     let currentItems = [];
     let selectedFolderFilter = null;
     let activeModalItemId = null;
+    let deferredInstallPrompt = null;
 
-    // Master Memory Audit Logs (12 Records)
+    // Relative Time Helper ("... ago")
+    function timeAgo(dateInput) {
+      if (!dateInput) return "just now";
+      const past = new Date(dateInput).getTime();
+      if (isNaN(past)) return "recently";
+      const now = Date.now();
+      const diffSec = Math.max(0, Math.floor((now - past) / 1000));
+
+      if (diffSec < 60) return "just now";
+      const diffMin = Math.floor(diffSec / 60);
+      if (diffMin < 60) return `${diffMin}m ago`;
+      const diffHour = Math.floor(diffMin / 60);
+      if (diffHour < 24) return `${diffHour}h ago`;
+      const diffDays = Math.floor(diffHour / 24);
+      if (diffDays < 30) return `${diffDays}d ago`;
+      const diffMonths = Math.floor(diffDays / 30);
+      if (diffMonths < 12) return `${diffMonths}mo ago`;
+      return `${Math.floor(diffMonths / 12)}y ago`;
+    }
+
+    // Master Memory Audit Logs (12 Records) with Exact Timestamps
     const masterMemoryLogs = [
-      { id: "LOG-001", cat: "OAUTH", title: "GIS Client Handshake Established", notes: "Initialized Google Identity Services token client using official OAuth client credentials.", timestamp: "2026-11-20 09:15" },
-      { id: "LOG-002", cat: "STORAGE", title: "Local Partition Sandboxing", notes: "Enforced partitioned storage keys (cc_[email]_items) to guarantee zero-leakage local caching.", timestamp: "2026-11-20 11:20" },
-      { id: "LOG-003", cat: "TRIAGE", title: "S21 Ultra Dynamic AMOLED Ingestion", notes: "Evaluated 4 supply candidates. Approved GH82-26034A Samsung teardown pull midframe.", timestamp: "2026-11-21 14:02" },
-      { id: "LOG-004", cat: "SCAM-GUARD", title: "BMS Flex Verification Check", notes: "Flagged clone batteries lacking Texas Instruments BQ fuel-gauge IC. Enforced OEM pull rule.", timestamp: "2026-11-21 15:30" },
-      { id: "LOG-005", cat: "ENGINE", title: "Dual Adaptive Viewport Deployed", notes: "Embedded mobile 5-icon thumb dock and desktop header navigation tab bars.", timestamp: "2026-11-21 17:45" },
-      { id: "LOG-006", cat: "MARKETPLACE", title: "Multi-Platform Platform Routing", notes: "Enabled dynamic linking and sourcing for Pinduoduo, Taobao, 1688 Wholesale, and Xianyu.", timestamp: "2026-11-21 18:30" },
-      { id: "LOG-007", cat: "CURRENCY", title: "Landed SGD Conversion Engine", notes: "Locked RMB:SGD conversion factor at 5.30 including estimated consolidation freight weight.", timestamp: "2026-11-22 08:00" },
-      { id: "LOG-008", cat: "SCHEMATIC", title: "Vector Teardown Fallback Engine", notes: "Integrated inline SVG generation for hardware midframes, lithium pouches, and die-cut gaskets.", timestamp: "2026-11-22 09:12" },
-      { id: "LOG-009", cat: "INSPECTION", title: "Folder Manifest Filtering", notes: "Active folder filtering dynamically organizes procurement lists across customer projects.", timestamp: "2026-11-22 10:05" },
-      { id: "LOG-010", cat: "GOV", title: "Lead Engineer Seal Assigned", notes: "Hardware verification authenticated under Rayne Water lead engineering profile.", timestamp: "2026-11-22 11:15" },
-      { id: "LOG-011", cat: "SECURITY", title: "Cross-Origin Link Protocol", notes: "All external shopping URLs isolated with rel='noopener noreferrer' and strict sanitization.", timestamp: "2026-11-22 12:00" },
-      { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22 12:45" }
+      { id: "LOG-001", cat: "OAUTH", title: "GIS Client Handshake Established", notes: "Initialized Google Identity Services token client using official OAuth client credentials.", timestamp: "2026-11-20T09:15:00Z" },
+      { id: "LOG-002", cat: "STORAGE", title: "Local Partition Sandboxing", notes: "Enforced partitioned storage keys (cc_[email]_items) to guarantee zero-leakage local caching.", timestamp: "2026-11-20T11:20:00Z" },
+      { id: "LOG-003", cat: "TRIAGE", title: "S21 Ultra Dynamic AMOLED Ingestion", notes: "Evaluated 4 supply candidates. Approved GH82-26034A Samsung teardown pull midframe.", timestamp: "2026-11-21T14:02:00Z" },
+      { id: "LOG-004", cat: "SCAM-GUARD", title: "BMS Flex Verification Check", notes: "Flagged clone batteries lacking Texas Instruments BQ fuel-gauge IC. Enforced OEM pull rule.", timestamp: "2026-11-21T15:30:00Z" },
+      { id: "LOG-005", cat: "ENGINE", title: "Dual Adaptive Viewport Deployed", notes: "Embedded mobile 5-icon thumb dock and desktop header navigation tab bars.", timestamp: "2026-11-21T17:45:00Z" },
+      { id: "LOG-006", cat: "MARKETPLACE", title: "Multi-Platform Platform Routing", notes: "Enabled dynamic linking and sourcing for Pinduoduo, Taobao, 1688 Wholesale, and Xianyu.", timestamp: "2026-11-21T18:30:00Z" },
+      { id: "LOG-007", cat: "CURRENCY", title: "Landed SGD Conversion Engine", notes: "Locked RMB:SGD conversion factor at 5.30 including estimated consolidation freight weight.", timestamp: "2026-11-22T08:00:00Z" },
+      { id: "LOG-008", cat: "SCHEMATIC", title: "Vector Teardown Fallback Engine", notes: "Integrated inline SVG generation for hardware midframes, lithium pouches, and die-cut gaskets.", timestamp: "2026-11-22T09:12:00Z" },
+      { id: "LOG-009", cat: "INSPECTION", title: "Folder Manifest Filtering", notes: "Active folder filtering dynamically organizes procurement lists across customer projects.", timestamp: "2026-11-22T10:05:00Z" },
+      { id: "LOG-010", cat: "GOV", title: "Operator Seal Assigned", notes: "Hardware verification authenticated under Rayne Water profile.", timestamp: "2026-11-22T11:15:00Z" },
+      { id: "LOG-011", cat: "SECURITY", title: "Cross-Origin Link Protocol", notes: "All external shopping URLs isolated with rel='noopener noreferrer' and strict sanitization.", timestamp: "2026-11-22T12:00:00Z" },
+      { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22T12:45:00Z" }
     ];
 
     // Seed Data
@@ -595,7 +669,8 @@
         folder: "Galaxy S21 Ultra Project",
         status: "shortlist",
         badge: "Teardown Pull with Chassis",
-        frameAuth: "Original Samsung teardown frame assembly. Anodized Phantom Black midframe with copper heat-pipe intact."
+        frameAuth: "Original Samsung teardown frame assembly. Anodized Phantom Black midframe with copper heat-pipe intact.",
+        createdAt: "2026-11-22T10:00:00Z"
       },
       {
         id: "item_s21_batt",
@@ -608,7 +683,8 @@
         folder: "Galaxy S21 Ultra Project",
         status: "shortlist",
         badge: "0-Cycle Cell",
-        frameAuth: "High-density cobalt cell with original Texas Instruments BQ fuel-gauge microcontroller flex."
+        frameAuth: "High-density cobalt cell with original Texas Instruments BQ fuel-gauge microcontroller flex.",
+        createdAt: "2026-11-22T11:30:00Z"
       },
       {
         id: "item_s21_gasket",
@@ -621,7 +697,8 @@
         folder: "Galaxy S21 Ultra Project",
         status: "approved",
         badge: "Pre-cut OEM Spec",
-        frameAuth: "Precision die-cut waterproof perimeter adhesive seal. Includes camera module bezel adhesive."
+        frameAuth: "Precision die-cut waterproof perimeter adhesive seal. Includes camera module bezel adhesive.",
+        createdAt: "2026-11-22T12:15:00Z"
       }
     ];
 
@@ -752,13 +829,13 @@
 
     // Tab Switching Controller (Desktop & Mobile Sync)
     function switchTab(tabKey) {
-      // Toggle command bar so it only appears in Shortlist
-      const cmdBar = document.getElementById('triageCommandSection');
-      if (cmdBar) {
+      // Manage Triage Command Section Visibility: strictly show in shortlist only
+      const triageSection = document.getElementById('triageCommandSection');
+      if (triageSection) {
         if (tabKey === 'shortlist') {
-          cmdBar.classList.remove('hidden');
+          triageSection.classList.remove('hidden');
         } else {
-          cmdBar.classList.add('hidden');
+          triageSection.classList.add('hidden');
         }
       }
 
@@ -805,28 +882,16 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Update Counts Across All Views
-    function updateBadges() {
-      const shortCount = currentItems.filter(i => i.status === 'shortlist').length;
-      const appCount = currentItems.filter(i => i.status === 'approved').length;
-      const trashCount = currentItems.filter(i => i.status === 'trash').length;
-
-      const mShort = document.getElementById('badgeMobile_shortlist');
-      const mApp = document.getElementById('badgeMobile_approved');
-      const mTrash = document.getElementById('badgeMobile_trash');
-      if (mShort) mShort.textContent = shortCount;
-      if (mApp) mApp.textContent = appCount;
-      if (mTrash) mTrash.textContent = trashCount;
-
-      const dShort = document.getElementById('badgeDesktop_shortlist');
-      const dApp = document.getElementById('badgeDesktop_approved');
-      const dTrash = document.getElementById('badgeDesktop_trash');
-      if (dShort) dShort.textContent = shortCount;
-      if (dApp) dApp.textContent = appCount;
-      if (dTrash) dTrash.textContent = trashCount;
+    // Keyword Search Helper to Clear Input
+    function clearSearchFilter(inputId, callback) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.value = '';
+        if (typeof callback === 'function') callback();
+      }
     }
 
-    // Render Shortlist Cards
+    // Render Shortlist Cards with In-Tab Search Filtering
     function renderShortlist() {
       const container = document.getElementById('shortlistGrid');
       if (!container) return;
@@ -835,18 +900,15 @@
         currentItems = [...defaultInitialItems];
       }
 
-      const query = (document.getElementById('searchShortlistInput')?.value || '').toLowerCase().trim();
+      const searchInput = document.getElementById('shortlistSearchFilter');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
       const items = currentItems.filter(i => {
         if (i.status !== 'shortlist') return false;
         if (selectedFolderFilter && i.folder !== selectedFolderFilter) return false;
         if (query) {
-          const matchTitle = (i.title || '').toLowerCase().includes(query);
-          const matchCode = (i.oemPartCode || '').toLowerCase().includes(query);
-          const matchAuth = (i.frameAuth || '').toLowerCase().includes(query);
-          const matchFolder = (i.folder || '').toLowerCase().includes(query);
-          const matchPlatform = (i.platform || '').toLowerCase().includes(query);
-          if (!matchTitle && !matchCode && !matchAuth && !matchFolder && !matchPlatform) return false;
+          const haystack = `${i.title || ''} ${i.oemPartCode || ''} ${i.platform || ''} ${i.frameAuth || ''} ${i.folder || ''}`.toLowerCase();
+          if (!haystack.includes(query)) return false;
         }
         return true;
       });
@@ -855,7 +917,7 @@
         container.innerHTML = `
           <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
             <i class="fa-solid fa-microchip text-3xl mb-3 text-slate-600 block"></i>
-            No candidate components match the current query or filter.
+            ${query ? 'No shortlisted components match your keyword.' : 'No candidate components in this view. Use the triage command bar above to ingest components.'}
           </div>
         `;
         return;
@@ -872,6 +934,7 @@
           const priceSgd = typeof item.priceSgd === 'number' ? item.priceSgd.toFixed(2) : (priceRmb / SGD_EXCHANGE_RATE).toFixed(2);
           const oemCode = escapeHtml(item.oemPartCode || 'OEM-SPEC');
           const directUrl = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
+          const timeLabel = timeAgo(item.createdAt);
 
           return `
           <div class="glass-card rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between group">
@@ -889,7 +952,10 @@
 
               <div class="flex items-center justify-between gap-2">
                 <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${oemCode}</span>
-                <span class="text-[9px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]"><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</span>
+                <div class="flex items-center gap-1.5 overflow-hidden">
+                  <span class="text-[9px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[100px]"><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</span>
+                  <span class="text-[9px] font-mono text-orange-400/80 shrink-0"><i class="fa-regular fa-clock text-[8px] mr-0.5"></i>${timeLabel}</span>
+                </div>
               </div>
 
               <h4 class="text-xs font-bold text-white mt-2 line-clamp-2 leading-snug group-hover:text-orange-400 transition-colors">
@@ -926,21 +992,19 @@
       }
     }
 
-    // Render Approved Manifest Cards
+    // Render Approved Manifest Cards with In-Tab Search Filtering
     function renderApproved() {
       const container = document.getElementById('approvedGrid');
       if (!container) return;
 
-      const query = (document.getElementById('searchApprovedInput')?.value || '').toLowerCase().trim();
+      const searchInput = document.getElementById('approvedSearchFilter');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
       const items = currentItems.filter(i => {
         if (i.status !== 'approved') return false;
         if (query) {
-          const matchTitle = (i.title || '').toLowerCase().includes(query);
-          const matchCode = (i.oemPartCode || '').toLowerCase().includes(query);
-          const matchFolder = (i.folder || '').toLowerCase().includes(query);
-          const matchPlatform = (i.platform || '').toLowerCase().includes(query);
-          if (!matchTitle && !matchCode && !matchFolder && !matchPlatform) return false;
+          const haystack = `${i.title || ''} ${i.oemPartCode || ''} ${i.platform || ''} ${i.folder || ''}`.toLowerCase();
+          if (!haystack.includes(query)) return false;
         }
         return true;
       });
@@ -949,7 +1013,7 @@
         container.innerHTML = `
           <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
             <i class="fa-solid fa-clipboard-check text-3xl mb-3 text-slate-600 block"></i>
-            No approved components match the search query.
+            ${query ? 'No approved manifest items match your keyword.' : 'No approved components yet. Open the Shortlist tab and tap the checkmark to approve candidate items.'}
           </div>
         `;
         return;
@@ -960,6 +1024,7 @@
         const safeFolder = escapeHtml(item.folder || 'General');
         const safeImg = (item.imageUrl && item.imageUrl.startsWith('data:image')) ? item.imageUrl : generatePartPhotoSVG(item.category, item.title);
         const directUrl = getPlatformListingUrl(item.platform, item.title, item.oemPartCode);
+        const timeLabel = timeAgo(item.createdAt);
 
         return `
         <div class="glass-card rounded-2xl p-4 border border-emerald-500/30 bg-emerald-950/10 flex flex-col justify-between">
@@ -977,7 +1042,10 @@
             </div>
 
             <h4 class="text-xs font-bold text-white line-clamp-2">${safeTitle}</h4>
-            <div class="text-[10px] font-mono text-slate-400 mt-1"><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</div>
+            <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1">
+              <span><i class="fa-solid fa-folder text-[8px] mr-1 text-amber-500"></i>${safeFolder}</span>
+              <span class="text-emerald-400/80"><i class="fa-regular fa-clock text-[8px] mr-0.5"></i>${timeLabel}</span>
+            </div>
           </div>
 
           <div class="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between gap-2">
@@ -999,12 +1067,13 @@
       }).join('');
     }
 
-    // Render Project Folders
+    // Render Project Folders with In-Tab Search Filtering
     function renderFolders() {
       const container = document.getElementById('foldersGrid');
       if (!container) return;
 
-      const query = (document.getElementById('searchFoldersInput')?.value || '').toLowerCase().trim();
+      const searchInput = document.getElementById('foldersSearchFilter');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
       const folderMap = {};
       currentItems.forEach(item => {
@@ -1022,7 +1091,7 @@
       }
 
       if (folders.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-slate-500 font-mono">No matching project folders found.</div>`;
+        container.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-slate-500 font-mono">${query ? 'No repair project folders match your search.' : 'No active folders found.'}</div>`;
         return;
       }
 
@@ -1057,19 +1126,19 @@
       }).join('');
     }
 
-    // Render Trash
+    // Render Trash with In-Tab Search Filtering
     function renderTrash() {
       const container = document.getElementById('trashGrid');
       if (!container) return;
 
-      const query = (document.getElementById('searchTrashInput')?.value || '').toLowerCase().trim();
+      const searchInput = document.getElementById('trashSearchFilter');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
       const items = currentItems.filter(i => {
         if (i.status !== 'trash') return false;
         if (query) {
-          const matchTitle = (i.title || '').toLowerCase().includes(query);
-          const matchCode = (i.oemPartCode || '').toLowerCase().includes(query);
-          if (!matchTitle && !matchCode) return false;
+          const haystack = `${i.title || ''} ${i.oemPartCode || ''}`.toLowerCase();
+          if (!haystack.includes(query)) return false;
         }
         return true;
       });
@@ -1078,7 +1147,7 @@
         container.innerHTML = `
           <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
             <i class="fa-solid fa-trash-can text-3xl mb-3 text-slate-600 block"></i>
-            Trash has no matching items.
+            ${query ? 'No trashed items match your search.' : 'Trash is currently empty.'}
           </div>
         `;
         return;
@@ -1107,24 +1176,22 @@
       `).join('');
     }
 
-    // Render Memory Logs
+    // Render Memory Logs with In-Tab Search Filtering
     function renderMemoryLogs() {
       const container = document.getElementById('memoryLogsContainer');
       if (!container) return;
 
-      const query = (document.getElementById('searchMemoryInput')?.value || '').toLowerCase().trim();
+      const searchInput = document.getElementById('memorySearchFilter');
+      const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
       const logs = masterMemoryLogs.filter(log => {
         if (!query) return true;
-        const matchTitle = (log.title || '').toLowerCase().includes(query);
-        const matchNotes = (log.notes || '').toLowerCase().includes(query);
-        const matchCat = (log.cat || '').toLowerCase().includes(query);
-        const matchId = (log.id || '').toLowerCase().includes(query);
-        return matchTitle || matchNotes || matchCat || matchId;
+        const haystack = `${log.id} ${log.cat} ${log.title} ${log.notes}`.toLowerCase();
+        return haystack.includes(query);
       });
 
       if (logs.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-slate-500 font-mono">No memory audit logs match your query.</div>`;
+        container.innerHTML = `<div class="py-8 text-center text-xs text-slate-500 font-mono">No audit memory logs match "${escapeHtml(query)}".</div>`;
         return;
       }
 
@@ -1132,7 +1199,7 @@
         <div class="glass-card rounded-xl p-3 border border-slate-800 font-mono space-y-1">
           <div class="flex items-center justify-between text-[10px] text-slate-500">
             <span class="px-1.5 py-0.5 rounded bg-slate-900 text-cyan-400 border border-slate-800">${log.id} • ${log.cat}</span>
-            <span>${log.timestamp}</span>
+            <span class="text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock text-[8px]"></i>${timeAgo(log.timestamp)}</span>
           </div>
           <h4 class="text-xs font-bold text-slate-200 mt-1">${escapeHtml(log.title)}</h4>
           <p class="text-[11px] text-slate-400 leading-relaxed break-words">${escapeHtml(log.notes)}</p>
@@ -1304,6 +1371,7 @@
           item.status = "shortlist";
           item.frameAuth = "Anti-scam supplier heuristics scored: authentic traces and OEM serialization intact.";
           item.imageUrl = generatePartPhotoSVG(item.category, item.title);
+          item.createdAt = new Date().toISOString();
           currentItems.unshift(item);
         });
 
@@ -1403,7 +1471,8 @@
         status: "shortlist",
         badge: "Custom Listing",
         frameAuth: "Manually registered component listing.",
-        imageUrl: generatePartPhotoSVG(category, title)
+        imageUrl: generatePartPhotoSVG(category, title),
+        createdAt: new Date().toISOString()
       };
 
       currentItems.unshift(newItem);
@@ -1548,48 +1617,48 @@
       });
     }
 
-    function completeLoginFlow(user) {
-      currentUser = user;
-      localStorage.setItem('cc_active_user', JSON.stringify(user));
+    // PWA BeforeInstallPrompt Handler & Service Worker Registration
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const installBtn = document.getElementById('pwaInstallBtn');
+      if (installBtn) installBtn.classList.remove('hidden');
+    });
 
-      document.getElementById('authGateView').classList.add('hidden');
-
-      const avatar = user.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'Rayne Water')}&background=f97316&color=fff&bold=true`;
-      document.getElementById('headerUserAvatar').src = avatar;
-      document.getElementById('headerUserName').textContent = user.name || "Rayne Water";
-      document.getElementById('headerUserEmail').textContent = user.email || "raynendchannel@gmail.com";
-
-      loadUserData();
-      selectedFolderFilter = null;
-      switchTab('shortlist');
-      setSystemStatus('IDLE', 'IDLE • System Ready');
+    function triggerPWAInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User installed CircuitCore PWA to Home Screen');
+          }
+          deferredInstallPrompt = null;
+          const installBtn = document.getElementById('pwaInstallBtn');
+          if (installBtn) installBtn.classList.add('hidden');
+        });
+      } else {
+        alert("To install as an app on your mobile device:\n\n• On Chrome/Android: Tap browser menu (⋮) -> 'Install App' or 'Add to Home screen'.\n• On Safari/iOS: Tap Share (⎋) -> 'Add to Home Screen'.");
+      }
     }
 
-    // Account Details & Sign Out Modal
-    function openSignOutModal() {
-      const modal = document.getElementById('signOutModal');
-      const name = currentUser ? currentUser.name : "Rayne Water";
-      const email = currentUser ? currentUser.email : "raynendchannel@gmail.com";
-      const avatar = (currentUser && currentUser.picture) ? currentUser.picture : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f97316&color=fff&bold=true`;
-
-      document.getElementById('modalUserName').textContent = name;
-      document.getElementById('modalUserEmail').textContent = email;
-      document.getElementById('modalUserAvatar').src = avatar;
-      document.getElementById('modalPartitionId').textContent = getUserStorageKey();
-      document.getElementById('modalItemCount').textContent = currentItems.length + " items";
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeSignOutModal() {
-      document.getElementById('signOutModal').classList.add('hidden');
-    }
-
-    function confirmSignOut() {
-      closeSignOutModal();
-      currentUser = null;
-      localStorage.removeItem('cc_active_user');
-      document.getElementById('authGateView').classList.remove('hidden');
+    // Register Inline Service Worker for Full PWA Offline & App Status
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swScript = `
+          const CACHE_NAME = 'circuitcore-cache-v1';
+          self.addEventListener('install', (e) => { self.skipWaiting(); });
+          self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+          self.addEventListener('fetch', (e) => {
+            e.respondWith(
+              fetch(e.request).catch(() => caches.match(e.request))
+            );
+          });
+        `;
+        const blob = new Blob([swScript], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch((err) => {
+          console.warn("SW register notice:", err);
+        });
+      });
     }
 
     // Fail-safe dismiss boot screen
