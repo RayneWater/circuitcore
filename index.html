@@ -129,7 +129,7 @@
     <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
       CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.7 PRO</span>
     </h1>
-    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">Rayne Water</p>
+    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">RayneWater</p>
     <p class="text-xs font-mono text-slate-400 mt-0.5">Hardware Procurement &amp; Anti-Scam Triage Engine</p>
     <div class="mt-6 flex items-center gap-2 text-[11px] font-mono text-slate-500">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -151,7 +151,7 @@
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
             CircuitCore <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">v1.7 PRO</span>
           </h2>
-          <p class="text-xs text-orange-400/90 font-mono font-medium">Rayne Water</p>
+          <p class="text-xs text-orange-400/90 font-mono font-medium">RayneWater</p>
         </div>
       </div>
 
@@ -160,6 +160,7 @@
         Sign in with Google to access your sandboxed repair hardware lists, anti-scam vendor heuristics, and automated BOM manifest exports.
       </p>
 
+      <!-- Standard Google Sign In Button -->
       <button id="googleSignInBtn" onclick="triggerOfficialGoogleLogin()" class="w-full py-3 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-medium text-sm flex items-center justify-center gap-3 shadow-lg transition-all active:scale-[0.98]">
         <svg class="w-4 h-4" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -168,6 +169,50 @@
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
         <span>Sign in with Google</span>
+      </button>
+
+      <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <span>Zero Cloud Leakage</span>
+        <span>Scoped Local Sandbox</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APPLICATION LAYOUT ================= -->
+  <div id="appContainer" class="min-h-screen flex flex-col justify-between max-w-full">
+    
+    <!-- TOP APP BAR -->
+    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 overflow-x-hidden">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white text-xs sm:text-sm shrink-0">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
+        <div class="flex items-center gap-1 sm:gap-1.5">
+          <span class="font-extrabold text-xs sm:text-base tracking-tight text-white whitespace-nowrap">CircuitCore</span>
+          <span class="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold whitespace-nowrap">v1.7 PRO</span>
+        </div>
+      </div>
+
+      <h3 class="text-base font-bold text-slate-100 mb-2">Workspace Authentication</h3>
+      <p class="text-xs text-slate-400 leading-relaxed mb-6 font-mono">
+        Sign in with Google to access your sandboxed repair hardware lists, anti-scam vendor heuristics, and automated BOM manifest exports.
+      </p>
+
+      <!-- Instant One-Tap Sign In for raynendchannel@gmail.com -->
+      <button onclick="instantAuthenticateRayneWater()" class="w-full py-3 px-4 mb-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-bold text-sm flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all">
+        <i class="fa-solid fa-bolt text-slate-950"></i>
+        <span>Sign in as Rayne Water (raynendchannel)</span>
+      </button>
+
+      <button id="googleSignInBtn" onclick="triggerOfficialGoogleLogin()" class="w-full py-3 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-medium text-sm flex items-center justify-center gap-3 shadow-lg transition-all active:scale-[0.98]">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Standard Google OAuth</span>
       </button>
 
       <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
@@ -226,9 +271,9 @@
         </button>
 
         <button onclick="openSignOutModal()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left">
-          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=Rayne+Water&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700">
+          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=RayneWater&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700">
           <div class="hidden sm:block">
-            <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">Rayne Water</div>
+            <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">RayneWater</div>
             <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[120px]">Workspace Verified</div>
           </div>
           <i class="fa-solid fa-arrow-right-from-bracket text-slate-400 text-xs sm:ml-1"></i>
@@ -412,7 +457,7 @@
     </main>
 
     <!-- ================= MOBILE FLOATING DOCK (CLEAN ICON-ONLY) ================= -->
-    <nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm glass-dock rounded-2xl p-1.5 border border-slate-700/60 shadow-2xl">
+    <nav id="mobileActionDock" class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm glass-dock rounded-2xl p-1.5 border border-slate-700/60 shadow-2xl hidden">
       <div class="grid grid-cols-5 items-center justify-items-center gap-1">
         <!-- Tab: Shortlist -->
         <button onclick="switchTab('shortlist')" id="mobileNav_shortlist" class="relative w-full py-2.5 rounded-xl bg-orange-500 text-slate-950 flex flex-col items-center justify-center transition-all active:scale-95 active-nav-glow" title="Shortlist">
@@ -587,7 +632,7 @@
         </div>
         <div class="flex items-center justify-between text-slate-400">
           <span>Operator:</span>
-          <span class="text-slate-200">Rayne Water</span>
+          <span class="text-slate-200">RayneWater</span>
         </div>
       </div>
 
@@ -651,7 +696,7 @@
       { id: "LOG-007", cat: "CURRENCY", title: "Landed SGD Conversion Engine", notes: "Locked RMB:SGD conversion factor at 5.30 including estimated consolidation freight weight.", timestamp: "2026-11-22T08:00:00Z" },
       { id: "LOG-008", cat: "SCHEMATIC", title: "Vector Teardown Fallback Engine", notes: "Integrated inline SVG generation for hardware midframes, lithium pouches, and die-cut gaskets.", timestamp: "2026-11-22T09:12:00Z" },
       { id: "LOG-009", cat: "INSPECTION", title: "Folder Manifest Filtering", notes: "Active folder filtering dynamically organizes procurement lists across customer projects.", timestamp: "2026-11-22T10:05:00Z" },
-      { id: "LOG-010", cat: "GOV", title: "Operator Seal Assigned", notes: "Hardware verification authenticated under Rayne Water profile.", timestamp: "2026-11-22T11:15:00Z" },
+      { id: "LOG-010", cat: "GOV", title: "Operator Seal Assigned", notes: "Hardware verification authenticated under RayneWater profile.", timestamp: "2026-11-22T11:15:00Z" },
       { id: "LOG-011", cat: "SECURITY", title: "Cross-Origin Link Protocol", notes: "All external shopping URLs isolated with rel='noopener noreferrer' and strict sanitization.", timestamp: "2026-11-22T12:00:00Z" },
       { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22T12:45:00Z" }
     ];
@@ -1534,12 +1579,49 @@
     }
 
     // Google Sign-In & Auth Flow
+    function completeLoginFlow(user) {
+      currentUser = user;
+      localStorage.setItem('cc_active_user', JSON.stringify(user));
+
+      // Show mobile floating action dock post-authentication
+      const dock = document.getElementById('mobileActionDock');
+      if (dock) dock.classList.remove('hidden');
+
+      // Update Top Header Profile
+      const nameElem = document.getElementById('headerUserName');
+      const emailElem = document.getElementById('headerUserEmail');
+      const avatarElem = document.getElementById('headerUserAvatar');
+
+      if (nameElem) nameElem.textContent = user.name || "RayneWater";
+      if (emailElem) emailElem.textContent = user.email || "raynendchannel@gmail.com";
+      if (avatarElem) {
+        if (user.picture) {
+          avatarElem.src = user.picture;
+          avatarElem.onerror = () => {
+            avatarElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
+          };
+        } else {
+          avatarElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
+        }
+      }
+
+      // Hide Auth Gate
+      const gate = document.getElementById('authGateView');
+      if (gate) gate.classList.add('hidden');
+
+      // Load user partitioned database
+      loadUserData();
+      selectedFolderFilter = null;
+      switchTab('shortlist');
+      setSystemStatus('IDLE', 'IDLE • System Ready');
+    }
+
     function initializeGoogleOAuth() {
       try {
-        if (window.google && google.accounts && google.accounts.oauth2) {
+        if (window.google && window.google.accounts && window.google.accounts.oauth2) {
           gisTokenClient = google.accounts.oauth2.initTokenClient({
             client_id: OFFICIAL_GOOGLE_CLIENT_ID,
-            scope: "email profile openid",
+            scope: 'email profile openid',
             callback: (tokenResponse) => {
               if (tokenResponse && tokenResponse.access_token) {
                 fetchGoogleUserProfile(tokenResponse.access_token);
@@ -1550,6 +1632,43 @@
       } catch (err) {
         console.warn("GIS token client deferral:", err);
       }
+    }
+
+    function confirmSignOut() {
+      currentUser = null;
+      localStorage.removeItem('cc_active_user');
+      closeSignOutModal();
+
+      // Hide mobile action dock upon sign-out
+      const dock = document.getElementById('mobileActionDock');
+      if (dock) dock.classList.add('hidden');
+
+      document.getElementById('authGateView').classList.remove('hidden');
+      setSystemStatus('IDLE', 'AUTH REQUIRED');
+    }
+
+    function openSignOutModal() {
+      if (!currentUser) return;
+      const modal = document.getElementById('signOutModal');
+      document.getElementById('modalUserName').textContent = currentUser.name || "RayneWater";
+      document.getElementById('modalUserEmail').textContent = currentUser.email || "raynendchannel@gmail.com";
+      document.getElementById('modalPartitionId').textContent = getUserStorageKey();
+      document.getElementById('modalItemCount').textContent = currentItems.length + " items";
+      
+      const avatar = document.getElementById('modalUserAvatar');
+      if (currentUser.picture) {
+        avatar.src = currentUser.picture;
+        avatar.onerror = () => {
+          avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
+        };
+      } else {
+        avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeSignOutModal() {
+      document.getElementById('signOutModal').classList.add('hidden');
     }
 
     function triggerOfficialGoogleLogin() {
@@ -1576,7 +1695,7 @@
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const payload = JSON.parse(window.atob(base64));
             completeLoginFlow({
-              name: payload.name || "Rayne Water",
+              name: payload.name || "RayneWater",
               email: payload.email || "raynendchannel@gmail.com",
               picture: payload.picture || ""
             });
@@ -1603,14 +1722,14 @@
       .then(res => res.json())
       .then(data => {
         completeLoginFlow({
-          name: data.name || "Rayne Water",
+          name: data.name || "RayneWater",
           email: data.email || "raynendchannel@gmail.com",
           picture: data.picture || ""
         });
       })
       .catch(() => {
         completeLoginFlow({
-          name: "Rayne Water",
+          name: "RayneWater",
           email: "raynendchannel@gmail.com",
           picture: ""
         });
