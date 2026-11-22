@@ -361,30 +361,39 @@
   </main>
 
   <!-- ================= FLOATING BOTTOM DOCK NAVIGATION (MOBILE ONLY, <768px) ================= -->
-  <div class="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 w-[94%] max-w-md pb-[env(safe-area-inset-bottom)] pointer-events-none">
-    <nav class="glass-pill rounded-full p-1.5 flex items-center justify-between gap-1 overflow-x-auto no-scrollbar pointer-events-auto touch-pan-x">
-      <button onclick="switchTab('shortlist')" id="mobTabShortlist" class="flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-950 bg-orange-500 shadow-md transition-all">
-        <i class="fa-solid fa-list-check text-xs"></i>
-        <span>Shortlist</span>
-        <span id="badgeShortlist" class="text-[9px] px-1 rounded-full bg-black/40 text-white">0</span>
+  <div class="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-sm pb-[env(safe-area-inset-bottom)] pointer-events-none">
+    <nav class="glass-pill rounded-2xl p-1.5 grid grid-cols-5 items-center gap-1 pointer-events-auto shadow-2xl">
+      <!-- Shortlist Icon Tab -->
+      <button onclick="switchTab('shortlist')" id="mobTabShortlist" class="relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-950 bg-orange-500 shadow-md transition-all active:scale-95" title="Shortlist">
+        <i class="fa-solid fa-list-check text-base"></i>
+        <span class="text-[9px] font-mono font-bold mt-0.5 leading-none">List</span>
+        <span id="badgeShortlist" class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-orange-400 border border-orange-500/50 min-w-[15px] text-center">0</span>
       </button>
-      <button onclick="switchTab('approved')" id="mobTabApproved" class="flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-400 hover:text-white transition-all">
-        <i class="fa-solid fa-circle-check text-xs"></i>
-        <span>Approved</span>
-        <span id="badgeApproved" class="text-[9px] px-1 rounded-full bg-slate-800 text-slate-300">0</span>
+
+      <!-- Approved Icon Tab -->
+      <button onclick="switchTab('approved')" id="mobTabApproved" class="relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Approved">
+        <i class="fa-solid fa-circle-check text-base"></i>
+        <span class="text-[9px] font-mono font-bold mt-0.5 leading-none">Done</span>
+        <span id="badgeApproved" class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-emerald-400 border border-emerald-500/50 min-w-[15px] text-center">0</span>
       </button>
-      <button onclick="switchTab('folders')" id="mobTabFolders" class="flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-400 hover:text-white transition-all">
-        <i class="fa-solid fa-folder-tree text-xs"></i>
-        <span>Folders</span>
+
+      <!-- Folders Icon Tab -->
+      <button onclick="switchTab('folders')" id="mobTabFolders" class="relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Folders">
+        <i class="fa-solid fa-folder-tree text-base"></i>
+        <span class="text-[9px] font-mono font-bold mt-0.5 leading-none">Folder</span>
       </button>
-      <button onclick="switchTab('trash')" id="mobTabTrash" class="flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-400 hover:text-white transition-all">
-        <i class="fa-solid fa-trash-can text-xs"></i>
-        <span>Trash</span>
+
+      <!-- Trash Icon Tab -->
+      <button onclick="switchTab('trash')" id="mobTabTrash" class="relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Trash">
+        <i class="fa-solid fa-trash-can text-base"></i>
+        <span class="text-[9px] font-mono font-bold mt-0.5 leading-none">Trash</span>
       </button>
-      <button onclick="switchTab('memory')" id="mobTabMemory" class="flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-400 hover:text-white transition-all">
-        <i class="fa-solid fa-database text-xs"></i>
-        <span>Memory</span>
-        <span class="text-[9px] px-1 rounded-full bg-slate-800 text-slate-300">12</span>
+
+      <!-- Memory Icon Tab -->
+      <button onclick="switchTab('memory')" id="mobTabMemory" class="relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95" title="Memory Log">
+        <i class="fa-solid fa-database text-base"></i>
+        <span class="text-[9px] font-mono font-bold mt-0.5 leading-none">Mem</span>
+        <span class="absolute -top-1 -right-1 text-[8px] font-mono font-bold px-1 rounded-full bg-slate-950 text-cyan-400 border border-cyan-500/50 min-w-[15px] text-center">12</span>
       </button>
     </nav>
   </div>
@@ -982,17 +991,20 @@
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          // Auto-sanitize broken raw text strings and unencoded SVGs
-          currentItems = parsed.map(item => {
-            if (!item.imageUrl || item.imageUrl.includes('unsplash.com') || item.imageUrl.includes('utf8,<svg') || item.imageUrl.includes('style=')) {
-              item.imageUrl = generatePartPhotoSVG(item.category || 'BOARD', item.title);
-              item.gallery = [item.imageUrl];
-            }
-            if (!item.folder) {
-              item.folder = currentFolders[0] || 'General Hardware';
-            }
-            return item;
-          });
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            currentItems = parsed.map(item => {
+              if (!item.imageUrl || item.imageUrl.includes('unsplash.com') || item.imageUrl.includes('utf8,<svg') || item.imageUrl.includes('style=')) {
+                item.imageUrl = generatePartPhotoSVG(item.category || 'BOARD', item.title);
+                item.gallery = [item.imageUrl];
+              }
+              if (!item.folder) {
+                item.folder = currentFolders[0] || 'Galaxy S21 Ultra Project';
+              }
+              return item;
+            });
+          } else {
+            currentItems = [...defaultInitialItems];
+          }
           saveUserData();
         } catch (e) {
           currentItems = [...defaultInitialItems];
@@ -1005,7 +1017,10 @@
       const storedFolders = localStorage.getItem(`cc_${email}_folders`);
       if (storedFolders) {
         try {
-          currentFolders = JSON.parse(storedFolders);
+          const parsedF = JSON.parse(storedFolders);
+          if (Array.isArray(parsedF) && parsedF.length > 0) {
+            currentFolders = parsedF;
+          }
         } catch(e) {}
       }
     }
@@ -1081,11 +1096,9 @@
         const btn = mobButtons[key];
         if (!btn) return;
         if (key === tabId) {
-          btn.className = 'flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-950 bg-orange-500 shadow-md transition-all';
-          // Auto-center in mobile dock scrollview
-          btn.scrollIntoView({ inline: 'center', behavior: 'smooth' });
+          btn.className = 'relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-950 bg-orange-500 shadow-md transition-all active:scale-95';
         } else {
-          btn.className = 'flex-1 shrink-0 px-3 py-2 rounded-full text-xs font-bold font-mono flex items-center justify-center gap-1 text-slate-400 hover:text-white transition-all';
+          btn.className = 'relative flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95';
         }
       });
 
@@ -2064,7 +2077,10 @@
       const headerEmail = document.getElementById('headerUserEmail');
       const headerAvatar = document.getElementById('headerUserAvatar');
       if (headerEmail) headerEmail.innerText = user.name || user.email;
-      if (headerAvatar) headerAvatar.src = user.picture;
+      if (headerAvatar && user.picture) headerAvatar.src = user.picture;
+
+      // Always reset folder filter on login so all shortlist items display
+      selectedFolderFilter = null;
 
       // Load Partition Data
       loadUserData(user.email);
@@ -2074,7 +2090,11 @@
       document.getElementById('loggedOutModal').classList.add('hidden');
 
       setSystemStatus('IDLE', 'WORKSPACE • Authorized');
+      
+      // Ensure badges and views update
+      updateBadges();
       switchTab('shortlist');
+      renderShortlist();
     }
 
     // Sign Out Modal
