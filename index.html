@@ -39,6 +39,13 @@
     .chip-glow {
       box-shadow: 0 0 25px rgba(249, 115, 22, 0.35);
     }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
     @keyframes bootPulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.85; }
@@ -258,41 +265,8 @@
     </div>
   </section>
 
-  <!-- ==================== PRIMARY NAVIGATION TABS ==================== -->
-  <nav class="w-full px-3 sm:px-5 py-2">
-    <div class="flex border-b border-slate-800/80 gap-1 sm:gap-2 w-full">
-      <button id="navBtn-shortlist" onclick="switchTab('shortlist')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-orange-400 border-b-2 border-orange-500 bg-orange-500/10">
-        <i class="fa-solid fa-list-check"></i>
-        <span>Shortlist</span>
-        <span id="shortlistCount" class="bg-orange-500/20 text-orange-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-orange-500/30">0</span>
-      </button>
-
-      <button id="navBtn-approved" onclick="switchTab('approved')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Approved</span>
-        <span id="approvedCount" class="bg-slate-800 text-slate-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full">0</span>
-      </button>
-
-      <button id="navBtn-folders" onclick="switchTab('folders')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white">
-        <i class="fa-solid fa-folder-tree"></i>
-        <span>Folders</span>
-      </button>
-
-      <button id="navBtn-trash" onclick="switchTab('trash')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-rose-400">
-        <i class="fa-solid fa-trash-can"></i>
-        <span>Trash</span>
-      </button>
-
-      <button id="navBtn-memory" onclick="switchTab('memory')" class="flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-sky-400">
-        <i class="fa-solid fa-database"></i>
-        <span>Memory</span>
-        <span class="bg-sky-500/20 text-sky-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-sky-500/30">12</span>
-      </button>
-    </div>
-  </nav>
-
   <!-- ==================== MAIN WORKSPACE CONTAINER ==================== -->
-  <main class="w-full flex-1 px-3 sm:px-5 py-4 flex flex-col">
+  <main class="w-full flex-1 px-3 sm:px-5 py-4 pb-28 flex flex-col">
     
     <!-- TAB 1: SHORTLIST VIEW -->
     <div id="shortlistView" class="space-y-4">
@@ -391,6 +365,39 @@
     </div>
 
   </main>
+
+  <!-- ==================== FLOATING BOTTOM SWIPABLE ACTION DOCK ==================== -->
+  <div class="fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 max-w-[94vw] sm:max-w-fit w-auto pointer-events-auto">
+    <nav class="glass-panel border border-slate-700/80 rounded-2xl shadow-2xl p-1.5 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth whitespace-nowrap">
+      <button id="navBtn-shortlist" onclick="switchTab('shortlist')" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-orange-400 bg-orange-500/15 border border-orange-500/30 shrink-0">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Shortlist</span>
+        <span id="shortlistCount" class="bg-orange-500/20 text-orange-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-orange-500/30">0</span>
+      </button>
+
+      <button id="navBtn-approved" onclick="switchTab('approved')" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-slate-400 hover:text-white shrink-0">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Approved</span>
+        <span id="approvedCount" class="bg-slate-800 text-slate-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full">0</span>
+      </button>
+
+      <button id="navBtn-folders" onclick="switchTab('folders')" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-slate-400 hover:text-white shrink-0">
+        <i class="fa-solid fa-folder-tree"></i>
+        <span>Folders</span>
+      </button>
+
+      <button id="navBtn-trash" onclick="switchTab('trash')" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-slate-400 hover:text-rose-400 shrink-0">
+        <i class="fa-solid fa-trash-can"></i>
+        <span>Trash</span>
+      </button>
+
+      <button id="navBtn-memory" onclick="switchTab('memory')" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-slate-400 hover:text-sky-400 shrink-0">
+        <i class="fa-solid fa-database"></i>
+        <span>Memory</span>
+        <span class="bg-sky-500/20 text-sky-400 text-[10px] font-mono px-1.5 py-0.2 rounded-full border border-sky-500/30">12</span>
+      </button>
+    </nav>
+  </div>
 
   <!-- ==================== INTERACTIVE LISTING DETAIL MODAL ==================== -->
   <div id="listingDetailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 hidden">
@@ -943,7 +950,7 @@
         const navEl = document.getElementById(`navBtn-${v}`);
         if (viewEl) viewEl.classList.add('hidden');
         if (navEl) {
-          navEl.className = "flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white";
+          navEl.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-slate-400 hover:text-white shrink-0";
         }
       });
 
@@ -952,13 +959,14 @@
       if (activeView) activeView.classList.remove('hidden');
       if (activeNav) {
         if (tabId === 'trash') {
-          activeNav.className = "py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-rose-400 border-b-2 border-rose-500 bg-rose-500/10";
+          activeNav.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-rose-400 bg-rose-500/15 border border-rose-500/30 shrink-0";
         } else if (tabId === 'memory') {
-          activeNav.className = "py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-sky-400 border-b-2 border-sky-500 bg-sky-500/10";
+          activeNav.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-sky-400 bg-sky-500/15 border border-sky-500/30 shrink-0";
           renderMemoryLogs();
         } else {
-          activeNav.className = "flex-1 py-2.5 px-3 rounded-t-xl text-xs font-bold flex items-center justify-center gap-2 transition-all text-orange-400 border-b-2 border-orange-500 bg-orange-500/10";
+          activeNav.className = "px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all text-orange-400 bg-orange-500/15 border border-orange-500/30 shrink-0";
         }
+        activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
     }
 
