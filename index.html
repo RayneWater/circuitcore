@@ -1027,7 +1027,7 @@
 
         return `
         <div class="glass-card rounded-2xl p-4 border border-emerald-500/30 bg-emerald-950/10 flex flex-col justify-between">
-          <div>
+          <div class="cursor-pointer" onclick="openListingModal('${item.id}')">
             <div class="w-full h-32 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-3">
               <img src="${safeImg}" alt="${safeTitle}" class="w-full h-full object-cover">
               <div class="absolute top-2 right-2">
@@ -1448,6 +1448,14 @@
       }
 
       modal.classList.remove('hidden');
+    }
+
+    function closeListingModal() {
+      const modal = document.getElementById('listingDetailModal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+      activeModalItemId = null;
     }
     // ================= SECURE CLOUD PARTITION ENGINE (CROSS-DEVICE MERGE & SYNC) =================
     // Merges local items with cloud partition items to ensure both devices share all 22+ items
