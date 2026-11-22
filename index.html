@@ -749,37 +749,73 @@
     // Procedural SVG Hardware Schematics
     function generatePartPhotoSVG(category, title) {
       const cleanTitle = (title || 'HARDWARE COMPONENT').substring(0, 24).toUpperCase();
+      const lower = (title || '').toLowerCase();
       let innerArt = '';
 
-      switch(category) {
-        case 'SCREEN':
-          innerArt = `
-            <rect x="70" y="15" width="100" height="170" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-            <rect x="76" y="24" width="88" height="152" rx="4" fill="#0284c7" fill-opacity="0.25"/>
-            <circle cx="120" cy="32" r="3" fill="#020617"/>
-            <path d="M 85 185 L 85 195 L 110 195" fill="none" stroke="#f59e0b" stroke-width="3"/>
-          `;
-          break;
-        case 'BATTERY':
-          innerArt = `
-            <rect x="75" y="30" width="90" height="145" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-            <rect x="105" y="22" width="30" height="8" rx="2" fill="#10b981"/>
-            <path d="M 120 70 L 105 105 L 122 105 L 115 135" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
-          `;
-          break;
-        case 'HOUSING':
-          innerArt = `
-            <rect x="65" y="20" width="110" height="160" rx="14" fill="none" stroke="#f97316" stroke-width="3" stroke-dasharray="6,4"/>
-            <rect x="75" y="30" width="45" height="60" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
-          `;
-          break;
-        default:
-          innerArt = `
-            <rect x="70" y="45" width="100" height="110" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-            <rect x="95" y="70" width="50" height="50" rx="4" fill="#022c22" stroke="#34d399" stroke-width="1.5"/>
-            <circle cx="85" cy="60" r="3" fill="#fbbf24"/>
-            <circle cx="155" cy="60" r="3" fill="#fbbf24"/>
-          `;
+      // Check if it's a back cover / housing specifically
+      if (category === 'HOUSING' || lower.includes('back cover') || lower.includes('rear') || lower.includes('glass') || lower.includes('后盖')) {
+        innerArt = `
+          <!-- Multi-color back cover presentation inspired by real PDD / Xianyu warehouse photography -->
+          <g transform="translate(10, 8)">
+            <!-- Titanium Gray Back Cover -->
+            <rect x="25" y="10" width="36" height="150" rx="6" fill="#8e9297" stroke="#4b5563" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
+            <circle cx="37" cy="40" r="5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
+            <circle cx="37" cy="56" r="5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
+            <circle cx="49" cy="24" r="3" fill="#1e293b" stroke="#cbd5e1" stroke-width="1"/>
+            <circle cx="49" cy="38" r="2.5" fill="#ef4444"/>
+
+            <!-- Titanium Violet Back Cover -->
+            <rect x="65" y="10" width="36" height="150" rx="6" fill="#4338ca" stroke="#312e81" stroke-width="1.5"/>
+            <circle cx="77" cy="24" r="5" fill="#1e293b" stroke="#818cf8" stroke-width="1.2"/>
+            <circle cx="77" cy="40" r="5" fill="#1e293b" stroke="#818cf8" stroke-width="1.2"/>
+            <circle cx="77" cy="56" r="5" fill="#1e293b" stroke="#818cf8" stroke-width="1.2"/>
+            <circle cx="89" cy="24" r="3" fill="#1e293b" stroke="#818cf8" stroke-width="1"/>
+
+            <!-- Titanium Amber / Yellow Back Cover -->
+            <rect x="105" y="10" width="36" height="150" rx="6" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+            <circle cx="117" cy="24" r="5" fill="#1e293b" stroke="#fcd34d" stroke-width="1.2"/>
+            <circle cx="117" cy="40" r="5" fill="#1e293b" stroke="#fcd34d" stroke-width="1.2"/>
+            <circle cx="117" cy="56" r="5" fill="#1e293b" stroke="#fcd34d" stroke-width="1.2"/>
+            <circle cx="129" cy="24" r="3" fill="#1e293b" stroke="#fcd34d" stroke-width="1"/>
+
+            <!-- Titanium Black Back Cover -->
+            <rect x="145" y="10" width="36" height="150" rx="6" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+            <circle cx="157" cy="24" r="5" fill="#09090b" stroke="#71717a" stroke-width="1.2"/>
+            <circle cx="157" cy="40" r="5" fill="#09090b" stroke="#71717a" stroke-width="1.2"/>
+            <circle cx="157" cy="56" r="5" fill="#09090b" stroke="#71717a" stroke-width="1.2"/>
+            <circle cx="169" cy="24" r="3" fill="#09090b" stroke="#71717a" stroke-width="1"/>
+
+            <!-- Chinese Real Warehouse Shot Banner (实物拍摄) -->
+            <rect x="62" y="76" width="96" height="24" rx="4" fill="#dc2626" fill-opacity="0.9"/>
+            <text x="110" y="93" text-anchor="middle" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="900" letter-spacing="2">实物拍摄</text>
+          </g>
+        `;
+      } else {
+        switch(category) {
+          case 'SCREEN':
+            innerArt = `
+              <rect x="70" y="15" width="100" height="170" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+              <rect x="76" y="24" width="88" height="152" rx="4" fill="#0284c7" fill-opacity="0.25"/>
+              <circle cx="120" cy="32" r="3" fill="#020617"/>
+              <path d="M 85 185 L 85 195 L 110 195" fill="none" stroke="#f59e0b" stroke-width="3"/>
+            `;
+            break;
+          case 'BATTERY':
+            innerArt = `
+              <rect x="75" y="30" width="90" height="145" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+              <rect x="105" y="22" width="30" height="8" rx="2" fill="#10b981"/>
+              <path d="M 120 70 L 105 105 L 122 105 L 115 135" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+            `;
+            break;
+          default:
+            innerArt = `
+              <rect x="70" y="45" width="100" height="110" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+              <rect x="95" y="70" width="50" height="50" rx="4" fill="#022c22" stroke="#34d399" stroke-width="1.5"/>
+              <circle cx="85" cy="60" r="3" fill="#fbbf24"/>
+              <circle cx="155" cy="60" r="3" fill="#fbbf24"/>
+            `;
+        }
       }
 
       const svgXml = `
@@ -792,7 +828,7 @@
           <rect width="240" height="200" fill="#090d1a"/>
           <rect width="240" height="200" fill="url(#grid)"/>
           ${innerArt}
-          <text x="120" y="188" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="8" font-weight="bold">${escapeHtml(cleanTitle)}</text>
+          <text x="120" y="190" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="8" font-weight="bold">${escapeHtml(cleanTitle)}</text>
         </svg>
       `;
 
@@ -1318,53 +1354,471 @@
       }
     }
 
-    // Triage Command Engine (2–4 results)
+    // Triage Command Engine (Smart NLP Targeting vs Device-Only Broad Triage)
     function handleTriageSearch() {
       const input = document.getElementById('triageInput');
-      const query = (input ? input.value : '').trim();
-      if (!query) return;
+      const rawQuery = (input ? input.value : '').trim();
+      if (!rawQuery) return;
 
       setSystemStatus('ACTIVE', 'TRIAGING');
 
       setTimeout(() => {
-        const parts = query.toLowerCase();
+        const queryLower = rawQuery.toLowerCase();
         let generated = [];
 
-        const isScreen = parts.includes('screen') || parts.includes('display') || parts.includes('oled') || parts.includes('lcd');
-        const isBattery = parts.includes('battery') || parts.includes('batt');
-        const isFan = parts.includes('fan') || parts.includes('heatsink') || parts.includes('thermal');
-        const isPort = parts.includes('port') || parts.includes('hdmi') || parts.includes('usb') || parts.includes('sub');
+        // 1. Detect Category Intent from Query Keywords or Dropdown Selector
+        const dropdownCat = document.getElementById('partCategoryFilter') ? document.getElementById('partCategoryFilter').value : 'ALL';
+        
+        const isScreen = dropdownCat === 'SCREEN' || /(screen|display|oled|amoled|lcd|digitizer|屏幕|内屏|总成)/i.test(queryLower);
+        const isBattery = dropdownCat === 'BATTERY' || /(battery|batt|cell|mah|0-cycle|原电|电池|电芯)/i.test(queryLower);
+        const isBackCover = dropdownCat === 'HOUSING' || /(back cover|rear cover|rear glass|housing|chassis|back glass|door|后盖|后玻璃|外壳)/i.test(queryLower);
+        const isMotherboard = /(motherboard|mainboard|logic board|logicboard|pcb|主板|主控板)/i.test(queryLower);
+        const isPort = dropdownCat === 'BOARD' || /(port|sub-board|subboard|daughterboard|charging port|dock flex|tail plug|尾插|尾插排线|小板)/i.test(queryLower);
+        const isCamera = /(camera|lens|cam|sensor|telephoto|ultrawide|摄像头|后摄|前摄|镜头)/i.test(queryLower);
+        const isFan = /(fan|heatsink|cooler|thermal|cooling|风扇|散热)/i.test(queryLower);
 
+        // 2. Extract Device Name by stripping known component keywords
+        let detectedDevice = rawQuery
+          .replace(/(replacement|original|oem|service pack|service frame|with frame|plus frame|assembly|module|pulled|teardown|grade a|disassembly|flex|cable|glass)/gi, '')
+          .replace(/(screen|display|oled|amoled|lcd|digitizer|battery|batt|cell|back cover|rear cover|rear glass|housing|motherboard|mainboard|logic board|sub-board|subboard|charging port|camera|fan|heatsink)/gi, '')
+          .replace(/(屏幕|总成|电池|原电|后盖|外壳|主板|尾插|排线|风扇|摄像头)/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        if (!detectedDevice || detectedDevice.length < 2) {
+          detectedDevice = rawQuery;
+        }
+
+        const hasFrame = /(with frame|\+ frame|plus frame|带框|连框)/i.test(queryLower);
+
+        // CASE A: SPECIFIC COMPONENT REQUESTED -> 3 to 4 Competing Listings for that EXACT part
         if (isScreen) {
+          const frameLabel = hasFrame ? "with Frame Pull" : "Display Assembly";
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} OEM Service Pack Teardown AMOLED`, category: "SCREEN", platform: "Taobao", priceRmb: 320, oemPartCode: "GH82-SCR-01", badge: "Disassembly Pull", specs: "120Hz LTPO Dynamic AMOLED panel with copper foil ground layer", authNotes: "Extracted from genuine device chassis; factory display driver IC and serialization matches motherboard query.", freightNotes: "Taobao Direct Air/Sea consolidation eligible with cushioned carton packaging.", score: 98.6 },
-            { id: "g_" + Date.now() + "_2", title: `${query} Shenzhen Wholesale Direct Display Assembly`, category: "SCREEN", platform: "1688", priceRmb: 260, oemPartCode: "1688-SCR-A", badge: "Factory Direct", specs: "High-spec aftermarket flexible OLED with standard driver flex", authNotes: "Grade A batch test confirmed; IC fuel communication verified without thermal throttle warning.", freightNotes: "Bulk factory shipment; combined freight to SG warehouse.", score: 92.1 },
-            { id: "g_" + Date.now() + "_3", title: `${query} PDD Flagship Authorized Front Panel`, category: "SCREEN", platform: "Pinduoduo", priceRmb: 295, oemPartCode: "PDD-DISP-X", badge: "Brand Verified", specs: "Original display panel with pre-installed alignment adhesive", authNotes: "Anti-bait triage verified; screwdriver bundle excluded from base price calculation.", freightNotes: "PDD official cross-border air shipping with door delivery.", score: 95.0 }
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} OEM Dynamic AMOLED / OLED 120Hz (${frameLabel})`,
+              category: "SCREEN",
+              platform: "Taobao",
+              priceRmb: hasFrame ? 485 : 395,
+              priceSgd: hasFrame ? 91.50 : 74.52,
+              oemPartCode: "GH82-SCR-OEM",
+              badge: hasFrame ? "Teardown Frame Pull" : "OEM AMOLED",
+              specs: `High-refresh LTPO Flexible OLED display panel ${hasFrame ? 'factory seated in magnesium alloy midframe chassis with side buttons' : 'bare service module with pre-applied OCA laminate'}.`,
+              authNotes: "Zero dead pixels, genuine touch digitizer calibration IC preserved, 1:1 color gamut match.",
+              freightNotes: "Taobao SG Direct Sea/Air consolidation eligible with bubble armor box.",
+              score: 98.6
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} Service Pack Teardown AMOLED Panel`,
+              category: "SCREEN",
+              platform: "Xianyu",
+              priceRmb: hasFrame ? 430 : 340,
+              priceSgd: hasFrame ? 81.13 : 64.15,
+              oemPartCode: "XY-SCR-PULL",
+              badge: "99% New Pulled",
+              specs: "Extracted directly from low-cycle pristine device. Copper foil dissipation layer fully intact.",
+              authNotes: "Verified IdleFish reputable merchant. Serialized flex connector passes diagnostic loop check.",
+              freightNotes: "Third-party freight forwarder collection to Singapore forwarding depot.",
+              score: 96.2
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} Factory Direct Flexible OLED Replacement`,
+              category: "SCREEN",
+              platform: "1688",
+              priceRmb: hasFrame ? 360 : 285,
+              priceSgd: hasFrame ? 67.92 : 53.77,
+              oemPartCode: "1688-OLED-F",
+              badge: "Wholesale Tier 1",
+              specs: "Shenzhen Huaqiangbei certified OEM flexible substrate OLED panel with factory pre-mounted digitizer.",
+              authNotes: "Automated factory batch test verified; supports full multi-touch gesture sampling rates.",
+              freightNotes: "Consolidated freight forwarder sea/air route to Singapore.",
+              score: 93.4
+            },
+            {
+              id: "g_" + Date.now() + "_4",
+              title: `${detectedDevice} PDD Flagship Digitizer Screen Assembly`,
+              category: "SCREEN",
+              platform: "Pinduoduo",
+              priceRmb: hasFrame ? 388 : 310,
+              priceSgd: hasFrame ? 73.20 : 58.49,
+              oemPartCode: "PDD-DSP-A1",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "Grade A+ tested screen assembly with pre-cut perimeter adhesive gasket and bezel.",
+              authNotes: "Triage anti-bait heuristic passed: excludes fake tool price bundles.",
+              freightNotes: "PDD Official Singapore Free Shipping zone door-to-door delivery.",
+              score: 94.8
+            }
           ];
         } else if (isBattery) {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} 0-Cycle Lithium Cell (TI BMS Board)`, category: "BATTERY", platform: "1688", priceRmb: 68, oemPartCode: "BAT-TI-001", badge: "TI Gas Gauge", specs: "High-density cobalt pouch cell with Texas Instruments BQ27Z fuel-gauge IC", authNotes: "Supports full Super Fast 45W PPS charging curves without device pop-up error codes.", freightNotes: "Special sensitive cargo air freight route for standalone lithium cells.", score: 99.2 },
-            { id: "g_" + Date.now() + "_2", title: `${query} Original Teardown Battery 98% Health`, category: "BATTERY", platform: "Taobao", priceRmb: 85, oemPartCode: "TB-OEM-CELL", badge: "Teardown Pull", specs: "Genuine OEM pulled battery with undamaged pull tabs", authNotes: "Tested 98%+ health capacity; authentic date-code laser engraving verified.", freightNotes: "Consolidated sea shipping required due to strict airline battery regulations.", score: 97.4 },
-            { id: "g_" + Date.now() + "_3", title: `${query} PDD Direct Replacement High-Capacity Battery`, category: "BATTERY", platform: "Pinduoduo", priceRmb: 58, oemPartCode: "PDD-BATT-02", badge: "Overcharge IC", specs: "Enhanced cycle life lithium-ion polymer cell with dual MOS protection", authNotes: "Overcharge and thermal shutdown protection IC verified by automated scan.", freightNotes: "Door-to-door sea freight consolidation to Singapore.", score: 94.0 }
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} 0-Cycle OEM Battery (TI BMS Gas Gauge IC)`,
+              category: "BATTERY",
+              platform: "1688",
+              priceRmb: 68,
+              priceSgd: 12.83,
+              oemPartCode: "BAT-TI-PRO",
+              badge: "TI Gas Gauge BMS",
+              specs: "Pure cobalt cathode high-density pouch cell equipped with Texas Instruments BQ fuel gauge microcontroller.",
+              authNotes: "Reports genuine 100% health in OS diagnostics without throttling fast charging curves.",
+              freightNotes: "Special sensitive cargo air freight route approved for lithium cells.",
+              score: 99.1
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} Original Teardown Battery with Pull-Tabs`,
+              category: "BATTERY",
+              platform: "Taobao",
+              priceRmb: 85,
+              priceSgd: 16.03,
+              oemPartCode: "TB-OEM-CELL",
+              badge: "Teardown 0-Cycle",
+              specs: "OEM pulled lithium cell with undamaged stretch release pull-tab strips and pristine flex cable.",
+              authNotes: "Laser-engraved lot serial verified matching factory manufacturing batch tolerances.",
+              freightNotes: "Consolidated sea shipping route for DG battery cargo.",
+              score: 97.5
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} PDD High-Capacity Battery Pack (+ Seal Adhesive)`,
+              category: "BATTERY",
+              platform: "Pinduoduo",
+              priceRmb: 52,
+              priceSgd: 9.81,
+              oemPartCode: "PDD-BAT-01",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "Direct drop-in replacement cell with dual MOS overcharge and thermal runaway protection PCB.",
+              authNotes: "Thermal resistance calibrated within ±2% of OEM specification.",
+              freightNotes: "Official PDD consolidated freight with Singapore delivery.",
+              score: 95.0
+            },
+            {
+              id: "g_" + Date.now() + "_4",
+              title: `${detectedDevice} Xianyu Authentic Tested Clean Battery Cell`,
+              category: "BATTERY",
+              platform: "Xianyu",
+              priceRmb: 58,
+              priceSgd: 10.94,
+              oemPartCode: "XY-BAT-TEST",
+              badge: "Verified Health",
+              specs: "Low-cycle pulled battery tested on digital battery analyzer with 98%+ nominal capacity.",
+              authNotes: "IdleFish verified hardware recycler with real photo proof.",
+              freightNotes: "Local transit to forwarder warehouse for SG air consolidation.",
+              score: 94.2
+            }
+          ];
+        } else if (isBackCover) {
+          generated = [
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} OEM AG Matte Glass Rear Cover (Pre-Installed Camera Bezel + Gasket)`,
+              category: "HOUSING",
+              platform: "Pinduoduo",
+              priceRmb: 18.5,
+              priceSgd: 3.46,
+              oemPartCode: "GH82-33392A",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "Authentic Corning Gorilla AG matte textured rear glass. Factory pre-mounted camera bezel rings and microphone mesh port.",
+              authNotes: "Factory mold 1:1 fitment. Anti-shatter laminate inner layer intact. Color-matched Titanium/Glass coating.",
+              freightNotes: "PDD Direct Free Shipping to Singapore with foam armor casing box.",
+              score: 98.8
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} Original Disassembly Teardown Pull Rear Glass Housing`,
+              category: "HOUSING",
+              platform: "Taobao",
+              priceRmb: 28.0,
+              priceSgd: 5.28,
+              oemPartCode: "GH82-33389A",
+              badge: "原装拆机",
+              specs: "Genuine device pulled rear glass. Includes authentic laser-etched OEM model markings and flash diffuser lens.",
+              authNotes: "Inspected zero scratches on outer ceramic coating. Genuine oleophobic layer intact with water-drop angle > 110°.",
+              freightNotes: "Taobao SG Free Shipping eligible air freight tier.",
+              score: 99.4
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} 1688 Factory Direct Wholesale Batch Rear Panel (Grade A+)`,
+              category: "HOUSING",
+              platform: "1688",
+              priceRmb: 12.0,
+              priceSgd: 2.26,
+              oemPartCode: "1688-BC-A1",
+              badge: "Factory Direct",
+              specs: "High-silicon tempered glass back cover with pre-cut 300LSE adhesive perimeter gasket.",
+              authNotes: "Precision CNC cut camera lens cutouts. Micro-chamfered edges matching chassis bevel.",
+              freightNotes: "Consolidated freight forwarder to Singapore distribution point.",
+              score: 94.2
+            },
+            {
+              id: "g_" + Date.now() + "_4",
+              title: `${detectedDevice} IdleFish / Xianyu Pristine Chassis Teardown Back Cover`,
+              category: "HOUSING",
+              platform: "Xianyu",
+              priceRmb: 26.0,
+              priceSgd: 4.90,
+              oemPartCode: "XY-CVR-OEM",
+              badge: "99% New Pull",
+              specs: "Pulled from clean customer return unit. Complete with original graphite thermal pad on inner surface.",
+              authNotes: "Verified IdleFish reputable merchant. Real warehouse photo verified.",
+              freightNotes: "Third-party sea/air forwarding to Singapore.",
+              score: 96.1
+            }
+          ];
+        } else if (isMotherboard) {
+          generated = [
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} Fully Unlocked Clean Motherboard Logic Board (No Lock / Tested)`,
+              category: "BOARD",
+              platform: "Taobao",
+              priceRmb: 680,
+              priceSgd: 128.30,
+              oemPartCode: "MB-UNL-01",
+              badge: "Clean Serial",
+              specs: "100% functional motherboard extracted from decommissioned units. Zero account lock, factory wiped.",
+              authNotes: "Tested full Baseband, Wi-Fi 6E/7, Bluetooth, NFC, Face/Fingerprint sensors, and fast charging.",
+              freightNotes: "High-value air courier route with insured anti-static packaging.",
+              score: 98.2
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} Xianyu Working Teardown Main Logic Board`,
+              category: "BOARD",
+              platform: "Xianyu",
+              priceRmb: 590,
+              priceSgd: 111.32,
+              oemPartCode: "XY-MB-PULL",
+              badge: "Teardown Mainboard",
+              specs: "OEM motherboard pulled from screen-damaged device. Factory RF shield cans untouched.",
+              authNotes: "Boot log verified clean via video verification prior to dispatch.",
+              freightNotes: "Consolidated freight forwarder with door delivery in Singapore.",
+              score: 95.4
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} 1688 Factory Tested Bare Logic PCB Assembly`,
+              category: "BOARD",
+              platform: "1688",
+              priceRmb: 520,
+              priceSgd: 98.11,
+              oemPartCode: "1688-LOGIC-B",
+              badge: "Factory Refurb",
+              specs: "Grade A re-balled CPU and PMIC logic board with clean firmware partitions.",
+              authNotes: "Automated burn-in thermal test completed with zero kernel panics.",
+              freightNotes: "Bulk electronics cargo forwarding to Singapore.",
+              score: 92.8
+            }
+          ];
+        } else if (isPort) {
+          generated = [
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} OEM Fast Charging Port Sub-Board & Mic Flex Module`,
+              category: "BOARD",
+              platform: "Taobao",
+              priceRmb: 45,
+              priceSgd: 8.49,
+              oemPartCode: "GH96-PORT-01",
+              badge: "Original IC Sub-Board",
+              specs: "Type-C / Lightning charging port module with dual MEMS microphone and antenna line contacts.",
+              authNotes: "Preserves fast-charging negotiation IC and transient voltage suppression ESD diodes.",
+              freightNotes: "Direct air consolidation to SG warehouse.",
+              score: 98.5
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} PDD Direct Replacement Tail Plug Flex Board`,
+              category: "BOARD",
+              platform: "Pinduoduo",
+              priceRmb: 26,
+              priceSgd: 4.90,
+              oemPartCode: "PDD-CHG-SUB",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "Precision gold-plated pin connector board with moisture detection sensor contact.",
+              authNotes: "Triage anti-scam confirmed: includes genuine fast charge IC, not cheap passive passthrough.",
+              freightNotes: "PDD official Singapore free delivery.",
+              score: 96.0
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} 1688 Direct Wholesale Charging Port Micro-Flex`,
+              category: "BOARD",
+              platform: "1688",
+              priceRmb: 18,
+              priceSgd: 3.40,
+              oemPartCode: "1688-USB-C",
+              badge: "Wholesale Direct",
+              specs: "Factory batch charging port module. Tested for OTG data transfer and super fast charge.",
+              authNotes: "Signal traces gold-plated with 50-ohm impedance matched antenna routing.",
+              freightNotes: "Consolidated freight forwarding to SG address.",
+              score: 93.8
+            }
+          ];
+        } else if (isCamera) {
+          generated = [
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} Original Primary Camera Module (OIS Gyro Tested)`,
+              category: "BOARD",
+              platform: "Taobao",
+              priceRmb: 165,
+              priceSgd: 31.13,
+              oemPartCode: "CAM-MAIN-OIS",
+              badge: "OIS Tested Pull",
+              specs: "Genuine high-megapixel main camera sensor with optical image stabilization voice coil intact.",
+              authNotes: "Auto-focus laser align and OIS gimbal tested; zero purple haze or sensor dust specs.",
+              freightNotes: "Taobao fragile air cargo route.",
+              score: 98.2
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} Xianyu Teardown Camera Array Set`,
+              category: "BOARD",
+              platform: "Xianyu",
+              priceRmb: 135,
+              priceSgd: 25.47,
+              oemPartCode: "XY-CAM-SET",
+              badge: "Clean Pull",
+              specs: "Complete rear multi-camera sensor module with telephoto prism and ultra-wide flex.",
+              authNotes: "Disassembled from working motherboard; CMOS glass surface in immaculate condition.",
+              freightNotes: "Consolidated forwarder air shipping to SG.",
+              score: 95.1
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} 1688 Grade A Replacement Front Facing Selfie Camera`,
+              category: "BOARD",
+              platform: "1688",
+              priceRmb: 48,
+              priceSgd: 9.06,
+              oemPartCode: "1688-CAM-FRT",
+              badge: "Factory Direct",
+              specs: "High-definition front camera sensor with dual-pixel phase detection flex.",
+              authNotes: "Calibrated for system facial recognition and portrait autofocus.",
+              freightNotes: "Consolidated sea/air forwarding to Singapore.",
+              score: 92.5
+            }
           ];
         } else if (isFan) {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} Delta Silent Bearing Internal Cooling Fan`, category: "BOARD", platform: "Taobao", priceRmb: 65, oemPartCode: "FAN-DLT-01", badge: "OEM Teardown", specs: "Fluid dynamic bearing 5V 0.5A 4-pin PWM quiet cooling fan", authNotes: "Genuine teardown fan unit; zero blade wobble and correct tachometer signal feedback.", freightNotes: "Taobao Choice standard direct air shipping to Singapore.", score: 97.8 },
-            { id: "g_" + Date.now() + "_2", title: `${query} Wholesale Dual Heatpipe Thermal Fan Module`, category: "BOARD", platform: "1688", priceRmb: 52, oemPartCode: "1688-FAN-HP", badge: "Direct Factory", specs: "Pure copper thermal pipe assembly with pre-applied phase change thermal pad", authNotes: "Direct factory sourcing; 100% pressure-tested vacuum copper pipe integrity.", freightNotes: "Consolidated freight forwarder forwarding to SG address.", score: 93.5 },
-            { id: "g_" + Date.now() + "_3", title: `${query} Xianyu Genuine Console Pulled Fan Assmbly`, category: "BOARD", platform: "Xianyu", priceRmb: 48, oemPartCode: "XY-FAN-PULL", badge: "Tested Working", specs: "Pulled from low-hour working device chassis", authNotes: "Seller verified via Idle Fish community reputation; includes original mounting screws.", freightNotes: "Third-party freight forwarder warehouse collection required.", score: 91.0 }
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} Delta Silent Bearing Internal Cooling Fan Module`,
+              category: "BOARD",
+              platform: "Taobao",
+              priceRmb: 65,
+              priceSgd: 12.26,
+              oemPartCode: "FAN-DLT-01",
+              badge: "OEM Teardown",
+              specs: "Fluid dynamic bearing 5V 4-pin PWM silent cooling fan with zero blade imbalance.",
+              authNotes: "Genuine fan pull unit; correct tachometer signal and dynamic speed ramping verified.",
+              freightNotes: "Taobao Choice standard air shipping to Singapore.",
+              score: 97.8
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} 1688 Direct Dual Heatpipe Thermal Fan Module`,
+              category: "BOARD",
+              platform: "1688",
+              priceRmb: 52,
+              priceSgd: 9.81,
+              oemPartCode: "1688-FAN-HP",
+              badge: "Factory Direct",
+              specs: "Pure copper thermal pipe module with pre-applied phase-change thermal interface material.",
+              authNotes: "100% pressure-tested vacuum copper pipe integrity and thermal dissipation efficiency.",
+              freightNotes: "Combined freight forwarder to SG warehouse.",
+              score: 93.5
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} PDD Replacement Cooling Fan (+ Thermal Paste)`,
+              category: "BOARD",
+              platform: "Pinduoduo",
+              priceRmb: 42,
+              priceSgd: 7.92,
+              oemPartCode: "PDD-FAN-02",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "Low-noise replacement thermal fan with anti-vibration silicone mounting corners.",
+              authNotes: "Passed acoustic dB noise threshold test under maximum load RPM.",
+              freightNotes: "PDD Singapore free shipping route.",
+              score: 94.7
+            }
           ];
-        } else {
+        } 
+        
+        // CASE B: BROAD DEVICE QUERY (Only model given, e.g. "S21 Ultra", "iPhone 15 Pro Max")
+        // -> Return exactly 4 essential repair items: Screen, Battery, Sub-Board, Back Cover
+        else {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} Complete Display Digitizer Chassis Assembly`, category: "SCREEN", platform: "Taobao", priceRmb: 310, oemPartCode: "DSP-GEN-01", badge: "Frame Pull", specs: "Pre-bonded display and touch panel seated in original magnesium midframe", authNotes: "OEM teardown pull with copper heat dissipation backing and ground springs intact.", freightNotes: "Taobao direct air cargo with fragile glass protection.", score: 98.0 },
-            { id: "g_" + Date.now() + "_2", title: `${query} Replacement Power Lithium Cell (0-Cycle)`, category: "BATTERY", platform: "1688", priceRmb: 75, oemPartCode: "PWR-BATT-02", badge: "0-Cycle BMS", specs: "Zero-cycle high capacity battery with authentic protection circuit module", authNotes: "Passed charge controller authentication; thermal sensor resistance within ±2% OEM spec.", freightNotes: "Sea freight consolidation channel for lithium chemistry.", score: 96.5 },
-            { id: "g_" + Date.now() + "_3", title: `${query} Pre-Cut Precision IP68 Perimeter Gasket`, category: "HOUSING", platform: "Pinduoduo", priceRmb: 16, oemPartCode: "GSK-SEAL-03", badge: "Die-Cut OEM", specs: "Double-sided waterproof acrylic adhesive gasket custom cut to chassis contours", authNotes: "OEM-grade 300LSE adhesive substrate ensures IP68 dust/water seal restoration.", freightNotes: "PDD Singapore free shipping eligible tier.", score: 99.0 },
-            { id: "g_" + Date.now() + "_4", title: `${query} Charging Port Sub-Board Micro-Flex Assembly`, category: "BOARD", platform: "Xianyu", priceRmb: 42, oemPartCode: "BRD-FLEX-04", badge: "Original IC", specs: "USB-C fast charge daughterboard with antenna interconnect and microphone array", authNotes: "Genuine board pull; fast charge negotiation IC and ESD protection diodes verified.", freightNotes: "Third-party forwarder warehouse consolidation route.", score: 95.8 }
+            {
+              id: "g_" + Date.now() + "_1",
+              title: `${detectedDevice} OEM Display Digitizer (Service Pack Frame Pull)`,
+              category: "SCREEN",
+              platform: "Taobao",
+              priceRmb: 420,
+              priceSgd: 79.25,
+              oemPartCode: "GH82-SCR-FRM",
+              badge: "Service Frame Pull",
+              specs: "Genuine high-refresh display seated in anodized chassis with side buttons and earpiece mesh.",
+              authNotes: "OEM teardown pull with copper heat dissipation backing and ground springs intact.",
+              freightNotes: "Taobao direct air cargo with fragile glass protection.",
+              score: 98.0
+            },
+            {
+              id: "g_" + Date.now() + "_2",
+              title: `${detectedDevice} 0-Cycle Lithium Cell Battery (TI Fuel Gauge BMS)`,
+              category: "BATTERY",
+              platform: "1688",
+              priceRmb: 75,
+              priceSgd: 14.15,
+              oemPartCode: "EB-PWR-CELL",
+              badge: "TI Gas Gauge BMS",
+              specs: "Zero-cycle high capacity battery with authentic protection circuit module and fuel gauge IC.",
+              authNotes: "Passed charge controller authentication; thermal sensor resistance within ±2% OEM spec.",
+              freightNotes: "Sea freight consolidation channel for lithium chemistry.",
+              score: 96.5
+            },
+            {
+              id: "g_" + Date.now() + "_3",
+              title: `${detectedDevice} Fast Charging Port Sub-Board & Mic Flex Assembly`,
+              category: "BOARD",
+              platform: "Xianyu",
+              priceRmb: 42,
+              priceSgd: 7.92,
+              oemPartCode: "BRD-FLEX-04",
+              badge: "Original IC Sub-Board",
+              specs: "USB-C / Lightning fast charge daughterboard with antenna interconnect and microphone array.",
+              authNotes: "Genuine board pull; fast charge negotiation IC and ESD protection diodes verified.",
+              freightNotes: "Third-party forwarder warehouse consolidation route.",
+              score: 95.8
+            },
+            {
+              id: "g_" + Date.now() + "_4",
+              title: `${detectedDevice} OEM AG Matte Glass Rear Cover (+ Pre-cut Adhesive)`,
+              category: "HOUSING",
+              platform: "Pinduoduo",
+              priceRmb: 22,
+              priceSgd: 4.15,
+              oemPartCode: "GH82-33392A",
+              badge: "实物拍摄 • PDD Free SG",
+              specs: "OEM AG matte glass back cover with camera lens rings & waterproof adhesive.",
+              authNotes: "Authentic teardown replacement with factory pre-applied seal.",
+              freightNotes: "PDD Singapore free shipping eligible tier.",
+              score: 99.0
+            }
           ];
         }
 
+        // Apply metadata, folder organization and add to shortlist
         generated.forEach(item => {
-          item.priceSgd = (item.priceRmb / SGD_EXCHANGE_RATE);
-          item.folder = query + " Project";
+          if (!item.priceSgd) item.priceSgd = (item.priceRmb / SGD_EXCHANGE_RATE);
+          item.folder = detectedDevice + " Project";
           item.status = "shortlist";
           item.frameAuth = item.authNotes || "Anti-scam supplier heuristics scored: authentic traces and OEM serialization intact.";
           item.imageUrl = generatePartPhotoSVG(item.category, item.title);
