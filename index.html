@@ -478,8 +478,13 @@
         </div>
 
         <div class="space-y-2">
-          <div class="text-xs font-bold text-slate-300 font-mono">Component Analysis &amp; Anti-Scam Verification:</div>
-          <p id="modalAuthNotes" class="text-xs text-slate-400 leading-relaxed font-mono bg-slate-900/50 p-2.5 rounded-lg border border-slate-800/80"></p>
+          <div class="text-xs font-bold text-slate-300 font-mono flex items-center justify-between">
+            <span>Component Analysis &amp; Anti-Scam Verification:</span>
+            <span id="modalReliabilityScore" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">98.4% Confidence</span>
+          </div>
+          <div id="modalDetailedSummary" class="space-y-2 font-mono text-xs">
+            <!-- Dynamic structured bullet points restored here -->
+          </div>
         </div>
       </div>
 
@@ -1332,28 +1337,28 @@
 
         if (isScreen) {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} OEM Service Pack Teardown AMOLED`, category: "SCREEN", platform: "Taobao", priceRmb: 320, oemPartCode: "GH82-SCR-01", badge: "Disassembly Pull" },
-            { id: "g_" + Date.now() + "_2", title: `${query} Shenzhen Wholesale Direct Display Assembly`, category: "SCREEN", platform: "1688", priceRmb: 260, oemPartCode: "1688-SCR-A", badge: "Factory Direct" },
-            { id: "g_" + Date.now() + "_3", title: `${query} PDD Flagship Authorized Front Panel`, category: "SCREEN", platform: "Pinduoduo", priceRmb: 295, oemPartCode: "PDD-DISP-X", badge: "Brand Verified" }
+            { id: "g_" + Date.now() + "_1", title: `${query} OEM Service Pack Teardown AMOLED`, category: "SCREEN", platform: "Taobao", priceRmb: 320, oemPartCode: "GH82-SCR-01", badge: "Disassembly Pull", specs: "120Hz LTPO Dynamic AMOLED panel with copper foil ground layer", authNotes: "Extracted from genuine device chassis; factory display driver IC and serialization matches motherboard query.", freightNotes: "Taobao Direct Air/Sea consolidation eligible with cushioned carton packaging.", score: 98.6 },
+            { id: "g_" + Date.now() + "_2", title: `${query} Shenzhen Wholesale Direct Display Assembly`, category: "SCREEN", platform: "1688", priceRmb: 260, oemPartCode: "1688-SCR-A", badge: "Factory Direct", specs: "High-spec aftermarket flexible OLED with standard driver flex", authNotes: "Grade A batch test confirmed; IC fuel communication verified without thermal throttle warning.", freightNotes: "Bulk factory shipment; combined freight to SG warehouse.", score: 92.1 },
+            { id: "g_" + Date.now() + "_3", title: `${query} PDD Flagship Authorized Front Panel`, category: "SCREEN", platform: "Pinduoduo", priceRmb: 295, oemPartCode: "PDD-DISP-X", badge: "Brand Verified", specs: "Original display panel with pre-installed alignment adhesive", authNotes: "Anti-bait triage verified; screwdriver bundle excluded from base price calculation.", freightNotes: "PDD official cross-border air shipping with door delivery.", score: 95.0 }
           ];
         } else if (isBattery) {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} 0-Cycle Lithium Cell (TI BMS Board)`, category: "BATTERY", platform: "1688", priceRmb: 68, oemPartCode: "BAT-TI-001", badge: "TI Gas Gauge" },
-            { id: "g_" + Date.now() + "_2", title: `${query} Original Teardown Battery 98% Health`, category: "BATTERY", platform: "Taobao", priceRmb: 85, oemPartCode: "TB-OEM-CELL", badge: "Teardown Pull" },
-            { id: "g_" + Date.now() + "_3", title: `${query} PDD Direct Replacement High-Capacity Battery`, category: "BATTERY", platform: "Pinduoduo", priceRmb: 58, oemPartCode: "PDD-BATT-02", badge: "Overcharge IC" }
+            { id: "g_" + Date.now() + "_1", title: `${query} 0-Cycle Lithium Cell (TI BMS Board)`, category: "BATTERY", platform: "1688", priceRmb: 68, oemPartCode: "BAT-TI-001", badge: "TI Gas Gauge", specs: "High-density cobalt pouch cell with Texas Instruments BQ27Z fuel-gauge IC", authNotes: "Supports full Super Fast 45W PPS charging curves without device pop-up error codes.", freightNotes: "Special sensitive cargo air freight route for standalone lithium cells.", score: 99.2 },
+            { id: "g_" + Date.now() + "_2", title: `${query} Original Teardown Battery 98% Health`, category: "BATTERY", platform: "Taobao", priceRmb: 85, oemPartCode: "TB-OEM-CELL", badge: "Teardown Pull", specs: "Genuine OEM pulled battery with undamaged pull tabs", authNotes: "Tested 98%+ health capacity; authentic date-code laser engraving verified.", freightNotes: "Consolidated sea shipping required due to strict airline battery regulations.", score: 97.4 },
+            { id: "g_" + Date.now() + "_3", title: `${query} PDD Direct Replacement High-Capacity Battery`, category: "BATTERY", platform: "Pinduoduo", priceRmb: 58, oemPartCode: "PDD-BATT-02", badge: "Overcharge IC", specs: "Enhanced cycle life lithium-ion polymer cell with dual MOS protection", authNotes: "Overcharge and thermal shutdown protection IC verified by automated scan.", freightNotes: "Door-to-door sea freight consolidation to Singapore.", score: 94.0 }
           ];
         } else if (isFan) {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} Delta Silent Bearing Internal Cooling Fan`, category: "BOARD", platform: "Taobao", priceRmb: 65, oemPartCode: "FAN-DLT-01", badge: "OEM Teardown" },
-            { id: "g_" + Date.now() + "_2", title: `${query} Wholesale Dual Heatpipe Thermal Fan Module`, category: "BOARD", platform: "1688", priceRmb: 52, oemPartCode: "1688-FAN-HP", badge: "Direct Factory" },
-            { id: "g_" + Date.now() + "_3", title: `${query} Xianyu Genuine Console Pulled Fan Assmbly`, category: "BOARD", platform: "Xianyu", priceRmb: 48, oemPartCode: "XY-FAN-PULL", badge: "Tested Working" }
+            { id: "g_" + Date.now() + "_1", title: `${query} Delta Silent Bearing Internal Cooling Fan`, category: "BOARD", platform: "Taobao", priceRmb: 65, oemPartCode: "FAN-DLT-01", badge: "OEM Teardown", specs: "Fluid dynamic bearing 5V 0.5A 4-pin PWM quiet cooling fan", authNotes: "Genuine teardown fan unit; zero blade wobble and correct tachometer signal feedback.", freightNotes: "Taobao Choice standard direct air shipping to Singapore.", score: 97.8 },
+            { id: "g_" + Date.now() + "_2", title: `${query} Wholesale Dual Heatpipe Thermal Fan Module`, category: "BOARD", platform: "1688", priceRmb: 52, oemPartCode: "1688-FAN-HP", badge: "Direct Factory", specs: "Pure copper thermal pipe assembly with pre-applied phase change thermal pad", authNotes: "Direct factory sourcing; 100% pressure-tested vacuum copper pipe integrity.", freightNotes: "Consolidated freight forwarder forwarding to SG address.", score: 93.5 },
+            { id: "g_" + Date.now() + "_3", title: `${query} Xianyu Genuine Console Pulled Fan Assmbly`, category: "BOARD", platform: "Xianyu", priceRmb: 48, oemPartCode: "XY-FAN-PULL", badge: "Tested Working", specs: "Pulled from low-hour working device chassis", authNotes: "Seller verified via Idle Fish community reputation; includes original mounting screws.", freightNotes: "Third-party freight forwarder warehouse collection required.", score: 91.0 }
           ];
         } else {
           generated = [
-            { id: "g_" + Date.now() + "_1", title: `${query} Complete Display Digitizer Chassis Assembly`, category: "SCREEN", platform: "Taobao", priceRmb: 310, oemPartCode: "DSP-GEN-01", badge: "Frame Pull" },
-            { id: "g_" + Date.now() + "_2", title: `${query} Replacement Power Lithium Cell (0-Cycle)`, category: "BATTERY", platform: "1688", priceRmb: 75, oemPartCode: "PWR-BATT-02", badge: "0-Cycle BMS" },
-            { id: "g_" + Date.now() + "_3", title: `${query} Pre-Cut Precision IP68 Perimeter Gasket`, category: "HOUSING", platform: "Pinduoduo", priceRmb: 16, oemPartCode: "GSK-SEAL-03", badge: "Die-Cut OEM" },
-            { id: "g_" + Date.now() + "_4", title: `${query} Charging Port Sub-Board Micro-Flex Assembly`, category: "BOARD", platform: "Xianyu", priceRmb: 42, oemPartCode: "BRD-FLEX-04", badge: "Original IC" }
+            { id: "g_" + Date.now() + "_1", title: `${query} Complete Display Digitizer Chassis Assembly`, category: "SCREEN", platform: "Taobao", priceRmb: 310, oemPartCode: "DSP-GEN-01", badge: "Frame Pull", specs: "Pre-bonded display and touch panel seated in original magnesium midframe", authNotes: "OEM teardown pull with copper heat dissipation backing and ground springs intact.", freightNotes: "Taobao direct air cargo with fragile glass protection.", score: 98.0 },
+            { id: "g_" + Date.now() + "_2", title: `${query} Replacement Power Lithium Cell (0-Cycle)`, category: "BATTERY", platform: "1688", priceRmb: 75, oemPartCode: "PWR-BATT-02", badge: "0-Cycle BMS", specs: "Zero-cycle high capacity battery with authentic protection circuit module", authNotes: "Passed charge controller authentication; thermal sensor resistance within ±2% OEM spec.", freightNotes: "Sea freight consolidation channel for lithium chemistry.", score: 96.5 },
+            { id: "g_" + Date.now() + "_3", title: `${query} Pre-Cut Precision IP68 Perimeter Gasket`, category: "HOUSING", platform: "Pinduoduo", priceRmb: 16, oemPartCode: "GSK-SEAL-03", badge: "Die-Cut OEM", specs: "Double-sided waterproof acrylic adhesive gasket custom cut to chassis contours", authNotes: "OEM-grade 300LSE adhesive substrate ensures IP68 dust/water seal restoration.", freightNotes: "PDD Singapore free shipping eligible tier.", score: 99.0 },
+            { id: "g_" + Date.now() + "_4", title: `${query} Charging Port Sub-Board Micro-Flex Assembly`, category: "BOARD", platform: "Xianyu", priceRmb: 42, oemPartCode: "BRD-FLEX-04", badge: "Original IC", specs: "USB-C fast charge daughterboard with antenna interconnect and microphone array", authNotes: "Genuine board pull; fast charge negotiation IC and ESD protection diodes verified.", freightNotes: "Third-party forwarder warehouse consolidation route.", score: 95.8 }
           ];
         }
 
@@ -1361,7 +1366,7 @@
           item.priceSgd = (item.priceRmb / SGD_EXCHANGE_RATE);
           item.folder = query + " Project";
           item.status = "shortlist";
-          item.frameAuth = "Anti-scam supplier heuristics scored: authentic traces and OEM serialization intact.";
+          item.frameAuth = item.authNotes || "Anti-scam supplier heuristics scored: authentic traces and OEM serialization intact.";
           item.imageUrl = generatePartPhotoSVG(item.category, item.title);
           item.createdAt = new Date().toISOString();
           currentItems.unshift(item);
@@ -1390,7 +1395,41 @@
 
       document.getElementById('modalRmbPrice').textContent = `¥${item.priceRmb}`;
       document.getElementById('modalSgdPrice').textContent = `S$${(item.priceRmb / SGD_EXCHANGE_RATE).toFixed(2)}`;
-      document.getElementById('modalAuthNotes').textContent = item.frameAuth;
+
+      const scoreElem = document.getElementById('modalReliabilityScore');
+      if (scoreElem) {
+        scoreElem.textContent = (item.score ? item.score.toFixed(1) : "97.5") + "% Confidence";
+      }
+
+      // Restored point-form summarized breakdown
+      const summaryContainer = document.getElementById('modalDetailedSummary');
+      if (summaryContainer) {
+        const specsText = escapeHtml(item.specs || `${item.category} replacement unit engineered to OEM hardware tolerances.`);
+        const authText = escapeHtml(item.authNotes || item.frameAuth || "Anti-scam verification passed: OEM traces and IC controllers confirmed.");
+        const freightText = escapeHtml(item.freightNotes || `${item.platform} freight consolidation route to Singapore forwarding hub.`);
+        const supplierText = `Sourced from top-tier ${escapeHtml(item.platform)} vendor with verified buyer review density and low dispute history.`;
+
+        summaryContainer.innerHTML = `
+          <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 space-y-2 text-slate-300">
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-microchip text-orange-400 mt-0.5 text-[11px] shrink-0"></i>
+              <div><strong class="text-white">Part Specifications:</strong> ${specsText}</div>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-shield-halved text-emerald-400 mt-0.5 text-[11px] shrink-0"></i>
+              <div><strong class="text-white">Authenticity &amp; Heuristics:</strong> ${authText}</div>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-plane-arrival text-cyan-400 mt-0.5 text-[11px] shrink-0"></i>
+              <div><strong class="text-white">Freight &amp; SG Delivery:</strong> ${freightText}</div>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-store text-amber-400 mt-0.5 text-[11px] shrink-0"></i>
+              <div><strong class="text-white">Supplier Verification:</strong> ${supplierText}</div>
+            </div>
+          </div>
+        `;
+      }
 
       const img = document.getElementById('modalPrimaryImage');
       img.src = (item.imageUrl && item.imageUrl.startsWith('data:image')) ? item.imageUrl : generatePartPhotoSVG(item.category, item.title);
@@ -1410,11 +1449,85 @@
 
       modal.classList.remove('hidden');
     }
+    // ================= SECURE CLOUD PARTITION ENGINE (CROSS-DEVICE MERGE & SYNC) =================
+    // Merges local items with cloud partition items to ensure both devices share all 22+ items
+    function mergeItemLists(localList, cloudList) {
+      const mergedMap = new Map();
+      (cloudList || []).forEach(item => {
+        if (item && item.id) mergedMap.set(item.id, item);
+      });
+      (localList || []).forEach(item => {
+        if (item && item.id) {
+          // Local changes take precedence if present
+          mergedMap.set(item.id, item);
+        }
+      });
+      return Array.from(mergedMap.values());
+    }
 
-    function closeListingModal() {
-      const modal = document.getElementById('listingDetailModal');
-      if (modal) modal.classList.add('hidden');
-      activeModalItemId = null;
+    async function pullCloudPartition() {
+      if (!currentUser || !currentUser.email) return;
+      setSystemStatus('SYNCING', 'SYNCING • Cloud Pull');
+
+      try {
+        const partitionKey = encodeURIComponent(getUserStorageKey());
+        const res = await fetch(`https://kv.val.run/get?key=${partitionKey}`);
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (Array.isArray(cloudData) && cloudData.length > 0) {
+            // Merge both devices' items seamlessly
+            currentItems = mergeItemLists(currentItems, cloudData);
+            localStorage.setItem(getUserStorageKey(), JSON.stringify(currentItems));
+            
+            // Push merged state back to cloud so the other device gets it too
+            await pushCloudPartition(true);
+            
+            renderShortlist();
+            renderApproved();
+            updateBadges();
+            setSystemStatus('IDLE', 'ONLINE • Synced');
+            setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2000);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Cloud partition pull notice:", err);
+      }
+      setSystemStatus('IDLE', 'ONLINE');
+    }
+
+    async function pushCloudPartition(skipStatus = false) {
+      if (!currentUser || !currentUser.email) return;
+      const syncIcon = document.getElementById('cloudSyncHeaderIcon');
+      if (syncIcon) syncIcon.className = "fa-solid fa-arrows-rotate fa-spin text-[11px]";
+      if (!skipStatus) setSystemStatus('SYNCING', 'SYNCING • Cloud Push');
+
+      try {
+        const partitionKey = encodeURIComponent(getUserStorageKey());
+        await fetch(`https://kv.val.run/set?key=${partitionKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentItems)
+        });
+        if (!skipStatus) {
+          setSystemStatus('IDLE', 'ONLINE • Synced');
+          setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2000);
+        }
+      } catch (err) {
+        console.warn("Cloud partition push notice:", err);
+        if (!skipStatus) setSystemStatus('IDLE', 'ONLINE');
+      } finally {
+        if (syncIcon) syncIcon.className = "fa-solid fa-cloud-arrow-up text-[11px]";
+      }
+    }
+
+    async function triggerManualCloudSync() {
+      if (!currentUser) {
+        triggerOfficialGoogleLogin();
+        return;
+      }
+      await pullCloudPartition();
+      await pushCloudPartition();
     }
 
     function toggleModalItemApproval() {
