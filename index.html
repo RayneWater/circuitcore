@@ -620,6 +620,7 @@
     const SGD_EXCHANGE_RATE = 5.30;
 
     let gisTokenClient = null;
+    let gisSheetsTokenClient = null;
     let currentUser = null;
     let currentAccessToken = null;
     let currentItems = [];
@@ -1618,9 +1619,22 @@
     // Google Sheets API Integration: Push Manifest to Cloud
     async function syncAllToGoogleSheets() {
       if (!currentAccessToken) {
-        // If token expired or not loaded, request token with sheets scope
-        if (gisTokenClient) {
-          gisTokenClient.requestAccessToken({ prompt: '' });
+        // Request sheets scope on-demand rather than blocking main login
+        if (gisSheetsTokenClient) {
+          gisSheetsTokenClient.requestAccessToken({ prompt: 'consent' });
+        } else if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+          gisSheetsTokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: OFFICIAL_GOOGLE_CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/spreadsheets',
+            callback: async (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                currentAccessToken = tokenResponse.access_token;
+                localStorage.setItem('cc_access_token', tokenResponse.access_token);
+                await syncAllToGoogleSheets();
+              }
+            }
+          });
+          gisSheetsTokenClient.requestAccessToken({ prompt: 'consent' });
         } else {
           alert("Please sign in with Google first to sync with your Google Sheet.");
         }
@@ -1736,9 +1750,10 @@
     function initializeGoogleOAuth() {
       try {
         if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+          // Use standard identity scopes to avoid Google's unverified app 403 block
           gisTokenClient = google.accounts.oauth2.initTokenClient({
             client_id: OFFICIAL_GOOGLE_CLIENT_ID,
-            scope: 'email profile openid https://www.googleapis.com/auth/spreadsheets',
+            scope: 'email profile openid',
             callback: (tokenResponse) => {
               if (tokenResponse && tokenResponse.access_token) {
                 currentAccessToken = tokenResponse.access_token;
@@ -1748,6 +1763,19 @@
             },
             error_callback: (err) => {
               console.error("GIS OAuth error:", err);
+            }
+          });
+
+          // Dedicated on-demand client for Sheets API
+          gisSheetsTokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: OFFICIAL_GOOGLE_CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/spreadsheets',
+            callback: async (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                currentAccessToken = tokenResponse.access_token;
+                localStorage.setItem('cc_access_token', tokenResponse.access_token);
+                await syncAllToGoogleSheets();
+              }
             }
           });
         }
