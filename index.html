@@ -196,7 +196,7 @@
       <!-- Live Engine Dynamic Status Indicator -->
       <div id="liveEngineStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="liveStatusText" class="font-semibold text-slate-200">IDLE • System Ready</span>
+        <span id="liveStatusText" class="font-semibold text-slate-200">ONLINE</span>
       </div>
 
       <!-- Desktop Navigation Bar (>= 768px) -->
@@ -1535,8 +1535,10 @@
 
     // Google Sign-In & Auth Flow
     function completeLoginFlow(user) {
+      if (!user) return;
       currentUser = user;
       localStorage.setItem('cc_active_user', JSON.stringify(user));
+      localStorage.setItem('cc_logged_in', 'true');
 
       // Show mobile floating action dock strictly post-authentication
       const dock = document.getElementById('mobileActionDock');
@@ -1563,7 +1565,7 @@
         }
       }
 
-      // Hide Auth Gate
+      // Hide Auth Gate completely
       const gate = document.getElementById('authGateView');
       if (gate) gate.classList.add('hidden');
 
@@ -1571,7 +1573,7 @@
       loadUserData();
       selectedFolderFilter = null;
       switchTab('shortlist');
-      setSystemStatus('IDLE', 'IDLE • System Ready');
+      setSystemStatus('IDLE', 'ONLINE');
     }
 
     function initializeGoogleOAuth() {
@@ -1598,6 +1600,7 @@
     function confirmSignOut() {
       currentUser = null;
       localStorage.removeItem('cc_active_user');
+      localStorage.removeItem('cc_logged_in');
       closeSignOutModal();
 
       // Enforce hiding mobile action dock upon sign-out
@@ -1608,7 +1611,7 @@
       }
 
       document.getElementById('authGateView').classList.remove('hidden');
-      setSystemStatus('IDLE', 'AUTH REQUIRED');
+      setSystemStatus('IDLE', 'AUTH');
     }
 
     function openSignOutModal() {
@@ -1765,11 +1768,31 @@
 
     // Application Bootstrap Sequence
     window.onload = function() {
-      // Strictly enforce mobile dock is hidden before login
-      const dock = document.getElementById('mobileActionDock');
-      if (dock) {
-        dock.style.setProperty('display', 'none', 'important');
-        dock.classList.add('hidden');
+      // Check login state immediately before displaying anything
+      const cachedUserStr = localStorage.getItem('cc_active_user');
+      const isLoggedIn = localStorage.getItem('cc_logged_in') === 'true';
+      let userRestored = false;
+
+      if (cachedUserStr && isLoggedIn) {
+        try {
+          const cachedUser = JSON.parse(cachedUserStr);
+          if (cachedUser && cachedUser.email) {
+            completeLoginFlow(cachedUser);
+            userRestored = true;
+          }
+        } catch(e) {
+          console.warn("Failed to parse cached session:", e);
+        }
+      }
+
+      // If not logged in, enforce hidden dock and prepare auth gate
+      if (!userRestored) {
+        const dock = document.getElementById('mobileActionDock');
+        if (dock) {
+          dock.style.setProperty('display', 'none', 'important');
+          dock.classList.add('hidden');
+        }
+        setSystemStatus('IDLE', 'AUTH');
       }
 
       const hasTokenInUrl = checkUrlForAuthToken();
@@ -1778,21 +1801,11 @@
         initializeGoogleOAuth();
       }, 400);
 
-      const cachedUser = localStorage.getItem('cc_active_user');
-
       setTimeout(() => {
         dismissBootOverlay();
 
-        if (!hasTokenInUrl) {
-          if (cachedUser) {
-            try {
-              completeLoginFlow(JSON.parse(cachedUser));
-            } catch(e) {
-              document.getElementById('authGateView').classList.remove('hidden');
-            }
-          } else {
-            document.getElementById('authGateView').classList.remove('hidden');
-          }
+        if (!hasTokenInUrl && !userRestored) {
+          document.getElementById('authGateView').classList.remove('hidden');
         }
       }, 900);
     };
