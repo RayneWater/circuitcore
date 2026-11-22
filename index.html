@@ -181,7 +181,7 @@
   <div id="appContainer" class="min-h-screen flex flex-col justify-between max-w-full">
     
     <!-- TOP APP BAR -->
-    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-2 overflow-hidden">
+    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-2.5 sm:px-4 lg:px-6 py-2 flex items-center justify-between gap-1.5 sm:gap-2 overflow-hidden">
       <!-- Brand Logo -->
       <div class="flex items-center gap-1.5 shrink-0">
         <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white text-xs sm:text-sm shrink-0">
@@ -193,14 +193,14 @@
         </div>
       </div>
 
-      <!-- Live Engine Dynamic Status Indicator (Compact on mobile) -->
+      <!-- Live Engine Dynamic Status Indicator -->
       <div id="liveEngineStatusBadge" class="flex items-center gap-1 sm:gap-1.5 px-2 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         <span id="liveStatusText" class="font-semibold text-slate-200">ONLINE</span>
       </div>
 
-      <!-- Desktop Navigation Bar (>= 768px) -->
-      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+      <!-- Desktop Navigation Bar (Only on large screens >= 1024px to prevent landscape overflow) -->
+      <nav class="hidden lg:flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs font-mono">
         <button onclick="switchTab('shortlist')" id="desktopTab_shortlist" class="px-3 py-1.5 rounded-lg bg-orange-500 text-white font-bold transition-all">
           Shortlist <span id="badgeDesktop_shortlist" class="ml-1 text-[10px] bg-slate-950/40 px-1.5 py-0.2 rounded-full">3</span>
         </button>
@@ -214,7 +214,7 @@
           Trash <span id="badgeDesktop_trash" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">0</span>
         </button>
         <button onclick="switchTab('memory')" id="desktopTab_memory" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
-          Memory <span class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">12</span>
+          Memory <span id="badgeDesktop_memory" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">18</span>
         </button>
       </nav>
 
@@ -222,18 +222,18 @@
       <div class="flex items-center gap-1 sm:gap-2 shrink-0">
         <!-- Direct Cloud Sync Button -->
         <button id="cloudSyncHeaderBtn" onclick="syncAllToGoogleSheets()" class="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Sync live data with Google Sheets">
-          <i class="fa-solid fa-cloud-arrow-up text-[11px]" id="cloudSyncHeaderIcon"></i> <span class="hidden sm:inline">Sync</span>
+          <i class="fa-solid fa-cloud-arrow-up text-[11px]" id="cloudSyncHeaderIcon"></i> <span class="hidden xl:inline">Sync</span>
         </button>
 
         <!-- Native Install App Button -->
         <button id="pwaInstallBtn" onclick="triggerPWAInstall()" class="hidden p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/40 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Install App to Home Screen">
-          <i class="fa-solid fa-download text-[11px]"></i> <span class="hidden sm:inline">Install</span>
+          <i class="fa-solid fa-download text-[11px]"></i> <span class="hidden xl:inline">Install</span>
         </button>
 
         <!-- Profile / Sign Out Modal Button -->
         <button onclick="openSignOutModal()" class="flex items-center gap-1.5 p-1 sm:px-2 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left shrink-0">
           <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=RayneWater&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700 shrink-0">
-          <div class="hidden md:block">
+          <div class="hidden xl:block">
             <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">RayneWater</div>
             <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[110px]">Workspace Verified</div>
           </div>
@@ -243,7 +243,7 @@
     </header>
 
     <!-- MAIN BODY CONTAINER -->
-    <main class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 flex-1 pb-24 md:pb-8">
+    <main class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 flex-1 pb-24 lg:pb-8">
 
       <!-- ================= SEARCH & TRIAGE BAR (ONLY ON SHORTLIST) ================= -->
       <section id="triageCommandSection" class="glass-card rounded-2xl p-3 sm:p-4 mb-4 border border-slate-800 shadow-xl">
@@ -396,7 +396,7 @@
               </button>
             </div>
           </div>
-          <a href="https://docs.google.com/spreadsheets/d/1Xl2w5LZZ_example" target="_blank" class="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1">
+          <a href="https://docs.google.com/spreadsheets/d/13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4/edit" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1">
             <i class="fa-solid fa-table"></i> Master Google Sheet
           </a>
         </div>
@@ -417,8 +417,8 @@
 
     </main>
 
-    <!-- ================= MOBILE FLOATING DOCK (CLEAN ICON-ONLY) ================= -->
-    <nav id="mobileActionDock" style="display: none !important;" class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm glass-dock rounded-2xl p-1.5 border border-slate-700/60 shadow-2xl">
+    <!-- ================= MOBILE & LANDSCAPE FLOATING DOCK ================= -->
+    <nav id="mobileActionDock" style="display: none !important;" class="lg:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-md glass-dock rounded-2xl p-1.5 border border-slate-700/60 shadow-2xl">
       <div class="grid grid-cols-5 items-center justify-items-center gap-1">
         <!-- Tab: Shortlist -->
         <button onclick="switchTab('shortlist')" id="mobileNav_shortlist" class="relative w-full py-2.5 rounded-xl bg-orange-500 text-slate-950 flex flex-col items-center justify-center transition-all active:scale-95 active-nav-glow" title="Shortlist">
@@ -446,7 +446,7 @@
         <!-- Tab: Memory -->
         <button onclick="switchTab('memory')" id="mobileNav_memory" class="relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Memory">
           <i class="fa-solid fa-microchip text-lg"></i>
-          <span class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-cyan-400 border border-cyan-500/40 rounded-full w-4 h-4 flex items-center justify-center">12</span>
+          <span id="badgeMobile_memory" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-cyan-400 border border-cyan-500/40 rounded-full w-4 h-4 flex items-center justify-center">18</span>
         </button>
       </div>
     </nav>
@@ -646,10 +646,10 @@
       if (diffDays < 30) return `${diffDays}d ago`;
       const diffMonths = Math.floor(diffDays / 30);
       if (diffMonths < 12) return `${diffMonths}mo ago`;
-      return `${Math.floor(diffMonths / 12)}y ago`;
+      return `${Math.floor(diffDays / 365)}y ago`;
     }
 
-    // Master Memory Audit Logs (12 Records) with Exact Timestamps
+    // Master Memory Audit Logs (18 Records) with Exact Timestamps
     const masterMemoryLogs = [
       { id: "LOG-001", cat: "OAUTH", title: "GIS Client Handshake Established", notes: "Initialized Google Identity Services token client using official OAuth client credentials.", timestamp: "2026-11-20T09:15:00Z" },
       { id: "LOG-002", cat: "STORAGE", title: "Local Partition Sandboxing", notes: "Enforced partitioned storage keys (cc_[email]_items) to guarantee zero-leakage local caching.", timestamp: "2026-11-20T11:20:00Z" },
@@ -662,7 +662,13 @@
       { id: "LOG-009", cat: "INSPECTION", title: "Folder Manifest Filtering", notes: "Active folder filtering dynamically organizes procurement lists across customer projects.", timestamp: "2026-11-22T10:05:00Z" },
       { id: "LOG-010", cat: "GOV", title: "Operator Seal Assigned", notes: "Hardware verification authenticated under RayneWater profile.", timestamp: "2026-11-22T11:15:00Z" },
       { id: "LOG-011", cat: "SECURITY", title: "Cross-Origin Link Protocol", notes: "All external shopping URLs isolated with rel='noopener noreferrer' and strict sanitization.", timestamp: "2026-11-22T12:00:00Z" },
-      { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22T12:45:00Z" }
+      { id: "LOG-012", cat: "MANIFEST", title: "JSON Export Serialization Ready", notes: "Procurement manifests compiled ready for freight forwarding agent submission.", timestamp: "2026-11-22T12:45:00Z" },
+      { id: "LOG-013", cat: "PWA", title: "Standalone Web Manifest & Service Worker", notes: "Configured standalone display manifest, touch icons, and offline caching for direct home screen installation.", timestamp: "2026-11-22T15:10:00Z" },
+      { id: "LOG-014", cat: "LAYOUT", title: "Landscape Viewport Auto-Constrain", notes: "Shifted desktop tab bar to lg (1024px) breakpoint to eliminate header clipping on wide mobile viewports.", timestamp: "2026-11-22T18:40:00Z" },
+      { id: "LOG-015", cat: "SYNC", title: "Google Sheets Cloud Dual-Sync", notes: "Bound live append pipeline to Google Drive spreadsheet (ID: 13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4).", timestamp: "2026-11-22T19:25:00Z" },
+      { id: "LOG-016", cat: "PWA-TIME", title: "Standalone PWA & Dynamic Timestamp Engine", notes: "Embedded data-URI manifest for native home screen app launch without browser chrome. Deployed timeAgo() relative time calculator on all candidate, manifest, and audit cards. Unified branding to RayneWater.", timestamp: "2026-11-22T19:28:00Z" },
+      { id: "LOG-017", cat: "AUTH-FIX", title: "Dual OAuth Pipeline & 403 Remediation", notes: "Decoupled Google OAuth scopes to prevent unverified app 403 blocks. Core login runs standard identity scopes (email, profile, openid) with account picker; Google Sheets write permission is requested on-demand during cloud sync.", timestamp: "2026-11-22T19:30:00Z" },
+      { id: "LOG-018", cat: "SESSION-UI", title: "Dual-Persistence & Mobile Landscape Hardening", notes: "Implemented 365-day cookie and localStorage dual session persistence. Fixed missing updateBadges() function and hid mobile floating dock prior to login. Raised desktop tab breakpoint to lg (1024px) to prevent header clipping in mobile landscape.", timestamp: "2026-11-22T19:31:00Z" }
     ];
 
     // Seed Data
