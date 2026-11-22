@@ -2006,10 +2006,12 @@
         if (tokenInfoRes.ok) {
           const tokenInfo = await tokenInfoRes.json();
           if (tokenInfo.email) {
+            // Keep existing avatar if already loaded, rather than overwriting with initials
+            const existingUser = currentUser || {};
             completeLoginFlow({
               email: tokenInfo.email,
               name: tokenInfo.email.split('@')[0],
-              picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(tokenInfo.email)}&background=f97316&color=fff`
+              picture: existingUser.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(tokenInfo.email)}&background=f97316&color=fff`
             });
             return;
           }
@@ -2018,14 +2020,10 @@
         console.error('Tokeninfo lookup failed:', err);
       }
 
-      // If network requests are blocked, prompt user for their actual email to associate the session
-      const promptEmail = prompt('Google authorized successfully! Confirm your Google email for local partition synchronization:', 'user@gmail.com');
-      const cleanEmail = (promptEmail && promptEmail.includes('@')) ? promptEmail.trim() : 'engineer@gmail.com';
-      completeLoginFlow({
-        email: cleanEmail,
-        name: cleanEmail.split('@')[0],
-        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanEmail)}&background=f97316&color=fff`
-      });
+      // If user is already authenticated (e.g. via ID token), do nothing and do NOT prompt
+      if (currentUser && currentUser.email) {
+        return;
+      }
     }
 
     function triggerOfficialGoogleLogin() {
