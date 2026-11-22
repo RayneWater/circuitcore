@@ -221,7 +221,7 @@
       <!-- Account Profile / Sign Out Trigger / Quick Actions -->
       <div class="flex items-center gap-1 sm:gap-2 shrink-0">
         <!-- Direct Cloud Sync Button -->
-        <button id="cloudSyncHeaderBtn" onclick="syncAllToGoogleSheets()" class="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Sync live data with Google Sheets">
+        <button id="cloudSyncHeaderBtn" onclick="triggerManualCloudSync()" class="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Sync live data with Google Sheets">
           <i class="fa-solid fa-cloud-arrow-up text-[11px]" id="cloudSyncHeaderIcon"></i> <span class="hidden xl:inline">Sync</span>
         </button>
 
@@ -617,17 +617,19 @@
     // Hardcoded Official OAuth Credentials & Google Sheet Target
     const OFFICIAL_GOOGLE_CLIENT_ID = "425600149049-1j3m0dumf9que1f047m00oa28en4jubt.apps.googleusercontent.com";
     const TARGET_SPREADSHEET_ID = "13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4";
+    const CLOUD_SYNC_TAB_NAME = "CircuitCore Cloud Sync";
     const REDIRECT_URI = "https://raynewater.github.io/circuitcore/";
     const SGD_EXCHANGE_RATE = 5.30;
 
     let gisTokenClient = null;
-    let gisSheetsTokenClient = null;
     let currentUser = null;
     let currentAccessToken = null;
     let currentItems = [];
     let selectedFolderFilter = null;
     let activeModalItemId = null;
     let deferredInstallPrompt = null;
+    let isCloudSyncing = false;
+    let cloudSaveDebounceTimer = null;
 
     // Relative Time Helper ("... ago")
     function timeAgo(dateInput) {
@@ -1393,7 +1395,7 @@
         saveUserData();
         renderShortlist();
         updateBadges();
-        setSystemStatus('IDLE', 'IDLE • System Ready');
+        setSystemStatus('IDLE', 'ONLINE');
         input.value = '';
       }, 500);
     }
@@ -1529,7 +1531,6 @@
       return `cc_${email}_items`;
     }
 
-    // Badge Counter Sync (Fixing missing declaration that broke completeLoginFlow)
     function updateBadges() {
       const shortlistCount = currentItems.filter(i => i.status === 'shortlist').length;
       const approvedCount = currentItems.filter(i => i.status === 'approved').length;
@@ -1564,141 +1565,184 @@
       }
     }
 
+    // Automatically writes locally and debounces cloud save to Google Drive Sheets
     function saveUserData() {
       const key = getUserStorageKey();
       localStorage.setItem(key, JSON.stringify(currentItems));
+
+      // Trigger automatic cloud sync to Google Sheets if access token is present
+      if (currentAccessToken && currentUser) {
+        if (cloudSaveDebounceTimer) clearTimeout(cloudSaveDebounceTimer);
+        cloudSaveDebounceTimer = setTimeout(() => {
+          pushDataToGoogleSheets();
+        }, 1200);
+      }
     }
 
-    // Google Sign-In & Auth Flow (With robust dual persistence and error handling)
-    function completeLoginFlow(user) {
-      if (!user) return;
-      currentUser = user;
+    // ================= REAL TWO-WAY GOOGLE SHEETS CLOUD STORAGE ENGINE =================
 
-      // Dual persistence: localStorage + 1-year persistent cookie
+    // Ensure the dedicated tab exists in the spreadsheet
+    async function ensureCloudSyncTabExists() {
+      if (!currentAccessToken) return false;
       try {
-        localStorage.setItem('cc_active_user', JSON.stringify(user));
-        localStorage.setItem('cc_logged_in', 'true');
-        const cookieExpire = new Date(Date.now() + 365*24*60*60*1000).toUTCString();
-        document.cookie = `cc_user=${encodeURIComponent(JSON.stringify(user))}; expires=${cookieExpire}; path=/; SameSite=Lax`;
-      } catch (e) {
-        console.warn("Storage sync notice:", e);
-      }
+        const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}?fields=sheets.properties.title`, {
+          headers: { Authorization: `Bearer ${currentAccessToken}` }
+        });
+        if (!metaRes.ok) return false;
+        const metaData = await metaRes.json();
+        const tabExists = (metaData.sheets || []).some(s => s.properties && s.properties.title === CLOUD_SYNC_TAB_NAME);
 
-      // Show mobile floating action dock strictly post-authentication
-      const dock = document.getElementById('mobileActionDock');
-      if (dock) {
-        dock.style.removeProperty('display');
-        dock.classList.remove('hidden');
-      }
-
-      // Update Top Header Profile
-      const nameElem = document.getElementById('headerUserName');
-      const emailElem = document.getElementById('headerUserEmail');
-      const avatarElem = document.getElementById('headerUserAvatar');
-
-      if (nameElem) nameElem.textContent = user.name || "RayneWater";
-      if (emailElem) emailElem.textContent = user.email || "raynendchannel@gmail.com";
-      if (avatarElem) {
-        if (user.picture) {
-          avatarElem.src = user.picture;
-          avatarElem.onerror = () => {
-            avatarElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
-          };
-        } else {
-          avatarElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'RayneWater')}&background=f97316&color=fff&bold=true`;
+        if (!tabExists) {
+          const createRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}:batchUpdate`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${currentAccessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              requests: [{
+                addSheet: {
+                  properties: {
+                    title: CLOUD_SYNC_TAB_NAME,
+                    gridProperties: { rowCount: 100, columnCount: 10 }
+                  }
+                }
+              }]
+            })
+          });
+          return createRes.ok;
         }
+        return true;
+      } catch (e) {
+        console.warn("Cloud sync tab verification notice:", e);
+        return false;
       }
-
-      // Hide Auth Gate completely
-      const gate = document.getElementById('authGateView');
-      if (gate) gate.classList.add('hidden');
-
-      // Update Status Badge to ONLINE
-      setSystemStatus('IDLE', 'ONLINE');
-
-      // Load user partitioned database
-      loadUserData();
-      selectedFolderFilter = null;
-      switchTab('shortlist');
-      updateBadges();
     }
 
-    // Google Sheets API Integration: Push Manifest to Cloud
-    async function syncAllToGoogleSheets() {
-      if (!currentAccessToken) {
-        // Request sheets scope on-demand rather than blocking main login
-        if (gisSheetsTokenClient) {
-          gisSheetsTokenClient.requestAccessToken({ prompt: 'consent' });
-        } else if (window.google && window.google.accounts && window.google.accounts.oauth2) {
-          gisSheetsTokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: OFFICIAL_GOOGLE_CLIENT_ID,
-            scope: 'https://www.googleapis.com/auth/spreadsheets',
-            callback: async (tokenResponse) => {
-              if (tokenResponse && tokenResponse.access_token) {
-                currentAccessToken = tokenResponse.access_token;
-                localStorage.setItem('cc_access_token', tokenResponse.access_token);
-                await syncAllToGoogleSheets();
-              }
-            }
-          });
-          gisSheetsTokenClient.requestAccessToken({ prompt: 'consent' });
-        } else {
-          alert("Please sign in with Google first to sync with your Google Sheet.");
+    // Pull saved items from Google Sheet (Runs on any device login)
+    async function pullDataFromGoogleSheets() {
+      if (!currentAccessToken || isCloudSyncing) return;
+      isCloudSyncing = true;
+      setSystemStatus('SYNCING', 'SYNCING • Reading Cloud');
+
+      try {
+        const range = encodeURIComponent(`'${CLOUD_SYNC_TAB_NAME}'!A2:H`);
+        const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}/values/${range}`, {
+          headers: { Authorization: `Bearer ${currentAccessToken}` }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const rows = data.values || [];
+          if (rows.length > 0) {
+            const cloudItems = rows.map(r => ({
+              id: r[0] || ("item_" + Date.now()),
+              title: r[1] || "Untitled Component",
+              category: r[2] || "BOARD",
+              platform: r[3] || "Taobao",
+              priceRmb: parseFloat(r[4]) || 0,
+              priceSgd: parseFloat(r[4]) ? parseFloat(r[4]) / SGD_EXCHANGE_RATE : 0,
+              oemPartCode: r[5] || "OEM-SPEC",
+              folder: r[6] || "General Hardware",
+              status: r[7] || "shortlist",
+              badge: "Cloud Synced",
+              frameAuth: "Ground-truth verified from Google Drive Sheet.",
+              createdAt: r[8] || new Date().toISOString()
+            }));
+
+            currentItems = cloudItems;
+            const key = getUserStorageKey();
+            localStorage.setItem(key, JSON.stringify(currentItems));
+            renderShortlist();
+            renderApproved();
+            updateBadges();
+            setSystemStatus('IDLE', 'ONLINE • Synced');
+            setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
+            return;
+          }
         }
-        return;
+      } catch (err) {
+        console.warn("Pull cloud data notice:", err);
+      } finally {
+        isCloudSyncing = false;
       }
+
+      setSystemStatus('IDLE', 'ONLINE');
+    }
+
+    // Push local state to Google Sheet (Overwrites with clean snapshot)
+    async function pushDataToGoogleSheets() {
+      if (!currentAccessToken || isCloudSyncing) return;
+      isCloudSyncing = true;
 
       const syncIcon = document.getElementById('cloudSyncHeaderIcon');
-      if (syncIcon) syncIcon.className = "fa-solid fa-arrows-rotate fa-spin text-[10px]";
-      setSystemStatus('SYNCING', 'SYNCING • Google Sheets');
+      if (syncIcon) syncIcon.className = "fa-solid fa-arrows-rotate fa-spin text-[11px]";
+      setSystemStatus('SYNCING', 'SYNCING • Writing Cloud');
 
       try {
-        const approvedAndShortlist = currentItems.filter(i => i.status !== 'trash');
-        
-        // Prepare rows for Google Sheets API (append to Activity & Session Log or Manifest)
-        const rows = approvedAndShortlist.map(item => [
-          `ITEM-${item.id.slice(-6).toUpperCase()}`,
-          new Date(item.createdAt || Date.now()).toISOString().split('T')[0],
-          item.status.toUpperCase(),
-          item.platform,
-          item.title,
-          `OEM: ${item.oemPartCode} | Category: ${item.category} | Notes: ${item.frameAuth || ''}`,
-          `RMB ¥${item.priceRmb} | SGD S$${(item.priceRmb / SGD_EXCHANGE_RATE).toFixed(2)} | Folder: ${item.folder}`
-        ]);
+        await ensureCloudSyncTabExists();
 
-        const range = encodeURIComponent("'Activity & Session Log'!B24:H");
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
+        // Prepare table snapshot rows: header + all non-trash/active items
+        const header = ["ID", "Title", "Category", "Platform", "Price_RMB", "OEM_Code", "Folder", "Status", "CreatedAt"];
+        const rows = [header, ...currentItems.map(item => [
+          item.id || "",
+          item.title || "",
+          item.category || "BOARD",
+          item.platform || "Taobao",
+          item.priceRmb || 0,
+          item.oemPartCode || "",
+          item.folder || "General Hardware",
+          item.status || "shortlist",
+          item.createdAt || new Date().toISOString()
+        ])];
 
-        const response = await fetch(url, {
+        const range = encodeURIComponent(`'${CLOUD_SYNC_TAB_NAME}'!A1:I`);
+        const clearUrl = `https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}/values/${range}:clear`;
+        await fetch(clearUrl, {
           method: 'POST',
+          headers: { Authorization: `Bearer ${currentAccessToken}` }
+        });
+
+        const updateUrl = `https://sheets.googleapis.com/v4/spreadsheets/${TARGET_SPREADSHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
+        const updateRes = await fetch(updateUrl, {
+          method: 'PUT',
           headers: {
-            'Authorization': `Bearer ${currentAccessToken}`,
+            Authorization: `Bearer ${currentAccessToken}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            range: "'Activity & Session Log'!B24:H",
-            majorDimension: "ROWS",
+            range: `'${CLOUD_SYNC_TAB_NAME}'!A1:I`,
+            majorDimension: 'ROWS',
             values: rows
           })
         });
 
-        if (response.ok) {
-          setSystemStatus('IDLE', 'ONLINE • Synced to Drive');
-          setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 3000);
+        if (updateRes.ok) {
+          setSystemStatus('IDLE', 'ONLINE • Cloud Saved');
+          setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
         } else {
-          const errData = await response.json().catch(() => ({}));
-          console.warn("Sheets sync warning:", errData);
           setSystemStatus('IDLE', 'ONLINE • Local Saved');
         }
       } catch (err) {
-        console.warn("Sheets API error:", err);
+        console.warn("Push cloud data error:", err);
         setSystemStatus('IDLE', 'ONLINE • Local Saved');
       } finally {
-        if (syncIcon) syncIcon.className = "fa-solid fa-cloud-arrow-up text-[10px]";
+        isCloudSyncing = false;
+        if (syncIcon) syncIcon.className = "fa-solid fa-cloud-arrow-up text-[11px]";
       }
     }
 
-    // Google Sign-In & Auth Flow (With robust dual persistence and error handling)
+    // Manual Trigger from Header Sync Button
+    async function triggerManualCloudSync() {
+      if (!currentAccessToken) {
+        triggerOfficialGoogleLogin();
+        return;
+      }
+      await pushDataToGoogleSheets();
+      await pullDataFromGoogleSheets();
+    }
+
+    // Google Sign-In & Auth Flow (With robust dual persistence and cloud hydration)
     function completeLoginFlow(user, token) {
       if (!user) return;
       currentUser = user;
@@ -1747,20 +1791,25 @@
       // Update Status Badge to ONLINE
       setSystemStatus('IDLE', 'ONLINE');
 
-      // Load user partitioned database
+      // 1. Load local partition as immediate instant cache
       loadUserData();
       selectedFolderFilter = null;
       switchTab('shortlist');
       updateBadges();
+
+      // 2. Hydrate from Google Cloud Sheet so all other devices match immediately
+      if (currentAccessToken) {
+        pullDataFromGoogleSheets();
+      }
     }
 
     function initializeGoogleOAuth() {
       try {
         if (window.google && window.google.accounts && window.google.accounts.oauth2) {
-          // Use standard identity scopes to avoid Google's unverified app 403 block
+          // Request identity and spreadsheets permissions for true cross-device data persistence
           gisTokenClient = google.accounts.oauth2.initTokenClient({
             client_id: OFFICIAL_GOOGLE_CLIENT_ID,
-            scope: 'email profile openid',
+            scope: 'email profile openid https://www.googleapis.com/auth/spreadsheets',
             callback: (tokenResponse) => {
               if (tokenResponse && tokenResponse.access_token) {
                 currentAccessToken = tokenResponse.access_token;
@@ -1770,19 +1819,6 @@
             },
             error_callback: (err) => {
               console.error("GIS OAuth error:", err);
-            }
-          });
-
-          // Dedicated on-demand client for Sheets API
-          gisSheetsTokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: OFFICIAL_GOOGLE_CLIENT_ID,
-            scope: 'https://www.googleapis.com/auth/spreadsheets',
-            callback: async (tokenResponse) => {
-              if (tokenResponse && tokenResponse.access_token) {
-                currentAccessToken = tokenResponse.access_token;
-                localStorage.setItem('cc_access_token', tokenResponse.access_token);
-                await syncAllToGoogleSheets();
-              }
             }
           });
         }
@@ -2022,4 +2058,4 @@
     setTimeout(dismissBootOverlay, 2500);
   </script>
 </body>
-</html>
+              </html>
