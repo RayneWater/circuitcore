@@ -1614,15 +1614,6 @@
       switchTab('shortlist');
       updateBadges();
     }
-      } else {
-        currentItems = [...defaultInitialItems];
-      }
-    }
-
-    function saveUserData() {
-      const key = getUserStorageKey();
-      localStorage.setItem(key, JSON.stringify(currentItems));
-    }
 
     // Google Sheets API Integration: Push Manifest to Cloud
     async function syncAllToGoogleSheets() {
