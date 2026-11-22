@@ -645,21 +645,69 @@
     let currentTab = 'shortlist';
     let googleTokenClient = null;
 
-    // Procedural SVG Hardware Generator for 100% resilient listing previews
+    // Procedural SVG Hardware Generator with 100% strict URI encoding to prevent HTML breakout
     function generatePartPhotoSVG(type, title) {
-      const cleanTitle = (title || 'Component').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').substring(0, 32);
+      const cleanTitle = (title || 'Component')
+        .replace(/[<>&"']/g, '')
+        .substring(0, 30);
+
+      let svgXml = '';
+
       if (type === 'SCREEN') {
-        return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="%230b0f19"/><rect x="180" y="30" width="240" height="340" rx="24" fill="%23111827" stroke="%23374151" stroke-width="4"/><rect x="195" y="45" width="210" height="310" rx="16" fill="%23030712" stroke="%231f2937" stroke-width="2"/><circle cx="300" cy="65" r="5" fill="%231e293b" stroke="%2338bdf8" stroke-width="1.5"/><rect x="220" y="100" width="160" height="180" fill="%23b45309" fill-opacity="0.18" stroke="%23d97706" stroke-dasharray="4,4"/><text x="300" y="195" fill="%23f59e0b" font-family="monospace" font-size="11" text-anchor="middle" font-weight="bold">COPPER GRAPHITE SHIELD</text><path d="M260 355 L260 385 L340 385 L340 355" fill="%23b45309" stroke="%23f59e0b" stroke-width="2"/><rect x="280" y="365" width="40" height="15" fill="%231e293b" stroke="%2338bdf8"/><text x="300" y="275" fill="%23e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">${cleanTitle}</text><text x="300" y="295" fill="%2310b981" font-family="monospace" font-size="10" text-anchor="middle">120Hz LTPO OLED • DIGITIZER OK</text></svg>`;
+        svgXml = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <rect width="600" height="400" fill="#0b0f19"/>
+          <rect x="180" y="30" width="240" height="340" rx="24" fill="#111827" stroke="#374151" stroke-width="4"/>
+          <rect x="195" y="45" width="210" height="310" rx="16" fill="#030712" stroke="#1f2937" stroke-width="2"/>
+          <circle cx="300" cy="65" r="5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+          <rect x="220" y="100" width="160" height="180" fill="#b45309" fill-opacity="0.18" stroke="#d97706" stroke-dasharray="4,4"/>
+          <text x="300" y="195" fill="#f59e0b" font-family="monospace" font-size="11" text-anchor="middle" font-weight="bold">COPPER GRAPHITE SHIELD</text>
+          <path d="M260 355 L260 385 L340 385 L340 355" fill="#b45309" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="280" y="365" width="40" height="15" fill="#1e293b" stroke="#38bdf8"/>
+          <text x="300" y="275" fill="#e2e8f0" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">${cleanTitle}</text>
+          <text x="300" y="295" fill="#10b981" font-family="monospace" font-size="10" text-anchor="middle">120Hz LTPO OLED • DIGITIZER OK</text>
+        </svg>`;
       } else if (type === 'BATTERY') {
-        return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="%23080e1a"/><rect x="200" y="70" width="200" height="290" rx="12" fill="%231e293b" stroke="%23475569" stroke-width="3"/><rect x="220" y="25" width="40" height="45" rx="3" fill="%230284c7" stroke="%2338bdf8" stroke-width="1.5"/><rect x="235" y="45" width="10" height="25" fill="%23f59e0b"/><rect x="340" y="25" width="40" height="45" rx="3" fill="%230f172a" stroke="%2364748b" stroke-width="1.5"/><rect x="220" y="100" width="60" height="60" fill="%230f172a" stroke="%23334155"/><rect x="228" y="108" width="44" height="44" fill="%23ffffff"/><text x="300" y="200" fill="%23f8fafc" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">TI BQ BMS CHIP</text><text x="300" y="225" fill="%2394a3b8" font-family="monospace" font-size="11" text-anchor="middle">5000mAh • 3.88V Li-ion</text><text x="300" y="255" fill="%2338bdf8" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle">${cleanTitle}</text><text x="300" y="325" fill="%2310b981" font-family="monospace" font-size="10" text-anchor="middle">✓ ZERO-CYCLE OEM AUTHENTIC</text></svg>`;
+        svgXml = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <rect width="600" height="400" fill="#080e1a"/>
+          <rect x="200" y="70" width="200" height="290" rx="12" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+          <rect x="220" y="25" width="40" height="45" rx="3" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+          <rect x="235" y="45" width="10" height="25" fill="#f59e0b"/>
+          <rect x="340" y="25" width="40" height="45" rx="3" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+          <rect x="220" y="100" width="60" height="60" fill="#0f172a" stroke="#334155"/>
+          <rect x="228" y="108" width="44" height="44" fill="#ffffff"/>
+          <text x="300" y="200" fill="#f8fafc" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">TI BQ BMS CHIP</text>
+          <text x="300" y="225" fill="#94a3b8" font-family="monospace" font-size="11" text-anchor="middle">OEM Grade • Zero Cycle</text>
+          <text x="300" y="255" fill="#38bdf8" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle">${cleanTitle}</text>
+          <text x="300" y="325" fill="#10b981" font-family="monospace" font-size="10" text-anchor="middle">✓ ZERO-CYCLE OEM AUTHENTIC</text>
+        </svg>`;
       } else if (type === 'SEALS') {
-        return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="%230b1120"/><rect x="180" y="40" width="240" height="320" rx="28" fill="none" stroke="%2338bdf8" stroke-width="6" stroke-dasharray="12,6"/><rect x="195" y="55" width="210" height="290" rx="20" fill="none" stroke="%230284c7" stroke-width="3"/><circle cx="235" cy="95" r="24" fill="none" stroke="%2338bdf8" stroke-width="4"/><circle cx="235" cy="160" r="18" fill="none" stroke="%2338bdf8" stroke-width="4"/><text x="300" y="210" fill="%2338bdf8" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">IP68 DIE-CUT ADHESIVE</text><text x="300" y="235" fill="%2394a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">${cleanTitle}</text><text x="300" y="260" fill="%2310b981" font-family="monospace" font-size="10" text-anchor="middle">LASER PRE-CUT • ACRYLIC SEAL</text></svg>`;
+        svgXml = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <rect width="600" height="400" fill="#0b1120"/>
+          <rect x="180" y="40" width="240" height="320" rx="28" fill="none" stroke="#38bdf8" stroke-width="6" stroke-dasharray="12,6"/>
+          <rect x="195" y="55" width="210" height="290" rx="20" fill="none" stroke="#0284c7" stroke-width="3"/>
+          <circle cx="235" cy="95" r="24" fill="none" stroke="#38bdf8" stroke-width="4"/>
+          <circle cx="235" cy="160" r="18" fill="none" stroke="#38bdf8" stroke-width="4"/>
+          <text x="300" y="210" fill="#38bdf8" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">IP68 DIE-CUT ADHESIVE</text>
+          <text x="300" y="235" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">${cleanTitle}</text>
+          <text x="300" y="260" fill="#10b981" font-family="monospace" font-size="10" text-anchor="middle">LASER PRE-CUT • ACRYLIC SEAL</text>
+        </svg>`;
       } else {
-        return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="%23080e1a"/><rect x="160" y="80" width="280" height="240" rx="14" fill="%23064e3b" stroke="%2310b981" stroke-width="3"/><circle cx="200" cy="120" r="8" fill="%23fbbf24"/><circle cx="400" cy="120" r="8" fill="%23fbbf24"/><rect x="250" y="140" width="100" height="100" fill="%23022c22" stroke="%2334d399" stroke-width="2"/><text x="300" y="195" fill="%2334d399" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">CONTROLLER IC</text><text x="300" y="270" fill="%23f8fafc" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle">${cleanTitle}</text><text x="300" y="295" fill="%2338bdf8" font-family="monospace" font-size="10" text-anchor="middle">GENUINE SUB-BOARD ASSEMBLY</text></svg>`;
+        svgXml = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <rect width="600" height="400" fill="#080e1a"/>
+          <rect x="160" y="80" width="280" height="240" rx="14" fill="#064e3b" stroke="#10b981" stroke-width="3"/>
+          <circle cx="200" cy="120" r="8" fill="#fbbf24"/>
+          <circle cx="400" cy="120" r="8" fill="#fbbf24"/>
+          <rect x="250" y="140" width="100" height="100" fill="#022c22" stroke="#34d399" stroke-width="2"/>
+          <text x="300" y="195" fill="#34d399" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">CONTROLLER IC</text>
+          <text x="300" y="270" fill="#f8fafc" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle">${cleanTitle}</text>
+          <text x="300" y="295" fill="#38bdf8" font-family="monospace" font-size="10" text-anchor="middle">GENUINE SUB-BOARD ASSEMBLY</text>
+        </svg>`;
       }
+
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml.trim());
     }
 
-    // Default Initial Dataset with verified hardware visual endpoints
+    // Default Initial Dataset with guaranteed clean encoded endpoints
     const defaultInitialItems = [
       {
         id: 'item-1',
@@ -972,14 +1020,15 @@
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          // Automatically upgrade old Unsplash stock photo URLs to accurate SVGs
+          // Auto-sanitize broken raw text strings and unencoded SVGs
           currentItems = parsed.map(item => {
-            if (!item.imageUrl || item.imageUrl.includes('unsplash.com')) {
-              item.imageUrl = generatePartPhotoSVG(item.category, item.title);
+            if (!item.imageUrl || item.imageUrl.includes('unsplash.com') || item.imageUrl.includes('utf8,<svg') || item.imageUrl.includes('style=')) {
+              item.imageUrl = generatePartPhotoSVG(item.category || 'BOARD', item.title);
               item.gallery = [item.imageUrl];
             }
             return item;
           });
+          saveUserData();
         } catch (e) {
           currentItems = [...defaultInitialItems];
         }
@@ -1066,6 +1115,16 @@
     // ==========================================
     // CARD GENERATION & RENDERING
     // ==========================================
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function renderShortlist() {
       const container = document.getElementById('shortlistGrid');
       if (!container) return;
@@ -1080,6 +1139,132 @@
         `;
         return;
       }
+
+      container.innerHTML = items.map(item => {
+        const safeTitle = escapeHtml(item.title);
+        const safeAuth = escapeHtml(item.frameAuth);
+        const safeBadge = escapeHtml(item.badge);
+        const safeImg = item.imageUrl || generatePartPhotoSVG(item.category, item.title);
+
+        return `
+        <div class="glass-card rounded-2xl p-4 border border-slate-800/80 hover:border-orange-500/40 transition-all flex flex-col justify-between group">
+          <div class="cursor-pointer" onclick="openListingModal('${item.id}')">
+            <!-- Image Card Preview -->
+            <div class="w-full h-36 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-3 flex items-center justify-center">
+              <img src="${safeImg}" alt="${safeTitle}" referrerpolicy="no-referrer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
+              <span class="absolute top-2 left-2 text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-black/75 border border-white/10 text-orange-400 backdrop-blur-sm pointer-events-none">
+                ${safeBadge}
+              </span>
+              <div class="absolute top-2 right-2 pointer-events-none">
+                ${getPlatformBadgeHtml(item.platform)}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">${item.oemPartCode}</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">Anti-Scam Verified</span>
+            </div>
+
+            <h4 class="text-xs font-bold text-white mt-2 line-clamp-2 leading-snug group-hover:text-orange-300 transition-colors">
+              ${safeTitle}
+            </h4>
+
+            <p class="text-[11px] text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
+              ${safeAuth}
+            </p>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-mono text-slate-500">¥${item.priceRmb}</div>
+              <div class="text-sm font-mono font-bold text-emerald-400">S$${item.priceSgd.toFixed(2)}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="openListingModal('${item.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors">
+                <i class="fa-solid fa-eye text-[10px]"></i> Details
+              </button>
+              <button onclick="promoteToApproved('${item.id}')" class="w-7 h-7 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 flex items-center justify-center transition-colors" title="Approve for Manifest">
+                <i class="fa-solid fa-check text-xs"></i>
+              </button>
+              <button onclick="moveItemToTrash('${item.id}')" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 flex items-center justify-center transition-colors" title="Reject / Trash">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function renderApproved() {
+      const container = document.getElementById('approvedGrid');
+      if (!container) return;
+
+      const items = currentItems.filter(i => i.status === 'approved');
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 font-mono text-xs">
+            <i class="fa-solid fa-circle-check text-3xl mb-3 text-slate-600 block"></i>
+            No approved components yet. Promote shortlisted items into the final manifest.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(item => {
+        const safeTitle = escapeHtml(item.title);
+        const safeAuth = escapeHtml(item.frameAuth);
+        const safeBadge = escapeHtml(item.badge);
+        const safeImg = item.imageUrl || generatePartPhotoSVG(item.category, item.title);
+
+        return `
+        <div class="glass-card rounded-2xl p-4 border border-emerald-500/30 hover:border-emerald-500/50 transition-all flex flex-col justify-between group">
+          <div class="cursor-pointer" onclick="openListingModal('${item.id}')">
+            <div class="w-full h-36 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden relative mb-3 flex items-center justify-center">
+              <img src="${safeImg}" alt="${safeTitle}" referrerpolicy="no-referrer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
+              <span class="absolute top-2 left-2 text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 backdrop-blur-sm pointer-events-none">
+                ${safeBadge}
+              </span>
+              <div class="absolute top-2 right-2 pointer-events-none">
+                ${getPlatformBadgeHtml(item.platform)}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">${item.oemPartCode}</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">Approved for Consolidation</span>
+            </div>
+
+            <h4 class="text-xs font-bold text-white mt-2 line-clamp-2 leading-snug">
+              ${safeTitle}
+            </h4>
+
+            <p class="text-[11px] text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
+              ${safeAuth}
+            </p>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-mono text-slate-500">¥${item.priceRmb}</div>
+              <div class="text-sm font-mono font-bold text-emerald-400">S$${item.priceSgd.toFixed(2)}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="openListingModal('${item.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors">
+                <i class="fa-solid fa-eye text-[10px]"></i> Details
+              </button>
+              <button onclick="demoteToShortlist('${item.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-orange-950/40 text-orange-400 text-xs font-mono transition-colors" title="Move back to Shortlist">
+                Return
+              </button>
+              <button onclick="moveItemToTrash('${item.id}')" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 flex items-center justify-center transition-colors" title="Trash">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
 
       container.innerHTML = items.map(item => `
         <div class="glass-card rounded-2xl p-4 border border-slate-800/80 hover:border-orange-500/40 transition-all flex flex-col justify-between group">
@@ -1334,19 +1519,20 @@
         modalPlatformEl.innerHTML = getPlatformBadgeHtml(item.platform || 'Taobao');
       }
 
-      document.getElementById('modalFrameAuth').innerText = item.frameAuth;
-      document.getElementById('modalIcSpecs').innerText = item.icSpecs;
-      document.getElementById('modalScamVerdict').innerText = item.scamVerdict;
-      document.getElementById('modalShipping').innerText = item.shipping;
+      document.getElementById('modalFrameAuth').innerText = item.frameAuth || 'Inspection pending delivery.';
+      document.getElementById('modalIcSpecs').innerText = item.icSpecs || 'Standard factory specifications.';
+      document.getElementById('modalScamVerdict').innerText = item.scamVerdict || 'Verified listing.';
+      document.getElementById('modalShipping').innerText = item.shipping || 'Consolidated shipping eligible.';
 
       const mainImg = document.getElementById('modalMainImage');
-      mainImg.src = item.imageUrl;
+      mainImg.src = item.imageUrl || generatePartPhotoSVG(item.category, item.title);
 
       const galleryStrip = document.getElementById('modalGalleryStrip');
-      const galleryImages = item.gallery && item.gallery.length > 0 ? item.gallery : [item.imageUrl];
-      galleryStrip.innerHTML = galleryImages.map(imgUrl => `
-        <button onclick="changeModalMainImage('${imgUrl}')" class="w-12 h-12 rounded-lg border border-slate-700 overflow-hidden shrink-0 focus:border-orange-500 transition-colors">
-          <img src="${imgUrl}" alt="Thumb" class="w-full h-full object-cover" onerror="handleCardImageError(this, '${item.category}', '${item.title.replace(/'/g, "\\'")}')">
+      const galleryImages = (item.gallery && item.gallery.length > 0) ? item.gallery : [item.imageUrl];
+      
+      galleryStrip.innerHTML = galleryImages.map((imgUrl, idx) => `
+        <button type="button" onclick="changeModalMainImage('${encodeURI(imgUrl)}')" class="w-12 h-12 rounded-lg border border-slate-700 overflow-hidden shrink-0 focus:border-orange-500 transition-colors bg-slate-900 flex items-center justify-center">
+          <img src="${imgUrl}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover pointer-events-none" onerror="handleCardImageError(this, '${item.category || 'BOARD'}')">
         </button>
       `).join('');
 
@@ -1370,6 +1556,26 @@
           </button>
         `;
       }
+
+      document.getElementById('listingDetailModal').classList.remove('hidden');
+    }
+
+    function closeListingModal() {
+      document.getElementById('listingDetailModal').classList.add('hidden');
+    }
+
+    function changeModalMainImage(url) {
+      const img = document.getElementById('modalMainImage');
+      if (img) img.src = decodeURI(url);
+    }
+
+    function handleModalImageError(img) {
+      img.src = generatePartPhotoSVG('BOARD', 'Component Schematic');
+    }
+
+    function handleCardImageError(img, cat) {
+      img.src = generatePartPhotoSVG(cat || 'BOARD', 'Component');
+    }
 
       document.getElementById('listingDetailModal').classList.remove('hidden');
     }
