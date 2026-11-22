@@ -181,20 +181,20 @@
   <div id="appContainer" class="min-h-screen flex flex-col justify-between max-w-full">
     
     <!-- TOP APP BAR -->
-    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 overflow-x-hidden">
+    <header class="sticky top-0 z-30 w-full glass-card border-b border-slate-800/80 px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-2 overflow-hidden">
       <!-- Brand Logo -->
-      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <div class="flex items-center gap-1.5 shrink-0">
         <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white text-xs sm:text-sm shrink-0">
           <i class="fa-solid fa-microchip"></i>
         </div>
-        <div class="flex items-center gap-1 sm:gap-1.5">
+        <div class="flex items-center gap-1">
           <span class="font-extrabold text-xs sm:text-base tracking-tight text-white whitespace-nowrap">CircuitCore</span>
-          <span class="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold whitespace-nowrap">v1.7 PRO</span>
+          <span class="text-[8px] sm:text-[9px] font-mono px-1 py-0.5 rounded bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold whitespace-nowrap">v1.7</span>
         </div>
       </div>
 
-      <!-- Live Engine Dynamic Status Indicator -->
-      <div id="liveEngineStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 shrink-0">
+      <!-- Live Engine Dynamic Status Indicator (Compact on mobile) -->
+      <div id="liveEngineStatusBadge" class="flex items-center gap-1 sm:gap-1.5 px-2 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         <span id="liveStatusText" class="font-semibold text-slate-200">ONLINE</span>
       </div>
@@ -218,25 +218,26 @@
         </button>
       </nav>
 
-      <!-- Account Profile / Sign Out Trigger -->
-      <div class="flex items-center gap-2 shrink-0">
+      <!-- Account Profile / Sign Out Trigger / Quick Actions -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
         <!-- Direct Cloud Sync Button -->
-        <button id="cloudSyncHeaderBtn" onclick="syncAllToGoogleSheets()" class="px-2.5 py-1 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 text-xs font-mono font-bold flex items-center gap-1.5 transition-all" title="Sync live data with Google Sheets">
-          <i class="fa-solid fa-cloud-arrow-up text-[10px]" id="cloudSyncHeaderIcon"></i> <span class="hidden sm:inline">Sync Cloud</span>
+        <button id="cloudSyncHeaderBtn" onclick="syncAllToGoogleSheets()" class="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Sync live data with Google Sheets">
+          <i class="fa-solid fa-cloud-arrow-up text-[11px]" id="cloudSyncHeaderIcon"></i> <span class="hidden sm:inline">Sync</span>
         </button>
 
-        <!-- Native Install App Button (Visible when installable) -->
-        <button id="pwaInstallBtn" onclick="triggerPWAInstall()" class="hidden px-2.5 py-1 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/40 text-xs font-mono font-bold flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-download text-[10px]"></i> <span class="hidden sm:inline">Install App</span>
+        <!-- Native Install App Button -->
+        <button id="pwaInstallBtn" onclick="triggerPWAInstall()" class="hidden p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/40 text-xs font-mono font-bold flex items-center gap-1 transition-all shrink-0" title="Install App to Home Screen">
+          <i class="fa-solid fa-download text-[11px]"></i> <span class="hidden sm:inline">Install</span>
         </button>
 
-        <button onclick="openSignOutModal()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left">
-          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=RayneWater&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700">
-          <div class="hidden sm:block">
+        <!-- Profile / Sign Out Modal Button -->
+        <button onclick="openSignOutModal()" class="flex items-center gap-1.5 p-1 sm:px-2 sm:py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all text-left shrink-0">
+          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=RayneWater&background=f97316&color=fff&bold=true" alt="User Profile" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-cover border border-slate-700 shrink-0">
+          <div class="hidden md:block">
             <div id="headerUserName" class="text-xs font-bold text-slate-200 leading-tight">RayneWater</div>
-            <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[120px]">Workspace Verified</div>
+            <div id="headerUserEmail" class="text-[9px] font-mono text-slate-400 truncate max-w-[110px]">Workspace Verified</div>
           </div>
-          <i class="fa-solid fa-arrow-right-from-bracket text-slate-400 text-xs sm:ml-1"></i>
+          <i class="fa-solid fa-arrow-right-from-bracket text-slate-400 text-[11px] ml-0.5"></i>
         </button>
       </div>
     </header>
@@ -722,19 +723,19 @@
       switch(state) {
         case 'IDLE':
           dot.classList.add('bg-emerald-400', 'animate-pulse');
-          text.textContent = customText || "IDLE • System Ready";
+          text.textContent = customText ? (customText.includes('•') ? customText.split('•')[0].trim() : customText) : "ONLINE";
           break;
         case 'ACTIVE':
           dot.classList.add('bg-orange-400', 'animate-ping');
-          text.textContent = customText || "ACTIVE • Anti-Scam Scoring";
+          text.textContent = customText ? (customText.includes('•') ? customText.split('•')[0].trim() : customText) : "TRIAGE";
           break;
         case 'SYNCING':
           dot.classList.add('bg-cyan-400', 'animate-pulse');
-          text.textContent = customText || "SYNCING";
+          text.textContent = "SYNC";
           break;
         default:
           dot.classList.add('bg-emerald-400');
-          text.textContent = customText || "IDLE • System Ready";
+          text.textContent = "ONLINE";
       }
     }
 
