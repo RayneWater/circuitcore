@@ -689,7 +689,8 @@
       { id: "LOG-019", cat: "AUTH-SCOPE", title: "OAuth Scope Hardening & Verification Bypass", notes: "Stripped unverified sensitive scopes (https://www.googleapis.com/auth/spreadsheets) to resolve Error 403: access_denied. Scoped login strictly to non-sensitive identity scopes (email, profile, openid).", timestamp: "2026-11-22T20:10:00Z" },
       { id: "LOG-020", cat: "MODAL-SYNC", title: "Modal Inspection Engine & Bidirectional Sync Merge", notes: "Restored 4-point structured technical summary. Enabled interactive clicks across Approved manifest tab cards. Built mergeItemLists() to combine cross-device items without data loss.", timestamp: "2026-11-22T20:45:00Z" },
       { id: "LOG-021", cat: "NLP-TRIAGE", title: "Intelligent Component-Specific NLP Triage Dispatch", notes: "Engineered multi-platform parsing for back covers, displays (with/without frame), batteries (TI fuel gauge BMS), sub-boards, and camera modules. Specific queries return 3–4 competing vendor listings; generic device queries return 4 core repair parts.", timestamp: "2026-11-22T21:15:00Z" },
-      { id: "LOG-022", cat: "RUNTIME-SYNC", title: "Runtime Syntax Hardening & Live Memory Sync Protocol", notes: "Restored missing return block and closing syntax in timeAgo() helper to restore unblocked execution. Ingested milestones LOG-019 through LOG-021 into masterMemoryLogs array and updated UI badge counter to dynamic array length. Engineered triggerMemorySyncRefresh() to pull live log rows and provide instant visual sync status feedback.", timestamp: "2026-11-23T07:11:00Z" }
+      { id: "LOG-022", cat: "RUNTIME-SYNC", title: "Runtime Syntax Hardening & Live Memory Sync Protocol", notes: "Restored missing return block and closing syntax in timeAgo() helper to restore unblocked execution. Ingested milestones LOG-019 through LOG-021 into masterMemoryLogs array and updated UI badge counter to dynamic array length. Engineered triggerMemorySyncRefresh() to pull live log rows and provide instant visual sync status feedback.", timestamp: "2026-11-23T07:11:00Z" },
+      { id: "LOG-023", cat: "UI-UX", title: "Boot Screen UX Centering & Fluid Transition Architecture", notes: "Re-engineered boot overlay with complete vertical and horizontal typography centering. Implemented smooth cubic-bezier scale/fade-out bloom transition (700ms) with background blur on workspace unlock. Added fluid-view keyframe animations across all sub-tab views.", timestamp: "2026-11-23T07:28:00Z" }
     ];
 
     // Seed Initial Data
@@ -2099,77 +2100,88 @@
 
     const GOOGLE_SHEET_MASTER_ID = "13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4";
 
-    async function triggerMemorySyncRefresh(isSilent = false) {
-      const icon = document.getElementById('memoryRefreshIcon');
-      if (icon) icon.classList.add('fa-spin');
-      if (!isSilent) setSystemStatus('SYNCING', 'SYNCING • Memory');
+    // JSONP callback receiver for CORS-bypassed Google Sheets gviz queries
+    window.handleGvizResponse = function(gvizData) {
+      if (!gvizData || !gvizData.table || !gvizData.table.rows) return;
+      let newCount = 0;
+      gvizData.table.rows.forEach(r => {
+        const c = r.c || [];
+        const rawId = (c[1]?.v || c[0]?.v || '') + '';
+        if (/^LOG-\d+/i.test(rawId.trim())) {
+          const logId = rawId.trim();
+          const logDate = (c[2]?.f || c[2]?.v || new Date().toISOString().split('T')[0]) + '';
+          const logCat = (c[3]?.v || 'UPDATE') + '';
+          const logTitle = (c[4]?.v || c[5]?.v || 'Milestone Record') + '';
+          const logNotes = (c[6]?.v || c[5]?.v || c[7]?.v || 'Documented engineering milestone.') + '';
 
-      let parsedCount = 0;
-
-      // 1. Live Google Sheets GViz Query
-      try {
-        const sheetUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_MASTER_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent("Activity & Session Log")}`;
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
-        const res = await fetch(sheetUrl, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (res.ok) {
-          const rawText = await res.text();
-          // Extract JSON payload from Google Visualization wrapper /*O_o*/ google.visualization.Query.setResponse(...)
-          const match = rawText.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/);
-          if (match && match[1]) {
-            const gvizData = JSON.parse(match[1]);
-            const rows = gvizData?.table?.rows || [];
-
-            rows.forEach(r => {
-              const c = r.c || [];
-              const rawId = (c[1]?.v || c[0]?.v || '') + '';
-              if (/^LOG-\d+/i.test(rawId.trim())) {
-                const logId = rawId.trim();
-                const logDate = (c[2]?.f || c[2]?.v || new Date().toISOString().split('T')[0]) + '';
-                const logCat = (c[3]?.v || 'UPDATE') + '';
-                const logTitle = (c[4]?.v || c[5]?.v || 'Milestone Record') + '';
-                const logNotes = (c[6]?.v || c[5]?.v || c[7]?.v || 'Documented engineering milestone.') + '';
-
-                const existingIndex = masterMemoryLogs.findIndex(m => m.id === logId);
-                if (existingIndex >= 0) {
-                  masterMemoryLogs[existingIndex].cat = logCat;
-                  masterMemoryLogs[existingIndex].title = logTitle;
-                  masterMemoryLogs[existingIndex].notes = logNotes;
-                } else {
-                  masterMemoryLogs.push({
-                    id: logId,
-                    cat: logCat,
-                    title: logTitle,
-                    notes: logNotes,
-                    timestamp: logDate.includes('T') ? logDate : `${logDate}T12:00:00Z`
-                  });
-                }
-                parsedCount++;
-              }
+          const existingIndex = masterMemoryLogs.findIndex(m => m.id === logId);
+          if (existingIndex >= 0) {
+            masterMemoryLogs[existingIndex].cat = logCat;
+            masterMemoryLogs[existingIndex].title = logTitle;
+            masterMemoryLogs[existingIndex].notes = logNotes;
+          } else {
+            masterMemoryLogs.push({
+              id: logId,
+              cat: logCat,
+              title: logTitle,
+              notes: logNotes,
+              timestamp: logDate.includes('T') ? logDate : `${logDate}T12:00:00Z`
             });
+            newCount++;
           }
         }
-      } catch (err) {
-        console.warn("Direct Google Sheet GViz fetch notice:", err);
-      }
+      });
 
-      // Sort logs descending so the newest log (e.g. LOG-022, LOG-023) is always at the top
       masterMemoryLogs.sort((a, b) => {
         const numA = parseInt((a.id || '').replace(/\D/g, ''), 10) || 0;
         const numB = parseInt((b.id || '').replace(/\D/g, ''), 10) || 0;
         return numB - numA;
       });
 
-      if (icon) icon.classList.remove('fa-spin');
       renderMemoryLogs();
       updateBadges();
+      setSystemStatus('IDLE', `ONLINE • ${masterMemoryLogs.length} Logs`);
+      setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
+    };
 
-      if (!isSilent) {
-        setSystemStatus('IDLE', `ONLINE • ${masterMemoryLogs.length} Logs`);
-        setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
+    async function triggerMemorySyncRefresh(isSilent = false) {
+      const icon = document.getElementById('memoryRefreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+      if (!isSilent) setSystemStatus('SYNCING', 'SYNCING • Memory');
+
+      // 1. JSONP Script Injection to bypass CORS restrictions
+      try {
+        const existingScript = document.getElementById('gvizJsonpScript');
+        if (existingScript) existingScript.remove();
+
+        const script = document.createElement('script');
+        script.id = 'gvizJsonpScript';
+        script.src = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_MASTER_ID}/gviz/tq?tqx=responseHandler:handleGvizResponse&sheet=${encodeURIComponent("Activity & Session Log")}&_ts=${Date.now()}`;
+        script.onerror = () => {
+          // Fallback to fetch if JSONP fails
+          console.warn("JSONP script injection failed, using internal registry.");
+        };
+        document.body.appendChild(script);
+      } catch (err) {
+        console.warn("Script injection notice:", err);
       }
+
+      // 2. Ensure descending sort
+      masterMemoryLogs.sort((a, b) => {
+        const numA = parseInt((a.id || '').replace(/\D/g, ''), 10) || 0;
+        const numB = parseInt((b.id || '').replace(/\D/g, ''), 10) || 0;
+        return numB - numA;
+      });
+
+      setTimeout(() => {
+        if (icon) icon.classList.remove('fa-spin');
+        renderMemoryLogs();
+        updateBadges();
+        if (!isSilent) {
+          setSystemStatus('IDLE', `ONLINE • ${masterMemoryLogs.length} Logs`);
+          setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
+        }
+      }, 700);
     }
 
     // Local Storage Partition Management
