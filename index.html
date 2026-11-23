@@ -637,6 +637,9 @@
       if (diffDays < 30) return `${diffDays}d ago`;
       const diffMonths = Math.floor(diffDays / 30);
       if (diffMonths < 12) return `${diffMonths}mo ago`;
+      return `${Math.floor(diffMonths / 12)}y ago`;
+    }
+
     // Master Memory Audit Logs (21 Records)
     const masterMemoryLogs = [
       { id: "LOG-001", cat: "OAUTH", title: "GIS Client Handshake Established", notes: "Initialized Google Identity Services token client using official OAuth client credentials.", timestamp: "2026-11-20T09:15:00Z" },
