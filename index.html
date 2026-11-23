@@ -95,6 +95,30 @@
       box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.75);
     }
 
+    /* Fluid View Transitions & Motion */
+    .fluid-view {
+      animation: viewSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes viewSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .boot-fade-out {
+      opacity: 0 !important;
+      transform: scale(1.04) !important;
+      filter: blur(6px) !important;
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      pointer-events: none !important;
+    }
+
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;
@@ -118,19 +142,21 @@
 <body class="min-h-screen bg-[#050811] text-slate-100 flex flex-col justify-between selection:bg-orange-500 selection:text-white">
 
   <!-- ================= BOOT SCREEN OVERLAY ================= -->
-  <div id="bootScreen" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-6 transition-opacity duration-500">
-    <div class="relative w-16 h-16 mb-4 flex items-center justify-center">
-      <div class="absolute inset-0 rounded-2xl bg-orange-500/20 animate-ping"></div>
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 text-white text-2xl">
+  <div id="bootScreen" class="fixed inset-0 z-50 bg-[#050811] flex flex-col items-center justify-center p-6 text-center select-none transition-all duration-700 ease-out">
+    <div class="relative w-20 h-20 mb-5 flex items-center justify-center">
+      <div class="absolute inset-0 rounded-3xl bg-orange-500/20 animate-ping"></div>
+      <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-xl shadow-orange-500/30 text-white text-3xl">
         <i class="fa-solid fa-microchip"></i>
       </div>
     </div>
-    <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-      CircuitCore <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.7 PRO</span>
-    </h1>
-    <p class="text-xs font-mono text-orange-400 font-semibold mt-1">RayneWater</p>
-    <p class="text-xs font-mono text-slate-400 mt-0.5">Hardware Procurement &amp; Anti-Scam Triage Engine</p>
-    <div class="mt-6 flex items-center gap-2 text-[11px] font-mono text-slate-500">
+    <div class="flex flex-col items-center justify-center">
+      <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
+        CircuitCore <span class="text-xs px-2.5 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono">v1.7 PRO</span>
+      </h1>
+      <p class="text-sm font-mono text-orange-400 font-semibold mt-1.5 text-center">RayneWater</p>
+      <p class="text-xs font-mono text-slate-400 mt-1 max-w-xs text-center leading-relaxed">Hardware Procurement &amp; Anti-Scam Triage Engine</p>
+    </div>
+    <div class="mt-8 flex items-center justify-center gap-2 text-xs font-mono text-slate-500">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span id="bootStatusText">Initializing secure workspace...</span>
     </div>
@@ -212,7 +238,7 @@
           Trash <span id="badgeDesktop_trash" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">0</span>
         </button>
         <button onclick="switchTab('memory')" id="desktopTab_memory" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
-          Memory <span id="badgeDesktop_memory" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">21</span>
+          Memory <span id="badgeDesktop_memory" class="ml-1 text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">22</span>
         </button>
       </nav>
 
@@ -269,7 +295,7 @@
       </section>
 
       <!-- ================= TAB: SHORTLIST ================= -->
-      <section id="tabView_shortlist" class="space-y-3">
+      <section id="tabView_shortlist" class="space-y-3 fluid-view">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -303,7 +329,7 @@
       </section>
 
       <!-- ================= TAB: APPROVED ================= -->
-      <section id="tabView_approved" class="space-y-3 hidden">
+      <section id="tabView_approved" class="space-y-3 fluid-view hidden">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -330,7 +356,7 @@
       </section>
 
       <!-- ================= TAB: FOLDERS ================= -->
-      <section id="tabView_folders" class="space-y-3 hidden">
+      <section id="tabView_folders" class="space-y-3 fluid-view hidden">
         <div class="flex items-center justify-between">
           <h2 class="text-sm sm:text-base font-extrabold text-white">Repair Project Folders</h2>
           <button onclick="promptCreateFolder()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 transition-all flex items-center gap-1.5">
@@ -352,7 +378,7 @@
       </section>
 
       <!-- ================= TAB: TRASH ================= -->
-      <section id="tabView_trash" class="space-y-3 hidden">
+      <section id="tabView_trash" class="space-y-3 fluid-view hidden">
         <div class="flex items-center justify-between">
           <h2 class="text-sm sm:text-base font-extrabold text-white">Rejected Candidates (Trash)</h2>
           <button onclick="emptyTrashPurge()" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 transition-all flex items-center gap-1.5">
@@ -374,7 +400,7 @@
       </section>
 
       <!-- ================= TAB: MEMORY ================= -->
-      <section id="tabView_memory" class="space-y-3 hidden">
+      <section id="tabView_memory" class="space-y-3 fluid-view hidden">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
@@ -434,7 +460,7 @@
 
         <button onclick="switchTab('memory')" id="mobileNav_memory" class="relative w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-100 flex flex-col items-center justify-center transition-all active:scale-95" title="Memory">
           <i class="fa-solid fa-microchip text-lg"></i>
-          <span id="badgeMobile_memory" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-cyan-400 border border-cyan-500/40 rounded-full w-4 h-4 flex items-center justify-center">21</span>
+          <span id="badgeMobile_memory" class="absolute -top-1 -right-1 text-[9px] font-mono font-bold bg-slate-900 text-cyan-400 border border-cyan-500/40 rounded-full w-4 h-4 flex items-center justify-center">22</span>
         </button>
       </div>
     </nav>
@@ -662,7 +688,8 @@
       { id: "LOG-018", cat: "SESSION-UI", title: "Dual-Persistence & Mobile Landscape Hardening", notes: "Implemented 365-day cookie and localStorage dual session persistence. Fixed missing updateBadges() function and hid mobile floating dock prior to login. Raised desktop tab breakpoint to lg (1024px) to prevent header clipping in mobile landscape.", timestamp: "2026-11-22T19:31:00Z" },
       { id: "LOG-019", cat: "AUTH-SCOPE", title: "OAuth Scope Hardening & Verification Bypass", notes: "Stripped unverified sensitive scopes (https://www.googleapis.com/auth/spreadsheets) to resolve Error 403: access_denied. Scoped login strictly to non-sensitive identity scopes (email, profile, openid).", timestamp: "2026-11-22T20:10:00Z" },
       { id: "LOG-020", cat: "MODAL-SYNC", title: "Modal Inspection Engine & Bidirectional Sync Merge", notes: "Restored 4-point structured technical summary. Enabled interactive clicks across Approved manifest tab cards. Built mergeItemLists() to combine cross-device items without data loss.", timestamp: "2026-11-22T20:45:00Z" },
-      { id: "LOG-021", cat: "NLP-TRIAGE", title: "Intelligent Component-Specific NLP Triage Dispatch", notes: "Engineered multi-platform parsing for back covers, displays (with/without frame), batteries (TI fuel gauge BMS), sub-boards, and camera modules. Specific queries return 3–4 competing vendor listings; generic device queries return 4 core repair parts.", timestamp: "2026-11-22T21:15:00Z" }
+      { id: "LOG-021", cat: "NLP-TRIAGE", title: "Intelligent Component-Specific NLP Triage Dispatch", notes: "Engineered multi-platform parsing for back covers, displays (with/without frame), batteries (TI fuel gauge BMS), sub-boards, and camera modules. Specific queries return 3–4 competing vendor listings; generic device queries return 4 core repair parts.", timestamp: "2026-11-22T21:15:00Z" },
+      { id: "LOG-022", cat: "RUNTIME-SYNC", title: "Runtime Syntax Hardening & Live Memory Sync Protocol", notes: "Restored missing return block and closing syntax in timeAgo() helper to restore unblocked execution. Ingested milestones LOG-019 through LOG-021 into masterMemoryLogs array and updated UI badge counter to dynamic array length. Engineered triggerMemorySyncRefresh() to pull live log rows and provide instant visual sync status feedback.", timestamp: "2026-11-23T07:11:00Z" }
     ];
 
     // Seed Initial Data
@@ -916,7 +943,10 @@
       if (tabKey === 'approved') renderApproved();
       if (tabKey === 'folders') renderFolders();
       if (tabKey === 'trash') renderTrash();
-      if (tabKey === 'memory') renderMemoryLogs();
+      if (tabKey === 'memory') {
+        renderMemoryLogs();
+        triggerMemorySyncRefresh(true);
+      }
 
       updateBadges();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2067,51 +2097,79 @@
       downloadAnchor.remove();
     }
 
-    async function triggerMemorySyncRefresh() {
+    const GOOGLE_SHEET_MASTER_ID = "13oA__u_bNLSVvADOQutxy0bT9xvo2oWlS-6hVUTpMH4";
+
+    async function triggerMemorySyncRefresh(isSilent = false) {
       const icon = document.getElementById('memoryRefreshIcon');
       if (icon) icon.classList.add('fa-spin');
-      setSystemStatus('SYNCING', 'SYNCING • Memory');
+      if (!isSilent) setSystemStatus('SYNCING', 'SYNCING • Memory');
 
-      // Attempt live fetch from published Google Sheets TSV / CSV endpoint if available
-      const MASTER_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR6f-memory/pub?gid=0&single=true&output=csv`;
-      
+      let parsedCount = 0;
+
+      // 1. Live Google Sheets GViz Query
       try {
+        const sheetUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_MASTER_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent("Activity & Session Log")}`;
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        const res = await fetch(MASTER_SHEET_CSV_URL, { signal: controller.signal });
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(sheetUrl, { signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (res.ok) {
-          const text = await res.text();
-          const rows = text.split('\n');
-          rows.forEach(r => {
-            if (r.startsWith('LOG-')) {
-              const cols = r.split(',');
-              const id = cols[0]?.trim();
-              if (id && !masterMemoryLogs.some(m => m.id === id)) {
-                masterMemoryLogs.push({
-                  id: id,
-                  cat: cols[2]?.trim() || "UPDATE",
-                  title: cols[3]?.trim() || "Live Milestone",
-                  notes: cols[5]?.trim() || cols[4]?.trim() || "Synced from Google Sheets.",
-                  timestamp: new Date().toISOString()
-                });
+          const rawText = await res.text();
+          // Extract JSON payload from Google Visualization wrapper /*O_o*/ google.visualization.Query.setResponse(...)
+          const match = rawText.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/);
+          if (match && match[1]) {
+            const gvizData = JSON.parse(match[1]);
+            const rows = gvizData?.table?.rows || [];
+
+            rows.forEach(r => {
+              const c = r.c || [];
+              const rawId = (c[1]?.v || c[0]?.v || '') + '';
+              if (/^LOG-\d+/i.test(rawId.trim())) {
+                const logId = rawId.trim();
+                const logDate = (c[2]?.f || c[2]?.v || new Date().toISOString().split('T')[0]) + '';
+                const logCat = (c[3]?.v || 'UPDATE') + '';
+                const logTitle = (c[4]?.v || c[5]?.v || 'Milestone Record') + '';
+                const logNotes = (c[6]?.v || c[5]?.v || c[7]?.v || 'Documented engineering milestone.') + '';
+
+                const existingIndex = masterMemoryLogs.findIndex(m => m.id === logId);
+                if (existingIndex >= 0) {
+                  masterMemoryLogs[existingIndex].cat = logCat;
+                  masterMemoryLogs[existingIndex].title = logTitle;
+                  masterMemoryLogs[existingIndex].notes = logNotes;
+                } else {
+                  masterMemoryLogs.push({
+                    id: logId,
+                    cat: logCat,
+                    title: logTitle,
+                    notes: logNotes,
+                    timestamp: logDate.includes('T') ? logDate : `${logDate}T12:00:00Z`
+                  });
+                }
+                parsedCount++;
               }
-            }
-          });
+            });
+          }
         }
       } catch (err) {
-        // Fallback gracefully to internal master array without error
-        console.log("Live sheet sync checked, internal master logs active.");
+        console.warn("Direct Google Sheet GViz fetch notice:", err);
       }
 
-      setTimeout(() => {
-        if (icon) icon.classList.remove('fa-spin');
-        renderMemoryLogs();
-        updateBadges();
-        setSystemStatus('IDLE', 'ONLINE • Synced');
-        setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2000);
-      }, 500);
+      // Sort logs descending so the newest log (e.g. LOG-022, LOG-023) is always at the top
+      masterMemoryLogs.sort((a, b) => {
+        const numA = parseInt((a.id || '').replace(/\D/g, ''), 10) || 0;
+        const numB = parseInt((b.id || '').replace(/\D/g, ''), 10) || 0;
+        return numB - numA;
+      });
+
+      if (icon) icon.classList.remove('fa-spin');
+      renderMemoryLogs();
+      updateBadges();
+
+      if (!isSilent) {
+        setSystemStatus('IDLE', `ONLINE • ${masterMemoryLogs.length} Logs`);
+        setTimeout(() => setSystemStatus('IDLE', 'ONLINE'), 2500);
+      }
     }
 
     // Local Storage Partition Management
@@ -2469,11 +2527,10 @@
     function dismissBootOverlay() {
       const bootScreen = document.getElementById('bootScreen');
       if (bootScreen) {
-        bootScreen.style.opacity = '0';
-        bootScreen.style.pointerEvents = 'none';
+        bootScreen.classList.add('boot-fade-out');
         setTimeout(() => {
           bootScreen.classList.add('hidden');
-        }, 500);
+        }, 700);
       }
     }
 
